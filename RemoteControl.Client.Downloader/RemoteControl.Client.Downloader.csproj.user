@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <StartArguments>https://www.baidu.com/link?url=mqnjzyKhgrgVOVZ4iokHCI3LKKkdMtq-qEC_LfDHd6-xuwvlYrui74YRZHWIOaLOJEBy6RLr57kZeEUxnFNLWnHApuZYgonY8kwCnXDu0vi&amp;wd=&amp;eqid=93e443b70002c41800000002596a4008 d:\1.exe</StartArguments>
+  </PropertyGroup>
+</Project>

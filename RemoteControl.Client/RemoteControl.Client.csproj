@@ -89,6 +89,7 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -107,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaptureVideoClient.cs" />
+    <Compile Include="MouseOpeUtil.cs" />
     <Compile Include="ProcessUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

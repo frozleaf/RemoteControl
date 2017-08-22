@@ -20,16 +20,21 @@ namespace RemoteControl.Client.CamCapture
         private string ServerIP = "127.0.0.1";
         private int ServerPort = 9001;
         private Socket client = null;
+        private bool _isHide = true;
 
-        public FrmMain()
+        public FrmMain(bool isHide)
         {
             InitializeComponent();
+            _isHide = isHide;
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            this.ShowInTaskbar = false;
-            this.Hide();
+            if (_isHide)
+            {
+                this.ShowInTaskbar = false;
+                this.Hide(); 
+            }
             StartCamCapture();
             new Thread(() => StartBroadCastInternal()) { IsBackground = true }.Start();
             new Thread(() => StartTransportServerInternal()) { IsBackground = true }.Start();
@@ -77,7 +82,7 @@ namespace RemoteControl.Client.CamCapture
             Bitmap bmp = null;
             while (true)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1);
                 if (queue.Count > 0 && queue.TryDequeue(out bmp))
                 {
                     if (bmp != null)
@@ -90,7 +95,7 @@ namespace RemoteControl.Client.CamCapture
 
         private void BroadCast(Bitmap bmp)
         {
-            if (client != null)
+            if (socket != null)
             {
                 try
                 {
@@ -98,13 +103,14 @@ namespace RemoteControl.Client.CamCapture
                     {
                         bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
                         byte[] data = ms.GetBuffer();
-                        client.Send(Encode(data));
+                        socket.SendTo(data, new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9001));
                         data = null;
                     }
+                    Output(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " 已广播");
                 }
                 catch (Exception ex)
                 {
-                    
+                    MessageBox.Show(ex.Message);
                 }
             }
             bmp.Dispose();
@@ -125,20 +131,7 @@ namespace RemoteControl.Client.CamCapture
                 return;
             try
             {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                for (int i = 0; i < 100; i++)
-                {
-                    try
-                    {
-                        socket.Bind(new IPEndPoint(IPAddress.Parse(ServerIP), ServerPort + i));
-                        break;
-                    }
-                    catch (Exception e)
-                    {
-                    }
-                }
-                socket.Listen(10);
-                client = socket.Accept();
+                socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             }
             catch (Exception ex)
             {
@@ -159,6 +152,21 @@ namespace RemoteControl.Client.CamCapture
             catch (Exception ex)
             {
             }
+        }
+
+        private void Output(string str)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<string>(Output), str);
+                return; 
+            }
+            this.toolStripStatusLabel3.Text = str;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.toolStripStatusLabel1.Text = "队列长度:" + queue.Count;
         }
     }
 }

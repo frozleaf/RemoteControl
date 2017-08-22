@@ -80,8 +80,7 @@
             this.Controls.Add(this.progressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FrmDownload";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "192.168.1.2";
+            this.Text = "下载文件";
             this.ResumeLayout(false);
             this.PerformLayout();
 

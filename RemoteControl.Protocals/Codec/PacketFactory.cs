@@ -152,6 +152,21 @@ namespace RemoteControl.Protocals
                 case ePacketType.PACKET_STOP_UPLOAD_REQUEST:
                     obj = FromJsonBytes<RequestStopUpload>(bodyData);
                     break;
+                case ePacketType.PACKET_COPY_FILE_OR_DIR_REQUEST:
+                    obj = FromJsonBytes<RequestCopyFile>(bodyData);
+                    break;
+                case ePacketType.PACKET_MOVE_FILE_OR_DIR_REQUEST:
+                    obj = FromJsonBytes<RequestMoveFile>(bodyData);
+                    break;
+                case ePacketType.PACKET_COPY_FILE_OR_DIR_RESPONSE:
+                    obj = FromJsonBytes<ResponseCopyFile>(bodyData);
+                    break;
+                case ePacketType.PACKET_MOVE_FILE_OR_DIR_RESPONSE:
+                    obj = FromJsonBytes<ResponseMoveFile>(bodyData);
+                    break;
+                case ePacketType.PACKET_RENAME_FILE_REQUEST:
+                    obj = FromJsonBytes<RequestRenameFile>(bodyData);
+                    break;
             }
         }
 

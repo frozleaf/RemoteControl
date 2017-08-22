@@ -11,12 +11,14 @@ using RemoteControl.Protocals;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using log4net;
 
 namespace RemoteControl.Server
 {
     public partial class FrmMain : FrmBase
     {
         public const string APP_TITLE = "远程控制服务端";
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(FrmMain));
         private int clientCount = 0;
         private TreeNode InternetTreeNode { get { return this.treeView1.Nodes[1]; } }
         private SocketSession currentSession = null;
@@ -106,6 +108,13 @@ namespace RemoteControl.Server
         void oRemoteControlServer_PacketReceived(object sender, PacketReceivedEventArgs e)
         {
             //Console.WriteLine(e.PacketType.ToString());
+            ResponseBase rb = e.Obj as ResponseBase;
+            if (rb != null && rb.Result == false)
+            {
+                Logger.Debug(e.Session.SocketId + " Error:" + rb.Message + "\r\n" + rb.Detail);
+                doOutput(rb.Message);
+                return;
+            }
             if (e.PacketType == ePacketType.PACKET_GET_DRIVES_RESPONSE)
             {
                 ResponseGetDrives resp = e.Obj as ResponseGetDrives;
@@ -282,6 +291,16 @@ namespace RemoteControl.Server
                     UpdateProcessListView(resp);
 
                 }) { IsBackground=true }.Start();
+            }
+            else if (e.PacketType == ePacketType.PACKET_COPY_FILE_OR_DIR_RESPONSE)
+            {
+                var resp = e.Obj as ResponseCopyFile;
+                doOutput("复制" + resp.SourceFile + "成功!");
+            }
+            else if (e.PacketType == ePacketType.PACKET_MOVE_FILE_OR_DIR_RESPONSE)
+            {
+                var resp = e.Obj as ResponseMoveFile;
+                doOutput("移动" + resp.SourceFile + "成功!");
             }
         }
 
@@ -596,15 +615,19 @@ namespace RemoteControl.Server
             if (this.currentSession == null)
                 return;
 
+            string remoteFileDir = this.listView1.Tag as string;
+            if (remoteFileDir == null)
+            {
+                MsgBox.ShowInfo("当前目录无法上传文件!");
+                return;
+            }
+
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Multiselect = false;
             if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
 
             string localFilePath = ofd.FileName;
-            string remoteFileDir = this.listView1.Tag as string;
-            if (remoteFileDir == null)
-                return;
             if (remoteFileDir.EndsWith("\\"))
                 remoteFileDir = remoteFileDir.TrimEnd('\\');
             string remoteFilePath = remoteFileDir + "\\" + System.IO.Path.GetFileName(localFilePath);
@@ -677,9 +700,19 @@ namespace RemoteControl.Server
                     reqStop.Id = fileId;
                     this.currentSession.Send(ePacketType.PACKET_STOP_UPLOAD_REQUEST, reqStop);
                     uploadDic.Remove(fileId);
+
+                    fs.Close();
+                    fs.Dispose();
+                    fs = null;
+
+                    MsgBox.ShowInfo("上传完成!");
                 }
-                fs.Close();
-                fs.Dispose();
+                if (frm != null)
+                {
+                    frm.Close();
+                    frm.Dispose();
+                    frm = null;
+                }
             }
         }
 
@@ -703,7 +736,9 @@ namespace RemoteControl.Server
                     return;
                 }
 
+                string fileName = System.IO.Path.GetFileName(tag.Path);
                 var sfd = new SaveFileDialog();
+                sfd.FileName = fileName;
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
                     return;
 
@@ -1166,6 +1201,219 @@ namespace RemoteControl.Server
             using (var frm = new FrmAbout())
             {
                 frm.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// 复制按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        { 
+            if (this.listView1.SelectedItems.Count < 1)
+            {
+                MsgBox.ShowInfo("请选择一个文件！");
+                return;
+            }
+
+            string path;
+            if(!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
+            {
+                MsgBox.ShowInfo("不支持文件夹的复制！");
+                return;
+            }
+
+            PasteInfo pi = toolStripButton8.Tag as PasteInfo;
+            if (pi == null)
+            {
+                pi = new PasteInfo();
+                toolStripButton8.Tag = pi;
+            }
+            pi.IsDeleteSourceFile = false;
+            pi.SourceFilePath = path;
+        }
+
+        /// <summary>
+        /// 剪切按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton12_Click(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count < 1)
+            {
+                MsgBox.ShowInfo("请选择一个文件！");
+                return;
+            }
+
+            string path;
+            if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
+            {
+                MsgBox.ShowInfo("不支持文件夹的剪切！");
+                return;
+            }
+
+            PasteInfo pi = toolStripButton8.Tag as PasteInfo;
+            if (pi == null)
+            {
+                pi = new PasteInfo();
+                toolStripButton8.Tag = pi;
+            }
+            pi.IsDeleteSourceFile = true;
+            pi.SourceFilePath = path;
+        }
+
+        /// <summary>
+        /// 粘贴按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton8_Click(object sender, EventArgs e)
+        {
+            PasteInfo pi = toolStripButton8.Tag as PasteInfo;
+            if (pi == null)
+            {
+                MsgBox.ShowInfo("请先复制或移动一个文件！");
+                return;
+            }
+
+            string pastMode = pi.IsDeleteSourceFile ? "移动" : "复制";
+            string curDir = this.listView1.Tag as string;
+            if (curDir == null)
+            {
+                MsgBox.ShowInfo("不能" + pastMode + "到当前目录！");
+                return;
+            }
+            if (MsgBox.ShowOkCancel("确定要" + pastMode + "文件" + pi.SourceFilePath + "?") == System.Windows.Forms.DialogResult.Cancel)
+                return;
+            string fileName = Path.GetFileName(pi.SourceFilePath);
+            string destPath = Path.Combine(curDir, fileName);
+            if (pi.IsDeleteSourceFile)
+            {
+                // move
+                RequestMoveFile req = new RequestMoveFile();
+                req.SourceFile = pi.SourceFilePath;
+                req.DestinationFile = destPath;
+                this.currentSession.Send(ePacketType.PACKET_MOVE_FILE_OR_DIR_REQUEST, req);
+            }
+            else
+            {
+                // copy
+                RequestCopyFile req = new RequestCopyFile();
+                req.SourceFile = pi.SourceFilePath;
+                req.DestinationFile = destPath;
+                this.currentSession.Send(ePacketType.PACKET_COPY_FILE_OR_DIR_REQUEST, req);
+            }
+        }
+
+        /// <summary>
+        /// listivew节点是否为文件
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private bool IsListViewItemAFile(ListViewItem item, out string path)
+        {
+            ListViewItemFileOrDirTag tag = item.Tag as ListViewItemFileOrDirTag;
+            path = tag.Path;
+            if (tag.IsFile == false)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// listview按键监控
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                toolStripButton9.PerformClick();
+            }
+            else if (e.KeyCode == Keys.C && e.Control)
+            {
+                toolStripButton7.PerformClick();
+            }
+            else if (e.KeyCode == Keys.X && e.Control)
+            {
+                toolStripButton12.PerformClick();
+            }
+            else if (e.KeyCode == Keys.V && e.Control)
+            {
+                toolStripButton8.PerformClick();
+            }
+            else if (e.KeyCode == Keys.F2)
+            {
+                toolStripButton2.PerformClick();
+            }
+        }
+
+        /// <summary>
+        /// 重命名按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count < 1)
+            {
+                MsgBox.ShowInfo("请选择一个文件！");
+                return;
+            }
+
+            string path;
+            if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
+            {
+                MsgBox.ShowInfo("不支持文件夹的剪切！");
+                return;
+            }
+
+            string oldName = System.IO.Path.GetFileName(path);
+            var frm = new FrmRename(oldName);
+            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                RequestRenameFile req = new RequestRenameFile();
+                req.SourceFile = path;
+                req.DestinationFileName = frm.NewName;
+                this.currentSession.Send(ePacketType.PACKET_RENAME_FILE_REQUEST, req);
+            }
+
+        }
+
+        /// <summary>
+        /// 树控件右键菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void treeView1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != System.Windows.Forms.MouseButtons.Right)
+                return;
+
+            TreeViewHitTestInfo ti = treeView1.HitTest(e.Location);
+            if (ti != null && 
+                ti.Node != null &&
+                ti.Node.Level == 1)
+            {
+                SocketSession client = ti.Node.Tag as SocketSession;
+                if (client != null)
+                {
+                    ContextMenuStrip cms = new ContextMenuStrip();
+                    cms.Items.Add("结束客户端程序", null, (o, s) =>
+                    {
+                        client.Send(ePacketType.PACKET_QUIT_APP_REQUEST, null);
+                    });
+                    cms.Items.Add("重启客户端程序", null, (o, s) =>
+                    {
+                        client.Send(ePacketType.PACKET_RESTART_APP_REQUEST, null);
+                    });
+                    cms.Show(this.treeView1, e.Location);
+                }
             }
         }
     }

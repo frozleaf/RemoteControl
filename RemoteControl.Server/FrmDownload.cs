@@ -14,15 +14,21 @@ namespace RemoteControl.Server
     {
         private long _fileSize;
         private Action _cancelAction;
-        public FrmDownload(Action cancelAction, string sourceFile, string destFile, long fileSize)
+        public FrmDownload(Action cancelAction, string sourceFile, string destFile, long fileSize):this(cancelAction, sourceFile,destFile,fileSize, true)
+        {
+        }
+        public FrmDownload(Action cancelAction, string sourceFile, string destFile, long fileSize, bool isDownloadMode)
         {
             InitializeComponent();
 
             this._cancelAction = cancelAction;
-            this.label2.Text = String.Format("正在下载文件 {0} 到 {1} 目录中...", System.IO.Path.GetFileName(sourceFile),
-                System.IO.Path.GetDirectoryName(destFile));
+            this.label2.Text = String.Format("正在{2}文件 {0} 到 {1} 目录中...", 
+                System.IO.Path.GetFileName(sourceFile),
+                System.IO.Path.GetDirectoryName(destFile),
+                isDownloadMode?"下载":"上传");
             this._fileSize = fileSize;
             this.label1.Text = string.Format("{0}/{1}", 0, this._fileSize);
+            this.Text = isDownloadMode?"下载文件":"上传文件";
         }
 
         public void UpdateProgress(long recvedBytes)

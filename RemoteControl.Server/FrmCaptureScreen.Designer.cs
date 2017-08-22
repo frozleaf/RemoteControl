@@ -34,6 +34,10 @@
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripMenuItemCaptureMouse = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCaptureKeyboard = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -43,7 +47,9 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton2,
-            this.toolStripButtonSave});
+            this.toolStripButtonSave,
+            this.toolStripSeparator1,
+            this.toolStripSplitButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(693, 31);
@@ -78,6 +84,10 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDoubleClick);
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
             // panel1
             // 
@@ -87,6 +97,37 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(693, 443);
             this.panel1.TabIndex = 2;
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
+            // 
+            // toolStripSplitButton1
+            // 
+            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemCaptureMouse,
+            this.toolStripMenuItemCaptureKeyboard});
+            this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
+            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(72, 28);
+            this.toolStripSplitButton1.Text = "捕捉操作";
+            // 
+            // toolStripMenuItemCaptureMouse
+            // 
+            this.toolStripMenuItemCaptureMouse.Name = "toolStripMenuItemCaptureMouse";
+            this.toolStripMenuItemCaptureMouse.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemCaptureMouse.Text = "鼠标";
+            this.toolStripMenuItemCaptureMouse.Click += new System.EventHandler(this.toolStripMenuItemCaptureMouse_Click);
+            // 
+            // toolStripMenuItemCaptureKeyboard
+            // 
+            this.toolStripMenuItemCaptureKeyboard.Name = "toolStripMenuItemCaptureKeyboard";
+            this.toolStripMenuItemCaptureKeyboard.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemCaptureKeyboard.Text = "键盘";
+            this.toolStripMenuItemCaptureKeyboard.Click += new System.EventHandler(this.toolStripMenuItemCaptureKeyboard_Click);
             // 
             // FrmCaptureScreen
             // 
@@ -114,5 +155,9 @@
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripButton toolStripButtonSave;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCaptureMouse;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCaptureKeyboard;
     }
 }

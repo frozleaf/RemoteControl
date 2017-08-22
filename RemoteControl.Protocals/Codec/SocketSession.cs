@@ -26,7 +26,14 @@ namespace RemoteControl.Protocals
 
         public void Send(ePacketType packetType, object obj)
         {
-            this.SocketObj.Send(PacketFactory.EncodeOject(packetType, obj));
+            try
+            {
+                this.SocketObj.Send(PacketFactory.EncodeOject(packetType, obj));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SocketSession Error:" + ex.Message);
+            }
         }
     }
 }

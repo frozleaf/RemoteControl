@@ -122,6 +122,11 @@
     <Compile Include="Request\RequestStopGetScreen.cs" />
     <Compile Include="Request\RequestOpenUrl.cs" />
     <Compile Include="Request\RequestStartUpload.cs" />
+    <Compile Include="Request\RequestCopyFile.cs" />
+    <Compile Include="Request\RequestMoveFile.cs" />
+    <Compile Include="Request\RequestRenameFile.cs" />
+    <Compile Include="Response\ResponseCopyFile.cs" />
+    <Compile Include="Response\ResponseMoveFile.cs" />
     <Compile Include="Response\ResponseBase.cs" />
     <Compile Include="Response\ResponseCommand.cs" />
     <Compile Include="Response\ResponseCreateFileOrDir.cs" />

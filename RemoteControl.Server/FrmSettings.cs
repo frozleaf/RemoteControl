@@ -30,6 +30,7 @@ namespace RemoteControl.Server
             if (!int.TryParse(this.textBox3.Text, out serverPort))
                 return;
             Settings.CurrentSettings.ServerPort = serverPort;
+            MsgBox.ShowInfo("已保存!");
         }
 
         private void buttonGenClient_Click(object sender, EventArgs e)

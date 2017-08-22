@@ -12,6 +12,7 @@ namespace RemoteControl.Protocals
     {
         public bool Result = true;
         public string Message = "成功";
+        public string Detail = "";
 
         protected Image ByteArray2Image(byte[] data)
         {

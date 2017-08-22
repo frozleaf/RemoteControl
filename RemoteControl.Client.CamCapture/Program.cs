@@ -10,11 +10,16 @@ namespace RemoteControl.Client.CamCapture
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            bool isHide = true;
+            if(args.Length == 1&&args[0]=="/s")
+            {
+                isHide = false;
+            }
+            Application.Run(new FrmMain(isHide));
         }
     }
 }

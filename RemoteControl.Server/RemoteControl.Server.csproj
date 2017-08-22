@@ -87,6 +87,9 @@
     <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\Libs\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -155,6 +158,12 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmRename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmRename.Designer.cs">
+      <DependentUpon>FrmRename.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmSelectIcon.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,6 +185,7 @@
     <Compile Include="ListViewItemFileOrDirTag.cs" />
     <Compile Include="MsgBox.cs" />
     <Compile Include="PacketReceivedEventArgs.cs" />
+    <Compile Include="PasteInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendCommandHotKey.cs" />
@@ -216,6 +226,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmRename.resx">
+      <DependentUpon>FrmRename.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSelectIcon.resx">
       <DependentUpon>FrmSelectIcon.cs</DependentUpon>

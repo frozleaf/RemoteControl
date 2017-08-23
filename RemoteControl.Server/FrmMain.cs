@@ -12,6 +12,8 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using log4net;
+using RemoteControl.Protocals.Plugin;
+using RemoteControl.Protocals.Request;
 
 namespace RemoteControl.Server
 {
@@ -1414,6 +1416,53 @@ namespace RemoteControl.Server
                     });
                     cms.Show(this.treeView1, e.Location);
                 }
+            }
+        }
+
+        /// <summary>
+        /// “执行代码”按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonExeCode_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "请选择代码插件";
+            ofd.Filter = "代码插件(*.dll)|*.dll|所有文件(*.*)|*.*";
+            ofd.FilterIndex = 1;
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string codeFile = ofd.FileName;
+                if (!PluginLoader.IsPlugin(codeFile))
+                {
+                    MsgBox.ShowInfo("非代码插件！");
+                    return;
+                }
+
+                new Thread(() => {
+                    string codeId = Guid.NewGuid().ToString();
+                    System.IO.FileStream fs = new FileStream(codeFile, FileMode.Open, FileAccess.Read);
+                    byte[] buffer = new byte[1024];
+                    while (true)
+                    {
+                        int size = fs.Read(buffer, 0, buffer.Length);
+                        if (size < 1)
+                            break;
+                        RequestTransportExecCode req = new RequestTransportExecCode();
+                        req.Data = new byte[size];
+                        for (int i = 0; i < req.Data.Length; i++)
+                        {
+                            req.ID = codeId;
+                            req.Data[i] = buffer[i];
+                        }
+                        this.currentSession.Send(ePacketType.PACKET_TRANSPORT_EXEC_CODE_REQUEST, req);
+                    }
+                    fs.Close();
+                    fs.Dispose();
+                    this.currentSession.Send(ePacketType.PACKET_RUN_EXEC_CODE_REQUEST, new RequestRunExecCode() { ID=codeId });
+                    MsgBox.ShowInfo("代码插件已经提交到客户端，等待执行！");
+                }) { IsBackground = true }.Start();
             }
         }
     }

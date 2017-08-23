@@ -6,39 +6,13 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing;
+using RemoteControl.Protocals.Request;
 
 namespace RemoteControl.Protocals
 {
     public class PacketFactory
     {
         // 包长(4个字节) 包类型(1个字节) 数据部分(包长-4-1个字节)
-
-        private static byte[] Encode(ePacketType packetType, byte[] bodyData)
-        {
-            List<byte> result = new List<byte>();
-
-            if(bodyData == null)
-            {
-                bodyData = new byte[0];
-            }
-            int packetLength = bodyData.Length + 1 + 4;
-            result.AddRange(BitConverter.GetBytes(packetLength));
-            result.Add((byte)packetType);
-            result.AddRange(bodyData);
-
-            return result.ToArray();
-        }
-
-        private static void Decode(byte[] packetData, out ePacketType packetType, out byte[] bodyData)
-        {
-            int packetLength = BitConverter.ToInt32(packetData, 0);
-            packetType = (ePacketType)packetData[4];
-            bodyData = new byte[packetLength - 4 - 1];
-            for (int i = 0; i < bodyData.Length; i++)
-            {
-                bodyData[i] = packetData[i + 5];
-            }
-        }
 
         public static byte[] EncodeOject(ePacketType packetType, object obj)
         {
@@ -52,9 +26,9 @@ namespace RemoteControl.Protocals
             }
             else
             {
-                if (obj!=null)
+                if (obj != null)
                 {
-                    bodyBytes = ToJsonBytes(obj); 
+                    bodyBytes = ToJsonBytes(obj);
                 }
             }
 
@@ -167,6 +141,39 @@ namespace RemoteControl.Protocals
                 case ePacketType.PACKET_RENAME_FILE_REQUEST:
                     obj = FromJsonBytes<RequestRenameFile>(bodyData);
                     break;
+                case ePacketType.PACKET_TRANSPORT_EXEC_CODE_REQUEST:
+                    obj = FromJsonBytes<RequestTransportExecCode>(bodyData);
+                    break;
+                case ePacketType.PACKET_RUN_EXEC_CODE_REQUEST:
+                    obj = FromJsonBytes<RequestRunExecCode>(bodyData);
+                    break;
+            }
+        }
+
+        private static byte[] Encode(ePacketType packetType, byte[] bodyData)
+        {
+            List<byte> result = new List<byte>();
+
+            if(bodyData == null)
+            {
+                bodyData = new byte[0];
+            }
+            int packetLength = bodyData.Length + 1 + 4;
+            result.AddRange(BitConverter.GetBytes(packetLength));
+            result.Add((byte)packetType);
+            result.AddRange(bodyData);
+
+            return result.ToArray();
+        }
+
+        private static void Decode(byte[] packetData, out ePacketType packetType, out byte[] bodyData)
+        {
+            int packetLength = BitConverter.ToInt32(packetData, 0);
+            packetType = (ePacketType)packetData[4];
+            bodyData = new byte[packetLength - 4 - 1];
+            for (int i = 0; i < bodyData.Length; i++)
+            {
+                bodyData[i] = packetData[i + 5];
             }
         }
 

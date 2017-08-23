@@ -38,6 +38,8 @@ namespace RemoteControl.Server
             List<string> lstSkinFiles = new List<string>();
 
             string sSkinPath = GetPath(ePathType.SKINS_DIR);
+            if (!System.IO.Directory.Exists(sSkinPath))
+                return lstSkinFiles;
             string[] arrDirecotry = System.IO.Directory.GetDirectories(sSkinPath);
             for (int i = 0; i < arrDirecotry.Length; i++)
             {

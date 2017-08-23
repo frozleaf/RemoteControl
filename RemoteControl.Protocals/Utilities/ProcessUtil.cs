@@ -2,15 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Diagnostics;
-using RemoteControl.Protocals;
 using System.Management;
-using System.IO;
 
-namespace RemoteControl.Client
+namespace RemoteControl.Protocals.Utilities
 {
+    /// <summary>
+    /// 进程工具类
+    /// </summary>
     public class ProcessUtil
     {
+        public static Thread Run(string appFileName, string arguments, bool hideWindow)
+        {
+            return Run(appFileName, arguments, hideWindow, false);
+        }
+
+        public static Thread Run(string appFileName, string arguments, bool hideWindow, bool useShellExecute)
+        {
+            var t = new Thread(() =>
+            {
+                try
+                {
+                    Process p = new Process();
+                    p.StartInfo.FileName = appFileName;
+                    p.StartInfo.Arguments = arguments;
+                    p.StartInfo.CreateNoWindow = hideWindow;
+                    p.StartInfo.UseShellExecute = useShellExecute;
+                    if (hideWindow)
+                    {
+                        p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    }
+                    p.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("启动进程失败，" + ex.Message);
+                }
+            }) { IsBackground = true };
+            t.Start();
+
+            return t;
+        }
+
         public static List<ProcessProperty> GetProcessProperyList()
         {
             List<ProcessProperty> list = new List<ProcessProperty>();
@@ -71,6 +105,29 @@ namespace RemoteControl.Client
                     }
                 }
             }
+        }
+
+        public static bool KillProcess(string processNameInLower)
+        {
+            var pros = Process.GetProcesses();
+            for (int i = 0; i < pros.Length; i++)
+            {
+                Process p = pros[i];
+                if (p.ProcessName.ToLower().Contains(processNameInLower))
+                {
+                    try
+                    {
+                        p.Kill();
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

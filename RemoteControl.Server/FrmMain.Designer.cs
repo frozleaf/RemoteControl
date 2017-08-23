@@ -30,19 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("我的电脑", 3, 3);
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("自动上线主机");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("HKEY_CLASSES_ROOT");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_USER");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("HKEY_LOCAL_MACHINE");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("HKEY_USERS");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_CONFIG");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("计算机", new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4,
-            treeNode5,
-            treeNode6,
-            treeNode7});
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("我的电脑", 3, 3);
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("自动上线主机");
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("HKEY_CLASSES_ROOT");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_USER");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("HKEY_LOCAL_MACHINE");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("HKEY_USERS");
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_CONFIG");
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("计算机", new System.Windows.Forms.TreeNode[] {
+            treeNode15,
+            treeNode16,
+            treeNode23,
+            treeNode24,
+            treeNode25});
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -141,6 +141,7 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinEngine1 = new Sunisoft.IrisSkin.SkinEngine(((System.ComponentModel.Component)(this)));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonExeCode = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -263,17 +264,17 @@
             this.treeView1.ItemHeight = 24;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode1.ImageIndex = 3;
-            treeNode1.Name = "treeNodeLocal";
-            treeNode1.SelectedImageIndex = 3;
-            treeNode1.Text = "我的电脑";
-            treeNode2.ImageIndex = 6;
-            treeNode2.Name = "treeNodeInternet";
-            treeNode2.SelectedImageKey = "internet";
-            treeNode2.Text = "自动上线主机";
+            treeNode21.ImageIndex = 3;
+            treeNode21.Name = "treeNodeLocal";
+            treeNode21.SelectedImageIndex = 3;
+            treeNode21.Text = "我的电脑";
+            treeNode22.ImageIndex = 6;
+            treeNode22.Name = "treeNodeInternet";
+            treeNode22.SelectedImageKey = "internet";
+            treeNode22.Text = "自动上线主机";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            treeNode21,
+            treeNode22});
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(272, 405);
             this.treeView1.TabIndex = 0;
@@ -622,6 +623,7 @@
             this.groupBox1.Controls.Add(this.buttonCloseCD);
             this.groupBox1.Controls.Add(this.buttonOpenCD);
             this.groupBox1.Controls.Add(this.buttonSleepComputer);
+            this.groupBox1.Controls.Add(this.buttonExeCode);
             this.groupBox1.Controls.Add(this.buttonHibernateComputer);
             this.groupBox1.Controls.Add(this.buttonLockComputer);
             this.groupBox1.Location = new System.Drawing.Point(670, 0);
@@ -793,20 +795,20 @@
             this.treeView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView2.Location = new System.Drawing.Point(0, 0);
             this.treeView2.Name = "treeView2";
-            treeNode3.Name = "节点1";
-            treeNode3.Text = "HKEY_CLASSES_ROOT";
-            treeNode4.Name = "节点3";
-            treeNode4.Text = "HKEY_CURRENT_USER";
-            treeNode5.Name = "节点4";
-            treeNode5.Text = "HKEY_LOCAL_MACHINE";
-            treeNode6.Name = "节点5";
-            treeNode6.Text = "HKEY_USERS";
-            treeNode7.Name = "节点6";
-            treeNode7.Text = "HKEY_CURRENT_CONFIG";
-            treeNode8.Name = "节点0";
-            treeNode8.Text = "计算机";
+            treeNode15.Name = "节点1";
+            treeNode15.Text = "HKEY_CLASSES_ROOT";
+            treeNode16.Name = "节点3";
+            treeNode16.Text = "HKEY_CURRENT_USER";
+            treeNode23.Name = "节点4";
+            treeNode23.Text = "HKEY_LOCAL_MACHINE";
+            treeNode24.Name = "节点5";
+            treeNode24.Text = "HKEY_USERS";
+            treeNode25.Name = "节点6";
+            treeNode25.Text = "HKEY_CURRENT_CONFIG";
+            treeNode26.Name = "节点0";
+            treeNode26.Text = "计算机";
             this.treeView2.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode8});
+            treeNode26});
             this.treeView2.Size = new System.Drawing.Size(326, 411);
             this.treeView2.TabIndex = 0;
             // 
@@ -1125,6 +1127,16 @@
             this.skinEngine1.SkinFile = null;
             this.skinEngine1.SkinStreamMain = ((System.IO.Stream)(resources.GetObject("skinEngine1.SkinStreamMain")));
             // 
+            // buttonExeCode
+            // 
+            this.buttonExeCode.Location = new System.Drawing.Point(160, 140);
+            this.buttonExeCode.Name = "buttonExeCode";
+            this.buttonExeCode.Size = new System.Drawing.Size(122, 34);
+            this.buttonExeCode.TabIndex = 4;
+            this.buttonExeCode.Text = "执行代码";
+            this.buttonExeCode.UseVisualStyleBackColor = true;
+            this.buttonExeCode.Click += new System.EventHandler(this.buttonExeCode_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1279,6 +1291,7 @@
         private System.Windows.Forms.ToolStripMenuItem 结束进程ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 配置服务程序ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.Button buttonExeCode;
     }
 }
 

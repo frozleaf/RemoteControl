@@ -89,6 +89,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -102,6 +103,9 @@
     <Compile Include="Generate\ClientParameters.cs" />
     <Compile Include="Generate\ClientParametersManager.cs" />
     <Compile Include="Codec\ePacketType.cs" />
+    <Compile Include="Plugin\AbstractPlugin.cs" />
+    <Compile Include="Plugin\IPlugin.cs" />
+    <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="Request\ePathType.cs" />
     <Compile Include="Extension\MyExtensions.cs" />
     <Compile Include="Codec\PacketFactory.cs" />
@@ -119,12 +123,14 @@
     <Compile Include="Request\RequestStartCaptureVideo.cs" />
     <Compile Include="Request\RequestStartGetScreen.cs" />
     <Compile Include="Request\RequestGetSubFilesOrDirs.cs" />
+    <Compile Include="Request\RequestRunExecCode.cs" />
     <Compile Include="Request\RequestStopGetScreen.cs" />
     <Compile Include="Request\RequestOpenUrl.cs" />
     <Compile Include="Request\RequestStartUpload.cs" />
     <Compile Include="Request\RequestCopyFile.cs" />
     <Compile Include="Request\RequestMoveFile.cs" />
     <Compile Include="Request\RequestRenameFile.cs" />
+    <Compile Include="Request\RequestTransportExecCode.cs" />
     <Compile Include="Response\ResponseCopyFile.cs" />
     <Compile Include="Response\ResponseMoveFile.cs" />
     <Compile Include="Response\ResponseBase.cs" />
@@ -139,6 +145,8 @@
     <Compile Include="Codec\SocketSession.cs" />
     <Compile Include="Response\ResponseStartUpload.cs" />
     <Compile Include="Response\ResponseStopUpload.cs" />
+    <Compile Include="Utilities\ProcessUtil.cs" />
+    <Compile Include="Utilities\ResUtil.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Utilities\Win32API.cs" />
     <Compile Include="Request\RequestDeleteFileOrDir.cs" />

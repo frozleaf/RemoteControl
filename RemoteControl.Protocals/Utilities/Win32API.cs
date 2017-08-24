@@ -92,6 +92,9 @@ namespace RemoteControl.Protocals
         public static extern bool GetCursorPos(ref CursorPosition lpPoint);
 
         [DllImport("user32.dll")]
+        public static extern bool SetCursorPos(int x, int y);
+
+        [DllImport("user32.dll")]
         public static extern Int32 ShowWindow(Int32 hwnd, Int32 nCmdShow);
         public const Int32 SW_SHOW = 0x5;
         public const Int32 SW_HIDE = 0x0;

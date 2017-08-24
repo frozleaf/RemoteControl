@@ -2,29 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace RemoteControl.Protocals
 {
     public class RequestMouseEvent
     {
-        public eMouseButton MouseButton;
-        public eMouseOperation MouseOperation;
-        public int X;
-        public int Y;
+        public eMouseButtons MouseButton;
+        public eMouseOperations MouseOperation;
+        public Point MouseLocation;
     }
 
-    public enum eMouseButton
+    public enum eMouseButtons
     {
-        None,
-        ButtonLeft,
-        ButtonRight,
-        ButtonMiddle
+        Left = 0x100000,
+        Middle = 0x400000,
+        None = 0,
+        Right = 0x200000,
+        XButton1 = 0x800000,
+        XButton2 = 0x1000000
     }
 
-    public enum eMouseOperation
+    public enum eMouseOperations
     {
         MouseDown,
         MouseUp,
+        MousePress,
+        MouseDoubleClick,
         MouseMove
     }
 }

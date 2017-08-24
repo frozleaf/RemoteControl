@@ -576,6 +576,39 @@ namespace RemoteControl.Client
                     }
                 }) { IsBackground = true }.Start();
             }
+            else if (packetType == ePacketType.PACKET_MOUSE_EVENT_REQUEST)
+            {
+                var req = obj as RequestMouseEvent;
+                DoOutput(string.Format("button:{0},operation:{1},location:{2},{3}",
+                    req.MouseButton,
+                    req.MouseOperation,
+                    req.MouseLocation.X, req.MouseLocation.Y));
+
+                if (req.MouseOperation == eMouseOperations.MouseDown)
+                {
+                    MouseOpeUtil.MouseDown(req.MouseButton, req.MouseLocation);
+                }
+                else if (req.MouseOperation == eMouseOperations.MouseUp)
+                {
+                    MouseOpeUtil.MouseUp(req.MouseButton, req.MouseLocation);
+                }
+                else if (req.MouseOperation == eMouseOperations.MousePress)
+                {
+                    MouseOpeUtil.MousePress(req.MouseButton, req.MouseLocation);
+                }
+                else if (req.MouseOperation == eMouseOperations.MouseDoubleClick)
+                {
+                    MouseOpeUtil.MouseDoubleClick(req.MouseButton, req.MouseLocation);
+                }
+                else if (req.MouseOperation == eMouseOperations.MouseMove)
+                {
+                    MouseOpeUtil.MouseMove(req.MouseLocation);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         static void CopyFile(SocketSession session, string sourceFile, string destFile, bool isDeleteSourceFile)
@@ -838,7 +871,7 @@ namespace RemoteControl.Client
                 req = sessionLockMouseHandleSwitch[session.SocketId];
                 for (int j = 0; j < 100; j++)
                 {
-                    MouseOpeUtil.MouseTo(0, 0);
+                    MouseOpeUtil.MouseMove(0, 0);
                     //Win32API.mouse_event(Win32API.MOUSEEVENTF_ABSOLUTE | Win32API.MOUSEEVENTF_MOVE, 0, 0, 0, 0);
                     Thread.Sleep(10);
                 }

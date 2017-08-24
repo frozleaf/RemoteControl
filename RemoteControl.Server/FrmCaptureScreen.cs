@@ -118,22 +118,51 @@ namespace RemoteControl.Server
         #region 鼠标操作事件
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-
+            if(_isCaptureMouse)
+            {
+                RequestMouseEvent req = new RequestMouseEvent();
+                req.MouseButton = (eMouseButtons)e.Button;
+                req.MouseOperation = eMouseOperations.MouseDown;
+                req.MouseLocation = e.Location;
+                this.oSession.Send(ePacketType.PACKET_MOUSE_EVENT_REQUEST, req);
+                Console.WriteLine(req);
+            }
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-
+            if (_isCaptureMouse)
+            {
+                RequestMouseEvent req = new RequestMouseEvent();
+                req.MouseButton = (eMouseButtons)e.Button;
+                req.MouseOperation = eMouseOperations.MouseUp;
+                req.MouseLocation = e.Location;
+                this.oSession.Send(ePacketType.PACKET_MOUSE_EVENT_REQUEST, req);
+            }
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-
+            //if (_isCaptureMouse)
+            //{
+            //    RequestMouseEvent req = new RequestMouseEvent();
+            //    req.MouseButton = (eMouseButtons)e.Button;
+            //    req.MouseOperation = eMouseOperations.MouseMove;
+            //    req.MouseLocation = e.Location;
+            //    this.oSession.Send(ePacketType.PACKET_MOUSE_EVENT_REQUEST, req);
+            //}
         }
 
         private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-
+            if (_isCaptureMouse)
+            {
+                RequestMouseEvent req = new RequestMouseEvent();
+                req.MouseButton = (eMouseButtons)e.Button;
+                req.MouseOperation = eMouseOperations.MouseDoubleClick;
+                req.MouseLocation = e.Location;
+                this.oSession.Send(ePacketType.PACKET_MOUSE_EVENT_REQUEST, req);
+            }
         } 
         #endregion
     }

@@ -26,7 +26,7 @@ namespace RemoteControl.Client
         //private static string ServerIP = "10.55.200.187";
         private static string ServerIP = "192.168.1.136";
         private static int ServerPort = 10086;
-        private static Dictionary<string, bool> sessionScreenHandleSwitch = new Dictionary<string, bool>();
+        private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, bool> sessionDownloadHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, Process> sessionCmdHandleSwitch = new Dictionary<string, Process>();
@@ -40,6 +40,8 @@ namespace RemoteControl.Client
 
         static void Main(string[] args)
         {
+            //Thread.Sleep(3000);
+            //MouseOpeUtil.MouseDown(eMouseButtons.Left, new Point() { X = 100, Y = 100 });
             ReadParameters();
             StartConnect();
             new Thread(() => StartHeartbeat()) { IsBackground = true }.Start();
@@ -187,8 +189,12 @@ namespace RemoteControl.Client
                 RequestStartGetScreen req = obj as RequestStartGetScreen;
                 if (!sessionScreenHandleSwitch.ContainsKey(sessionId))
                 {
-                    sessionScreenHandleSwitch.Add(sessionId, true);
-                    new Thread(() => StartClientCaptureScreen(session, req)) { IsBackground = true }.Start();
+                    sessionScreenHandleSwitch.Add(sessionId, req);
+                    new Thread(() => StartClientCaptureScreen(session)) { IsBackground = true }.Start();
+                }
+                else
+                {
+                    sessionScreenHandleSwitch[sessionId].fps = req.fps;
                 }
             }
             else if (packetType == ePacketType.PACKET_STOP_CAPTURE_SCREEN_REQUEST)
@@ -913,15 +919,21 @@ namespace RemoteControl.Client
             }
         }
 
-        static void StartClientCaptureScreen(SocketSession session, RequestStartGetScreen req)
+        static void StartClientCaptureScreen(SocketSession session)
         {
+            RequestStartGetScreen req = null;
+            int sleepValue = 1000;
+            int fpsValue = 1;
             while (true)
             {
                 if (!sessionScreenHandleSwitch.ContainsKey(session.SocketId))
                 {
                     return;
                 }
-                for (int i = 0; i < 1; i++)
+                req = sessionScreenHandleSwitch[session.SocketId];
+                fpsValue = req.fps;
+                sleepValue = 1000 / fpsValue;
+                for (int i = 0; i < fpsValue; i++)
                 {
                     ResponseStartGetScreen resp = new ResponseStartGetScreen();
                     try
@@ -935,8 +947,8 @@ namespace RemoteControl.Client
                         resp.Detail = ex.StackTrace;
                     }
                     session.Send(ePacketType.PACKET_START_CAPTURE_SCREEN_RESPONSE, resp);
+                    Thread.Sleep(sleepValue);
                 }
-                Thread.Sleep(1000);
             }
         }
 

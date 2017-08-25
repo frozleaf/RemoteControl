@@ -24,6 +24,11 @@ namespace RemoteControl.Server
             base.EnableCancelButton = true;
             this.textBox2.Text = Settings.CurrentSettings.ServerPort.ToString();
             this.textBox3.Text = this.textBox2.Text;
+            var ips = Utils.GetIPAddressV4();
+            if (ips.Count > 0)
+            {
+                this.textBox1.Text = ips[0];
+            }
         }
 
         private void buttonSaveServerSetting_Click(object sender, EventArgs e)

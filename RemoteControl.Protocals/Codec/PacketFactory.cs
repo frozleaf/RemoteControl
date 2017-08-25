@@ -147,6 +147,9 @@ namespace RemoteControl.Protocals
                 case ePacketType.PACKET_RUN_EXEC_CODE_REQUEST:
                     obj = FromJsonBytes<RequestRunExecCode>(bodyData);
                     break;
+                case ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST:
+                    obj = FromJsonBytes<RequestStartGetScreen>(bodyData);
+                    break;
             }
         }
 

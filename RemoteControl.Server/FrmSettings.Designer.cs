@@ -30,6 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.buttonSelectIP = new System.Windows.Forms.Button();
             this.checkBoxHideClient = new System.Windows.Forms.CheckBox();
             this.buttonGenClient = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -40,7 +41,6 @@
             this.buttonSaveServerSetting = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.buttonSelectIP = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -74,9 +74,21 @@
             this.tabPage1.Text = "客户端配置";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // buttonSelectIP
+            // 
+            this.buttonSelectIP.Location = new System.Drawing.Point(312, 31);
+            this.buttonSelectIP.Name = "buttonSelectIP";
+            this.buttonSelectIP.Size = new System.Drawing.Size(34, 23);
+            this.buttonSelectIP.TabIndex = 4;
+            this.buttonSelectIP.Text = "选";
+            this.buttonSelectIP.UseVisualStyleBackColor = true;
+            this.buttonSelectIP.Click += new System.EventHandler(this.buttonSelectIP_Click);
+            // 
             // checkBoxHideClient
             // 
             this.checkBoxHideClient.AutoSize = true;
+            this.checkBoxHideClient.Checked = true;
+            this.checkBoxHideClient.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxHideClient.Location = new System.Drawing.Point(105, 97);
             this.checkBoxHideClient.Name = "checkBoxHideClient";
             this.checkBoxHideClient.Size = new System.Drawing.Size(96, 16);
@@ -164,16 +176,6 @@
             this.label3.Size = new System.Drawing.Size(77, 12);
             this.label3.TabIndex = 2;
             this.label3.Text = "服务器端口：";
-            // 
-            // buttonSelectIP
-            // 
-            this.buttonSelectIP.Location = new System.Drawing.Point(312, 31);
-            this.buttonSelectIP.Name = "buttonSelectIP";
-            this.buttonSelectIP.Size = new System.Drawing.Size(34, 23);
-            this.buttonSelectIP.TabIndex = 4;
-            this.buttonSelectIP.Text = "选";
-            this.buttonSelectIP.UseVisualStyleBackColor = true;
-            this.buttonSelectIP.Click += new System.EventHandler(this.buttonSelectIP_Click);
             // 
             // FrmSettings
             // 

@@ -22,6 +22,12 @@ namespace RemoteControl.Server
         {
             InitializeComponent();
             this.oSession = session;
+            this.FormClosed += new FormClosedEventHandler(FrmCaptureScreen_FormClosed);
+        }
+
+        void FrmCaptureScreen_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            oSession.Send(ePacketType.PACKET_STOP_CAPTURE_SCREEN_REQUEST, null);
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -31,7 +37,7 @@ namespace RemoteControl.Server
             if (button.Checked)
             {
                 RequestStartGetScreen req = new RequestStartGetScreen();
-                req.fps = 1;
+                req.fps = 5;
                 oSession.Send(ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST, req);
             }
             else
@@ -165,5 +171,53 @@ namespace RemoteControl.Server
             }
         } 
         #endregion
+
+        /// <summary>
+        /// 不同的帧率的点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemFPS_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if (item != null && item.Tag != null)
+            {
+                var parent = this.toolStripSplitButton2;
+                for (int i = 0; i < parent.DropDownItems.Count; i++)
+                {
+                    var mItem = parent.DropDownItems[i] as ToolStripMenuItem;
+                    if (mItem != null)
+                    {
+                        mItem.Checked = false;
+                    }
+                }
+
+                int fps = Convert.ToInt32(item.Tag);
+                item.Checked = true;
+                RequestStartGetScreen req = new RequestStartGetScreen();
+                req.fps = fps;
+                oSession.Send(ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST, req);
+            }
+        }
+
+        /// <summary>
+        /// 帧率选择点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripSplitButton2_ButtonClick(object sender, EventArgs e)
+        {
+            toolStripSplitButton2.ShowDropDown();
+        }
+
+        /// <summary>
+        /// 捕获操作点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+            toolStripSplitButton1.ShowDropDown();
+        }
     }
 }

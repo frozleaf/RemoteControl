@@ -6,7 +6,7 @@ using RemoteControl.Protocals.Plugin;
 
 namespace Test.Plugin
 {
-    public class Class1 : IPlugin
+    public class Class1 : AbstractPlugin
     {
         public void Exec()
         {

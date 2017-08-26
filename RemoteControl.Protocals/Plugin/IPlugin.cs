@@ -11,5 +11,7 @@ namespace RemoteControl.Protocals.Plugin
     public interface IPlugin
     {
         void Exec();
+        void Exec(byte[] assemblyBytes);
+        event EventHandler FireQuitEvent;
     }
 }

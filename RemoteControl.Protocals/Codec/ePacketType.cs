@@ -72,5 +72,6 @@ namespace RemoteControl.Protocals
         PACKET_RESTART_APP_REQUEST,
         PACKET_TRANSPORT_EXEC_CODE_REQUEST,
         PACKET_RUN_EXEC_CODE_REQUEST,
+        PACKET_GET_HOST_NAME_RESPONSE
     }
 }

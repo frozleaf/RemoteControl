@@ -7,6 +7,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing;
 using RemoteControl.Protocals.Request;
+using RemoteControl.Protocals.Response;
 
 namespace RemoteControl.Protocals
 {
@@ -149,6 +150,9 @@ namespace RemoteControl.Protocals
                     break;
                 case ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST:
                     obj = FromJsonBytes<RequestStartGetScreen>(bodyData);
+                    break;
+                case ePacketType.PACKET_GET_HOST_NAME_RESPONSE:
+                    obj = FromJsonBytes<ResponseGetHostName>(bodyData);
                     break;
             }
         }

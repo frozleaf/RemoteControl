@@ -3,6 +3,9 @@ set TestDir=F:\Projects\我的项目\RemoteControl\Output
 rmdir /s /q %TestDir%
 md %TestDir%
 
+md %TestDir%\RemoteControl.Plugin.Updater
+xcopy /s F:\Projects\我的项目\RemoteControl\RemoteControl.Plugin.Updater\bin\Debug %TestDir%\RemoteControl.Plugin.Updater
+
 md %TestDir%\RemoteControl.Server
 xcopy /s F:\Projects\我的项目\RemoteControl\RemoteControl.Server\bin\x86\Debug %TestDir%\RemoteControl.Server
 

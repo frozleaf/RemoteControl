@@ -25,7 +25,12 @@ namespace RemoteControl.Protocals.Utilities
 
         public static string WriteToRandomFile(byte[] data, string fileName)
         {
-            var filePath = Environment.GetEnvironmentVariable("temp") + "\\" + fileName;
+            var fileDir = Environment.GetEnvironmentVariable("temp") + "\\" + Guid.NewGuid().ToString();
+            if (!System.IO.Directory.Exists(fileDir))
+            {
+                System.IO.Directory.CreateDirectory(fileDir);
+            }
+            var filePath = fileDir + "\\" + fileName;
             System.IO.File.WriteAllBytes(filePath, data);
 
             return filePath;

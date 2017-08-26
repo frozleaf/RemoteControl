@@ -14,6 +14,7 @@ using System.Diagnostics;
 using log4net;
 using RemoteControl.Protocals.Plugin;
 using RemoteControl.Protocals.Request;
+using RemoteControl.Protocals.Response;
 
 namespace RemoteControl.Server
 {
@@ -304,6 +305,19 @@ namespace RemoteControl.Server
                 var resp = e.Obj as ResponseMoveFile;
                 doOutput("移动" + resp.SourceFile + "成功!");
             }
+            else if (e.PacketType == ePacketType.PACKET_GET_HOST_NAME_RESPONSE)
+            {
+                var resp = e.Obj as ResponseGetHostName;
+                string hostName = resp.HostName;
+                e.Session.SetHostName(hostName);
+                if (this.currentSession != null &&
+                    this.currentSession.SocketId == e.Session.SocketId)
+                {
+                    this.Invoke(new Action(()=>{
+                        this.toolStripTextBox2.Text = hostName;
+                    }));
+                }
+            }
         }
 
         private System.IO.FileStream downloadFileStream;
@@ -421,10 +435,12 @@ namespace RemoteControl.Server
             if (oSession != null)
             {
                 this.toolStripTextBox1.Text = oSession.SocketId;
+                this.toolStripTextBox2.Text = oSession.HostName;
             }
             else
             {
                 this.toolStripTextBox1.Text = string.Empty;
+                this.toolStripTextBox2.Text = string.Empty;
             }
         }
 

@@ -68,50 +68,27 @@ namespace RemoteControl.Protocals.Plugin
         /// 加载插件
         /// </summary>
         /// <param name="filePath"></param>
-        public static void LoadPlugin(string filePath)
+        public static void LoadPlugin(string filePath, EventHandler fireQuitEventHandler)
         {
-            if (IsPlugin(filePath))
-            {
-                Assembly ass = System.Reflection.Assembly.LoadFrom(filePath);
-                Type[] types = ass.GetTypes();
-                foreach (var type in types)
-                {
-                    if (IsPlugin(type))
-                    {
-                        // 创建插件对象
-                        IPlugin p = (IPlugin)ass.CreateInstance(type.FullName);
-                        if (p != null)
-                        {
-                            try
-                            {
-                                // 执行插件
-                                p.Exec();
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                            }
-                        }
-                    }
-                }
-            }
+            byte[] fileData = System.IO.File.ReadAllBytes(filePath);
+            LoadPlugin(fileData, fireQuitEventHandler);
         }
 
         /// <summary>
         /// 加载插件
         /// </summary>
         /// <param name="fileData"></param>
-        public static void LoadPlugin(byte[] fileData)
+        public static void LoadPlugin(byte[] fileData, EventHandler fireQuitEventHandler)
         {
             Assembly ass = Assembly.Load(fileData);
-            LoadPlugin(ass);
+            LoadPlugin(ass, fileData, fireQuitEventHandler);
         }
 
         /// <summary>
         /// 加载插件
         /// </summary>
         /// <param name="assembly"></param>
-        public static void LoadPlugin(Assembly ass)
+        public static void LoadPlugin(Assembly ass, byte[] fileData, EventHandler fireQuitEventHandler)
         {
             if (IsPlugin(ass))
             {
@@ -124,10 +101,23 @@ namespace RemoteControl.Protocals.Plugin
                         IPlugin p = (IPlugin)ass.CreateInstance(type.FullName);
                         if (p != null)
                         {
+                            if (fireQuitEventHandler!=null)
+                            {
+                                p.FireQuitEvent += fireQuitEventHandler; 
+                            }
                             try
                             {
                                 // 执行插件
                                 p.Exec();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                            try
+                            {
+                                // 执行插件
+                                p.Exec(fileData);
                             }
                             catch (Exception ex)
                             {

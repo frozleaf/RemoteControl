@@ -12,6 +12,7 @@ namespace RemoteControl.Protocals
     {
         public Socket SocketObj { get; private set; }
         public string SocketId { get; private set; }
+        public string HostName { get; private set; }
 
         public SocketSession(string sId, Socket oSocket)
         {
@@ -22,6 +23,15 @@ namespace RemoteControl.Protocals
         public SocketSession(EndPoint sId, Socket oSocket) : this((sId as IPEndPoint).ToString(), oSocket)
         {
             
+        }
+
+        /// <summary>
+        /// 设置主机名
+        /// </summary>
+        /// <param name="hostName"></param>
+        public void SetHostName(string hostName)
+        {
+            this.HostName = hostName;
         }
 
         public void Send(ePacketType packetType, object obj)

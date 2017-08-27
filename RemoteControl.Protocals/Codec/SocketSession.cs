@@ -26,6 +26,24 @@ namespace RemoteControl.Protocals
         }
 
         /// <summary>
+        /// 关闭会话
+        /// </summary>
+        public void Close()
+        {
+            try
+            {
+                if (SocketObj != null)
+                {
+                    SocketObj.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 设置主机名
         /// </summary>
         /// <param name="hostName"></param>

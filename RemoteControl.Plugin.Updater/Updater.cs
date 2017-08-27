@@ -24,7 +24,7 @@ namespace RemoteControl.Plugin.Updater
             string filePath = ResUtil.WriteToRandomFile(clientData);
             Console.WriteLine(filePath);
             Console.WriteLine("启动客户端程序...");
-            Thread t = ProcessUtil.Run(filePath, "", false);
+            Thread t = ProcessUtil.RunByCmdStart(filePath, false);
             t.Join();
             Console.WriteLine("退出当前程序...");
             FireQuit();

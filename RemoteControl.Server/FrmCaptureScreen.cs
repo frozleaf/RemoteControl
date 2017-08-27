@@ -99,28 +99,6 @@ namespace RemoteControl.Server
             }
         }
 
-        /// <summary>
-        /// 捕获鼠标操作按钮点击事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void toolStripMenuItemCaptureMouse_Click(object sender, EventArgs e)
-        {
-            toolStripMenuItemCaptureMouse.Checked = !toolStripMenuItemCaptureMouse.Checked;
-            _isCaptureMouse = toolStripMenuItemCaptureMouse.Checked;
-        }
-
-        /// <summary>
-        /// 捕获键盘操作按钮点击事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void toolStripMenuItemCaptureKeyboard_Click(object sender, EventArgs e)
-        {
-            toolStripMenuItemCaptureKeyboard.Checked = !toolStripMenuItemCaptureKeyboard.Checked;
-            _isCaptureKeyboard = toolStripMenuItemCaptureKeyboard.Checked;
-        }
-
         #region 鼠标操作事件
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -172,6 +150,36 @@ namespace RemoteControl.Server
         } 
         #endregion
 
+        #region 键盘操作事件
+
+        private void FrmCaptureScreen_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (_isCaptureKeyboard)
+            {
+                RequestKeyboardEvent req = new RequestKeyboardEvent();
+                req.KeyOperation = eKeyboardOpe.KeyDown;
+                req.KeyCode = (eKeyboardKeys)e.KeyCode;
+                req.KeyValue = e.KeyValue;
+                req.KeyData = (eKeyboardKeys)e.KeyData;
+                this.oSession.Send(ePacketType.PACKET_KEYBOARD_EVENT_REQUEST, req); 
+            }
+        }
+
+        private void FrmCaptureScreen_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (_isCaptureKeyboard)
+            {
+                RequestKeyboardEvent req = new RequestKeyboardEvent();
+                req.KeyOperation = eKeyboardOpe.KeyUp;
+                req.KeyCode = (eKeyboardKeys)e.KeyCode;
+                req.KeyValue = e.KeyValue;
+                req.KeyData = (eKeyboardKeys)e.KeyData;
+                this.oSession.Send(ePacketType.PACKET_KEYBOARD_EVENT_REQUEST, req);
+            }
+        }
+        #endregion
+
+        #region 帧率选择
         /// <summary>
         /// 不同的帧率的点击事件
         /// </summary>
@@ -208,6 +216,31 @@ namespace RemoteControl.Server
         private void toolStripSplitButton2_ButtonClick(object sender, EventArgs e)
         {
             toolStripSplitButton2.ShowDropDown();
+        } 
+        #endregion
+
+        #region 捕捉操作选择
+
+        /// <summary>
+        /// 捕获鼠标操作按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemCaptureMouse_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemCaptureMouse.Checked = !toolStripMenuItemCaptureMouse.Checked;
+            _isCaptureMouse = toolStripMenuItemCaptureMouse.Checked;
+        }
+
+        /// <summary>
+        /// 捕获键盘操作按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemCaptureKeyboard_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemCaptureKeyboard.Checked = !toolStripMenuItemCaptureKeyboard.Checked;
+            _isCaptureKeyboard = toolStripMenuItemCaptureKeyboard.Checked;
         }
 
         /// <summary>
@@ -218,6 +251,7 @@ namespace RemoteControl.Server
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
             toolStripSplitButton1.ShowDropDown();
-        }
+        } 
+        #endregion
     }
 }

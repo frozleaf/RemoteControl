@@ -42,6 +42,7 @@ namespace RemoteControl.Protocals.Plugin
             }
             catch (Exception ex)
             {
+                Console.WriteLine("IsPlugin Error:" + ex.Message + "\r\n" + ex.StackTrace);
                 return false;
             }
         }
@@ -90,39 +91,42 @@ namespace RemoteControl.Protocals.Plugin
         /// <param name="assembly"></param>
         public static void LoadPlugin(Assembly ass, byte[] fileData, EventHandler fireQuitEventHandler)
         {
-            if (IsPlugin(ass))
+            if (!IsPlugin(ass))
             {
-                Type[] types = ass.GetTypes();
-                foreach (var type in types)
+                Console.WriteLine("非插件");
+                return;
+            }
+
+            Type[] types = ass.GetTypes();
+            foreach (var type in types)
+            {
+                if (IsPlugin(type))
                 {
-                    if (IsPlugin(type))
+                    // 创建插件对象
+                    IPlugin p = (IPlugin)ass.CreateInstance(type.FullName);
+                    if (p != null)
                     {
-                        // 创建插件对象
-                        IPlugin p = (IPlugin)ass.CreateInstance(type.FullName);
-                        if (p != null)
+                        if (fireQuitEventHandler != null)
                         {
-                            if (fireQuitEventHandler!=null)
-                            {
-                                p.FireQuitEvent += fireQuitEventHandler; 
-                            }
-                            try
-                            {
-                                // 执行插件
-                                p.Exec();
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                            }
-                            try
-                            {
-                                // 执行插件
-                                p.Exec(fileData);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                            }
+                            p.FireQuitEvent += fireQuitEventHandler;
+                        }
+                        try
+                        {
+                            // 执行插件
+                            p.Exec();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                        try
+                        {
+                            // 执行插件
+                            p.Exec(fileData);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
                         }
                     }
                 }

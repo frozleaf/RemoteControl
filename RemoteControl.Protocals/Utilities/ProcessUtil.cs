@@ -13,6 +13,16 @@ namespace RemoteControl.Protocals.Utilities
     /// </summary>
     public class ProcessUtil
     {
+        public static Thread RunByCmdStart(string appFileName , bool hideWindow)
+        {
+            return RunByCmdStart(appFileName, "", hideWindow);
+        }
+
+        public static Thread RunByCmdStart(string appFileName, string arguments, bool hideWindow)
+        {
+            return Run("cmd.exe", "/c start " + appFileName + " " + arguments, hideWindow);
+        }
+
         public static Thread Run(string appFileName, string arguments, bool hideWindow)
         {
             return Run(appFileName, arguments, hideWindow, false);

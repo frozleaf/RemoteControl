@@ -38,17 +38,17 @@ namespace RemoteControl.Server
 			}
         }
 
-        private void StartServerAccept(Socket oServer)
+        private void StartServerAccept(Socket server)
         {
             Thread serverAcceptThread = new Thread(() =>
             {
-                string sessionId = oServer.LocalEndPoint.ToString();
-                Socket oCient = null;
+                string sessionId = server.LocalEndPoint.ToString();
+                Socket client = null;
                 while (true)
                 {
                     try
                     {
-                        oCient = oServer.Accept();
+                        client = server.Accept();
                     }
                     catch (Exception ex)
                     {
@@ -59,29 +59,29 @@ namespace RemoteControl.Server
 
                         continue;
                     }
-                    DoClientConnected(oCient);
-                    StartClientRecv(oCient);
+                    // 创建会话对象
+                    SocketSession session = new SocketSession(client.RemoteEndPoint, client);
+                    DoClientConnected(session);
+                    StartClientRecv(session);
                 }
             });
-            serverAcceptThread.Name = serverAcceptThread + "->" + oServer.LocalEndPoint.ToString();
+            serverAcceptThread.Name = serverAcceptThread + "->" + server.LocalEndPoint.ToString();
             serverAcceptThread.IsBackground = true;
             serverAcceptThread.Start();
         }
 
-        private void DoClientConnected(Socket oCient)
+        private void DoClientConnected(SocketSession session)
         {
-            _oClientDic.Add(oCient.RemoteEndPoint.ToString(), oCient);
+            _oClientDic.Add(session.SocketId, session.SocketObj);
             if (ClientConnected != null)
             {
-                ClientConnectedEventArgs args = new ClientConnectedEventArgs(new SocketSession(oCient.RemoteEndPoint, oCient));
+                ClientConnectedEventArgs args = new ClientConnectedEventArgs(session);
                 ClientConnected(this, args);
             } 
         }
 
-        private void StartClientRecv(Socket oClient)
+        private void StartClientRecv(SocketSession session)
         {
-            string sessionId = oClient.RemoteEndPoint.ToString();
-            SocketSession session = new SocketSession(sessionId, oClient);
             new Thread(() =>
             {
                 byte[] buffer = new byte[1024];
@@ -91,7 +91,7 @@ namespace RemoteControl.Server
                 {
                     try
                     {
-                        recvSize = oClient.Receive(buffer);
+                        recvSize = session.SocketObj.Receive(buffer);
                         if (recvSize < 1)
                             continue;
 
@@ -112,9 +112,8 @@ namespace RemoteControl.Server
                     }
                     catch (Exception ex)
                     {
-                        //MsgBox.ShowInfo(ex.Message+"\r\n"+ex.StackTrace);
                         Console.WriteLine(ex.Message);
-                        DoClientDisConnected(sessionId, oClient);
+                        DoClientDisConnected(session);
                         break;
                     }
                 }
@@ -136,15 +135,15 @@ namespace RemoteControl.Server
             }
         }
 
-        private void DoClientDisConnected(string sessionId, Socket oClient)
+        private void DoClientDisConnected(SocketSession session)
         {
             lock (ClentDicLocker)
             {
-                _oClientDic.Remove(sessionId); 
+                _oClientDic.Remove(session.SocketId); 
             }
             if (ClientDisconnected != null)
             {
-                ClientConnectedEventArgs args = new ClientConnectedEventArgs(new SocketSession(sessionId, oClient));
+                ClientConnectedEventArgs args = new ClientConnectedEventArgs(session);
                 ClientDisconnected(this, args);
             } 
         }

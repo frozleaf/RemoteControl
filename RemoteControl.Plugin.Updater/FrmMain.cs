@@ -12,16 +12,23 @@ namespace RemoteControl.Plugin.Updater
 {
     public partial class FrmMain : Form
     {
-        public FrmMain()
+        public FrmMain(string[] args)
         {
             InitializeComponent();
+            if (args.Length == 1)
+            {
+                string clientFilePath = args[0];
+                GenerateUpdater(clientFilePath);
+                MessageBox.Show("生成成功！");
+                Environment.Exit(0);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Multiselect = false;
-            dialog.Filter = "*.exe|*.exe|所有文件(*.*)|*.*";
+            dialog.Filter = "*.exe|*.exe|*.dat|*.dat|所有文件(*.*)|*.*";
             dialog.FilterIndex = 1;
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {

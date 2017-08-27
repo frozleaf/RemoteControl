@@ -118,7 +118,11 @@ namespace RemoteControl.Server
                 doOutput(rb.Message);
                 return;
             }
-            if (e.PacketType == ePacketType.PACKET_GET_DRIVES_RESPONSE)
+            if (e.PacketType == ePacketType.PACKET_CLIENT_CLOSE_RESPONSE)
+            {
+                e.Session.Close();
+            }
+            else if (e.PacketType == ePacketType.PACKET_GET_DRIVES_RESPONSE)
             {
                 ResponseGetDrives resp = e.Obj as ResponseGetDrives;
                 this.UpdateUI(() =>
@@ -397,6 +401,9 @@ namespace RemoteControl.Server
                     this.InternetTreeNode.Nodes.RemoveAt(i);
                 }
             }
+            this.currentSession = null;
+            this.toolStripTextBox1.Clear();
+            this.toolStripTextBox2.Clear();
             this.clientCount--;
             refreshClientCountShow();
             doOutput(oClient.SocketId.ToString() + " 下线了！");
@@ -453,8 +460,7 @@ namespace RemoteControl.Server
                 this.currentSession = client;
                 if (client != null)
                 {
-                    byte[] packet = PacketFactory.EncodeOject(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
-                    client.SocketObj.Send(packet);
+                    client.Send(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
                 }
             }
         }
@@ -1442,6 +1448,11 @@ namespace RemoteControl.Server
         /// <param name="e"></param>
         private void buttonExeCode_Click(object sender, EventArgs e)
         {
+            if (this.currentSession == null)
+            {
+                MsgBox.ShowInfo("请先选择客户端！");
+                return;
+            }
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "请选择代码插件";
             ofd.Filter = "代码插件(*.dll)|*.dll|所有文件(*.*)|*.*";

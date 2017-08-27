@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaptureVideoClient.cs" />
+    <Compile Include="KeyboardOpeUtil.cs" />
     <Compile Include="MouseOpeUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -141,7 +141,7 @@
             // toolStripMenuItemFPS1
             // 
             this.toolStripMenuItemFPS1.Name = "toolStripMenuItemFPS1";
-            this.toolStripMenuItemFPS1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemFPS1.Size = new System.Drawing.Size(90, 22);
             this.toolStripMenuItemFPS1.Tag = "1";
             this.toolStripMenuItemFPS1.Text = "1";
             this.toolStripMenuItemFPS1.Click += new System.EventHandler(this.toolStripMenuItemFPS_Click);
@@ -151,7 +151,7 @@
             this.toolStripMenuItemFPS5.Checked = true;
             this.toolStripMenuItemFPS5.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemFPS5.Name = "toolStripMenuItemFPS5";
-            this.toolStripMenuItemFPS5.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemFPS5.Size = new System.Drawing.Size(90, 22);
             this.toolStripMenuItemFPS5.Tag = "5";
             this.toolStripMenuItemFPS5.Text = "5";
             this.toolStripMenuItemFPS5.Click += new System.EventHandler(this.toolStripMenuItemFPS_Click);
@@ -159,7 +159,7 @@
             // toolStripMenuItemFPS10
             // 
             this.toolStripMenuItemFPS10.Name = "toolStripMenuItemFPS10";
-            this.toolStripMenuItemFPS10.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemFPS10.Size = new System.Drawing.Size(90, 22);
             this.toolStripMenuItemFPS10.Tag = "10";
             this.toolStripMenuItemFPS10.Text = "10";
             this.toolStripMenuItemFPS10.Click += new System.EventHandler(this.toolStripMenuItemFPS_Click);
@@ -167,7 +167,7 @@
             // toolStripMenuItemFPS15
             // 
             this.toolStripMenuItemFPS15.Name = "toolStripMenuItemFPS15";
-            this.toolStripMenuItemFPS15.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemFPS15.Size = new System.Drawing.Size(90, 22);
             this.toolStripMenuItemFPS15.Tag = "15";
             this.toolStripMenuItemFPS15.Text = "15";
             this.toolStripMenuItemFPS15.Click += new System.EventHandler(this.toolStripMenuItemFPS_Click);
@@ -175,7 +175,7 @@
             // toolStripMenuItemFPS60
             // 
             this.toolStripMenuItemFPS60.Name = "toolStripMenuItemFPS60";
-            this.toolStripMenuItemFPS60.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemFPS60.Size = new System.Drawing.Size(90, 22);
             this.toolStripMenuItemFPS60.Tag = "60";
             this.toolStripMenuItemFPS60.Text = "60";
             this.toolStripMenuItemFPS60.Click += new System.EventHandler(this.toolStripMenuItemFPS_Click);
@@ -209,9 +209,12 @@
             this.ClientSize = new System.Drawing.Size(693, 474);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.toolStrip1);
+            this.KeyPreview = true;
             this.Name = "FrmCaptureScreen";
             this.Text = "抓取屏幕";
             this.Load += new System.EventHandler(this.FrmCaptureScreen_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmCaptureScreen_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmCaptureScreen_KeyUp);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

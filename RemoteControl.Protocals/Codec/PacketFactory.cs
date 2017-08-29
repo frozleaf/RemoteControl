@@ -154,6 +154,9 @@ namespace RemoteControl.Protocals
                 case ePacketType.PACKET_GET_HOST_NAME_RESPONSE:
                     obj = FromJsonBytes<ResponseGetHostName>(bodyData);
                     break;
+                case ePacketType.PACKET_OPEN_FILE_REQUEST:
+                    obj = FromJsonBytes<RequestOpenFile>(bodyData);
+                    break;
             }
         }
 

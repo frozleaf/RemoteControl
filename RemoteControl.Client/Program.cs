@@ -27,7 +27,7 @@ namespace RemoteControl.Client
         private static SocketSession oServerSession;
         private static bool isTestMode = true;
         //private static string ServerIP = "10.55.200.187";
-        private static string ServerIP = "192.168.0.108";
+        private static string ServerIP = "192.168.0.105";
         private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
@@ -639,6 +639,11 @@ namespace RemoteControl.Client
                 DoOutput(string.Format("keyCode:{0},keyValue:{1},keyOperation:{2}",
                     req.KeyCode, req.KeyValue, req.KeyOperation));
                 KeyboardOpeUtil.KeyOpe(req.KeyCode, req.KeyOperation);
+            }
+            else if (packetType == ePacketType.PACKET_OPEN_FILE_REQUEST)
+            {
+                var req = obj as RequestOpenFile;
+                ProcessUtil.Run(req.FilePath, "", req.IsHide, true);
             }
         }
 

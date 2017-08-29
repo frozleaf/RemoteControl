@@ -1087,24 +1087,6 @@ namespace RemoteControl.Server
             PostRequstWithCurrentSession(ePacketType.PACKET_STOP_PLAY_MUSIC_REQUEST, null);
         }
 
-        private void 复制全路径ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.listView1.SelectedItems.Count < 1)
-                return;
-
-            ListViewItem selectedItem = this.listView1.SelectedItems[0];
-            ListViewItemFileOrDirTag tag = selectedItem.Tag as ListViewItemFileOrDirTag;
-
-            try
-            {
-                Clipboard.SetText(tag.Path);
-            }
-            catch (Exception ex)
-            {
-                MsgBox.ShowInfo("复制到剪切板失败！");
-            }
-        }
-
         private void buttonRemoteDownloadWebUrl_Click(object sender, EventArgs e)
         {
             if (!IsCurrentSessionValid())
@@ -1122,17 +1104,6 @@ namespace RemoteControl.Server
                 PostRequstWithCurrentSession(ePacketType.PACKET_DOWNLOAD_WEBFILE_REQUEST, req);
             };
             frm.Show();
-        }
-
-        private void 刷新ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.listView1.Tag == null)
-                return;
-
-            RequestGetSubFilesOrDirs req = new RequestGetSubFilesOrDirs();
-            req.parentDir = this.listView1.Tag.ToString();
-
-            PostRequstWithCurrentSession(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, req);
         }
 
         private string GetFileSizeDesc(long size)
@@ -1159,6 +1130,83 @@ namespace RemoteControl.Server
             return result;
         }
 
+        #region 文件管理右键菜单
+
+        private void 刷新ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.listView1.Tag == null)
+                return;
+
+            RequestGetSubFilesOrDirs req = new RequestGetSubFilesOrDirs();
+            req.parentDir = this.listView1.Tag.ToString();
+
+            PostRequstWithCurrentSession(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, req);
+        }
+
+        private void 复制全路径ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count < 1)
+                return;
+
+            ListViewItem selectedItem = this.listView1.SelectedItems[0];
+            ListViewItemFileOrDirTag tag = selectedItem.Tag as ListViewItemFileOrDirTag;
+
+            try
+            {
+                Clipboard.SetText(tag.Path);
+            }
+            catch (Exception ex)
+            {
+                MsgBox.ShowInfo("复制到剪切板失败！");
+            }
+        }
+
+        private void 打开文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(this.listView1.SelectedItems.Count<1)
+                return;
+
+            string path;
+            if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
+            {
+                MsgBox.ShowInfo("请选择一个文件！");
+                return;
+            }
+
+            if (this.currentSession != null)
+            {
+                RequestOpenFile req = new RequestOpenFile();
+                req.FilePath = path;
+                req.IsHide = false;
+                this.currentSession.Send(ePacketType.PACKET_OPEN_FILE_REQUEST, req);
+            }
+        }
+
+        private void 打开文件隐藏模式ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count < 1)
+                return;
+
+            string path;
+            if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
+            {
+                MsgBox.ShowInfo("请选择一个文件！");
+                return;
+            }
+
+            if (this.currentSession != null)
+            {
+                RequestOpenFile req = new RequestOpenFile();
+                req.FilePath = path;
+                req.IsHide = true;
+                this.currentSession.Send(ePacketType.PACKET_OPEN_FILE_REQUEST, req);
+            }
+        }
+
+        #endregion
+
+        #region 进程管理右键菜单
+
         private void 刷新ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             this.PostRequstWithCurrentSession(ePacketType.PACKET_GET_PROCESSES_REQUEST, null);
@@ -1181,7 +1229,9 @@ namespace RemoteControl.Server
             }
 
             this.PostRequstWithCurrentSession(ePacketType.PACKET_KILL_PROCESS_REQUEST, req);
-        }
+        } 
+
+        #endregion
 
         private void toolStripButtonCaptureVideo_Click(object sender, EventArgs e)
         {

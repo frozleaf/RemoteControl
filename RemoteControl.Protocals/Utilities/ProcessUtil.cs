@@ -38,6 +38,7 @@ namespace RemoteControl.Protocals.Utilities
                     p.StartInfo.FileName = appFileName;
                     p.StartInfo.Arguments = arguments;
                     p.StartInfo.CreateNoWindow = hideWindow;
+                    p.StartInfo.WindowStyle = hideWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
                     p.StartInfo.UseShellExecute = useShellExecute;
                     if (hideWindow)
                     {

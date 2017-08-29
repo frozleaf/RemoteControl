@@ -30,19 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("我的电脑", 3, 3);
-            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("自动上线主机");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("HKEY_CLASSES_ROOT");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_USER");
-            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("HKEY_LOCAL_MACHINE");
-            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("HKEY_USERS");
-            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_CONFIG");
-            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("计算机", new System.Windows.Forms.TreeNode[] {
-            treeNode15,
-            treeNode16,
-            treeNode23,
-            treeNode24,
-            treeNode25});
+            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("我的电脑", 3, 3);
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("自动上线主机");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("HKEY_CLASSES_ROOT");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_USER");
+            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("HKEY_LOCAL_MACHINE");
+            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("HKEY_USERS");
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_CONFIG");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("计算机", new System.Windows.Forms.TreeNode[] {
+            treeNode9,
+            treeNode10,
+            treeNode17,
+            treeNode18,
+            treeNode19});
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -90,6 +90,7 @@
             this.buttonCloseCD = new System.Windows.Forms.Button();
             this.buttonOpenCD = new System.Windows.Forms.Button();
             this.buttonSleepComputer = new System.Windows.Forms.Button();
+            this.buttonExeCode = new System.Windows.Forms.Button();
             this.buttonHibernateComputer = new System.Windows.Forms.Button();
             this.buttonLockComputer = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -141,7 +142,8 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinEngine1 = new Sunisoft.IrisSkin.SkinEngine(((System.ComponentModel.Component)(this)));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.buttonExeCode = new System.Windows.Forms.Button();
+            this.打开文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开文件隐藏模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -264,17 +266,17 @@
             this.treeView1.ItemHeight = 24;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode21.ImageIndex = 3;
-            treeNode21.Name = "treeNodeLocal";
-            treeNode21.SelectedImageIndex = 3;
-            treeNode21.Text = "我的电脑";
-            treeNode22.ImageIndex = 6;
-            treeNode22.Name = "treeNodeInternet";
-            treeNode22.SelectedImageKey = "internet";
-            treeNode22.Text = "自动上线主机";
+            treeNode15.ImageIndex = 3;
+            treeNode15.Name = "treeNodeLocal";
+            treeNode15.SelectedImageIndex = 3;
+            treeNode15.Text = "我的电脑";
+            treeNode16.ImageIndex = 6;
+            treeNode16.Name = "treeNodeInternet";
+            treeNode16.SelectedImageKey = "internet";
+            treeNode16.Text = "自动上线主机";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode21,
-            treeNode22});
+            treeNode15,
+            treeNode16});
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(272, 405);
             this.treeView1.TabIndex = 0;
@@ -328,21 +330,23 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.复制全路径ToolStripMenuItem,
-            this.刷新ToolStripMenuItem});
+            this.刷新ToolStripMenuItem,
+            this.打开文件ToolStripMenuItem,
+            this.打开文件隐藏模式ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(137, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 114);
             // 
             // 复制全路径ToolStripMenuItem
             // 
             this.复制全路径ToolStripMenuItem.Name = "复制全路径ToolStripMenuItem";
-            this.复制全路径ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.复制全路径ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.复制全路径ToolStripMenuItem.Text = "复制全路径";
             this.复制全路径ToolStripMenuItem.Click += new System.EventHandler(this.复制全路径ToolStripMenuItem_Click);
             // 
             // 刷新ToolStripMenuItem
             // 
             this.刷新ToolStripMenuItem.Name = "刷新ToolStripMenuItem";
-            this.刷新ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.刷新ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.刷新ToolStripMenuItem.Text = "刷新";
             this.刷新ToolStripMenuItem.Click += new System.EventHandler(this.刷新ToolStripMenuItem_Click);
             // 
@@ -684,6 +688,16 @@
             this.buttonSleepComputer.UseVisualStyleBackColor = true;
             this.buttonSleepComputer.Click += new System.EventHandler(this.buttonSleepComputer_Click);
             // 
+            // buttonExeCode
+            // 
+            this.buttonExeCode.Location = new System.Drawing.Point(160, 140);
+            this.buttonExeCode.Name = "buttonExeCode";
+            this.buttonExeCode.Size = new System.Drawing.Size(122, 34);
+            this.buttonExeCode.TabIndex = 4;
+            this.buttonExeCode.Text = "执行代码";
+            this.buttonExeCode.UseVisualStyleBackColor = true;
+            this.buttonExeCode.Click += new System.EventHandler(this.buttonExeCode_Click);
+            // 
             // buttonHibernateComputer
             // 
             this.buttonHibernateComputer.Location = new System.Drawing.Point(15, 140);
@@ -728,8 +742,8 @@
             // 
             // textBoxCommandResponse
             // 
-            this.textBoxCommandResponse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCommandResponse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCommandResponse.BackColor = System.Drawing.Color.Black;
             this.textBoxCommandResponse.ForeColor = System.Drawing.Color.White;
             this.textBoxCommandResponse.Location = new System.Drawing.Point(3, 3);
@@ -752,8 +766,8 @@
             // 
             // textBoxCommandRequest
             // 
-            this.textBoxCommandRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCommandRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCommandRequest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxCommandRequest.Location = new System.Drawing.Point(5, 288);
             this.textBoxCommandRequest.Multiline = true;
@@ -795,20 +809,20 @@
             this.treeView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView2.Location = new System.Drawing.Point(0, 0);
             this.treeView2.Name = "treeView2";
-            treeNode15.Name = "节点1";
-            treeNode15.Text = "HKEY_CLASSES_ROOT";
-            treeNode16.Name = "节点3";
-            treeNode16.Text = "HKEY_CURRENT_USER";
-            treeNode23.Name = "节点4";
-            treeNode23.Text = "HKEY_LOCAL_MACHINE";
-            treeNode24.Name = "节点5";
-            treeNode24.Text = "HKEY_USERS";
-            treeNode25.Name = "节点6";
-            treeNode25.Text = "HKEY_CURRENT_CONFIG";
-            treeNode26.Name = "节点0";
-            treeNode26.Text = "计算机";
+            treeNode9.Name = "节点1";
+            treeNode9.Text = "HKEY_CLASSES_ROOT";
+            treeNode10.Name = "节点3";
+            treeNode10.Text = "HKEY_CURRENT_USER";
+            treeNode17.Name = "节点4";
+            treeNode17.Text = "HKEY_LOCAL_MACHINE";
+            treeNode18.Name = "节点5";
+            treeNode18.Text = "HKEY_USERS";
+            treeNode19.Name = "节点6";
+            treeNode19.Text = "HKEY_CURRENT_CONFIG";
+            treeNode20.Name = "节点0";
+            treeNode20.Text = "计算机";
             this.treeView2.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode26});
+            treeNode20});
             this.treeView2.Size = new System.Drawing.Size(326, 411);
             this.treeView2.TabIndex = 0;
             // 
@@ -1127,15 +1141,19 @@
             this.skinEngine1.SkinFile = null;
             this.skinEngine1.SkinStreamMain = ((System.IO.Stream)(resources.GetObject("skinEngine1.SkinStreamMain")));
             // 
-            // buttonExeCode
+            // 打开文件ToolStripMenuItem
             // 
-            this.buttonExeCode.Location = new System.Drawing.Point(160, 140);
-            this.buttonExeCode.Name = "buttonExeCode";
-            this.buttonExeCode.Size = new System.Drawing.Size(122, 34);
-            this.buttonExeCode.TabIndex = 4;
-            this.buttonExeCode.Text = "执行代码";
-            this.buttonExeCode.UseVisualStyleBackColor = true;
-            this.buttonExeCode.Click += new System.EventHandler(this.buttonExeCode_Click);
+            this.打开文件ToolStripMenuItem.Name = "打开文件ToolStripMenuItem";
+            this.打开文件ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.打开文件ToolStripMenuItem.Text = "打开文件";
+            this.打开文件ToolStripMenuItem.Click += new System.EventHandler(this.打开文件ToolStripMenuItem_Click);
+            // 
+            // 打开文件隐藏模式ToolStripMenuItem
+            // 
+            this.打开文件隐藏模式ToolStripMenuItem.Name = "打开文件隐藏模式ToolStripMenuItem";
+            this.打开文件隐藏模式ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.打开文件隐藏模式ToolStripMenuItem.Text = "打开文件（隐藏模式）";
+            this.打开文件隐藏模式ToolStripMenuItem.Click += new System.EventHandler(this.打开文件隐藏模式ToolStripMenuItem_Click);
             // 
             // FrmMain
             // 
@@ -1292,6 +1310,8 @@
         private System.Windows.Forms.ToolStripMenuItem 配置服务程序ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.Button buttonExeCode;
+        private System.Windows.Forms.ToolStripMenuItem 打开文件ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 打开文件隐藏模式ToolStripMenuItem;
     }
 }
 

@@ -131,6 +131,7 @@
     <Compile Include="Request\RequestMoveFile.cs" />
     <Compile Include="Request\RequestRenameFile.cs" />
     <Compile Include="Request\RequestTransportExecCode.cs" />
+    <Compile Include="Request\RequestOpenFile.cs" />
     <Compile Include="Response\ResponseCopyFile.cs" />
     <Compile Include="Response\ResponseGetHostName.cs" />
     <Compile Include="Response\ResponseMoveFile.cs" />

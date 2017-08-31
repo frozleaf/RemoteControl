@@ -157,6 +157,12 @@ namespace RemoteControl.Protocals
                 case ePacketType.PACKET_OPEN_FILE_REQUEST:
                     obj = FromJsonBytes<RequestOpenFile>(bodyData);
                     break;
+                case ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST:
+                    obj = FromJsonBytes<RequestViewRegistryKey>(bodyData);
+                    break;
+                case ePacketType.PACKET_VIEW_REGISTRY_KEY_RESPONSE:
+                    obj = FromJsonBytes<ResponseViewRegistryKey>(bodyData);
+                    break;
             }
         }
 

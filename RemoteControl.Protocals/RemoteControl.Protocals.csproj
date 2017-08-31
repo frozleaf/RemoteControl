@@ -100,6 +100,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="eRegistryHive.cs" />
+    <Compile Include="eRegistryValueKind.cs" />
     <Compile Include="Generate\ClientParameters.cs" />
     <Compile Include="Generate\ClientParametersManager.cs" />
     <Compile Include="Codec\ePacketType.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="Request\RequestRenameFile.cs" />
     <Compile Include="Request\RequestTransportExecCode.cs" />
     <Compile Include="Request\RequestOpenFile.cs" />
+    <Compile Include="Request\RequestViewRegistryKey.cs" />
     <Compile Include="Response\ResponseCopyFile.cs" />
     <Compile Include="Response\ResponseGetHostName.cs" />
     <Compile Include="Response\ResponseMoveFile.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Codec\SocketSession.cs" />
     <Compile Include="Response\ResponseStartUpload.cs" />
     <Compile Include="Response\ResponseStopUpload.cs" />
+    <Compile Include="Response\ResponseViewRegistryKey.cs" />
     <Compile Include="Utilities\ProcessUtil.cs" />
     <Compile Include="Utilities\ResUtil.cs" />
     <Compile Include="Utilities\Utils.cs" />

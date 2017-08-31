@@ -30,19 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("我的电脑", 3, 3);
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("自动上线主机");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("HKEY_CLASSES_ROOT");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_USER");
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("HKEY_LOCAL_MACHINE");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("HKEY_USERS");
-            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_CONFIG");
-            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("计算机", new System.Windows.Forms.TreeNode[] {
-            treeNode9,
-            treeNode10,
-            treeNode17,
-            treeNode18,
-            treeNode19});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("我的电脑", 3, 3);
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("自动上线主机");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("HKEY_CLASSES_ROOT");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_USER");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("HKEY_LOCAL_MACHINE");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("HKEY_USERS");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("HKEY_CURRENT_CONFIG");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("计算机", 1, 1, new System.Windows.Forms.TreeNode[] {
+            treeNode3,
+            treeNode4,
+            treeNode5,
+            treeNode6,
+            treeNode7});
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -58,6 +58,8 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.复制全路径ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.刷新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开文件隐藏模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
@@ -101,6 +103,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.treeView2 = new System.Windows.Forms.TreeView();
+            this.imgListRegistryKey = new System.Windows.Forms.ImageList(this.components);
             this.listView2 = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -135,15 +138,12 @@
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.设置GToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.配置服务程序ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.工具TToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.退出XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助HToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinEngine1 = new Sunisoft.IrisSkin.SkinEngine(((System.ComponentModel.Component)(this)));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.打开文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.打开文件隐藏模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imgListRegistryValue = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -266,17 +266,17 @@
             this.treeView1.ItemHeight = 24;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode15.ImageIndex = 3;
-            treeNode15.Name = "treeNodeLocal";
-            treeNode15.SelectedImageIndex = 3;
-            treeNode15.Text = "我的电脑";
-            treeNode16.ImageIndex = 6;
-            treeNode16.Name = "treeNodeInternet";
-            treeNode16.SelectedImageKey = "internet";
-            treeNode16.Text = "自动上线主机";
+            treeNode1.ImageIndex = 3;
+            treeNode1.Name = "treeNodeLocal";
+            treeNode1.SelectedImageIndex = 3;
+            treeNode1.Text = "我的电脑";
+            treeNode2.ImageIndex = 6;
+            treeNode2.Name = "treeNodeInternet";
+            treeNode2.SelectedImageKey = "internet";
+            treeNode2.Text = "自动上线主机";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode15,
-            treeNode16});
+            treeNode1,
+            treeNode2});
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(272, 405);
             this.treeView1.TabIndex = 0;
@@ -334,7 +334,7 @@
             this.打开文件ToolStripMenuItem,
             this.打开文件隐藏模式ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 92);
             // 
             // 复制全路径ToolStripMenuItem
             // 
@@ -349,6 +349,20 @@
             this.刷新ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.刷新ToolStripMenuItem.Text = "刷新";
             this.刷新ToolStripMenuItem.Click += new System.EventHandler(this.刷新ToolStripMenuItem_Click);
+            // 
+            // 打开文件ToolStripMenuItem
+            // 
+            this.打开文件ToolStripMenuItem.Name = "打开文件ToolStripMenuItem";
+            this.打开文件ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.打开文件ToolStripMenuItem.Text = "打开文件";
+            this.打开文件ToolStripMenuItem.Click += new System.EventHandler(this.打开文件ToolStripMenuItem_Click);
+            // 
+            // 打开文件隐藏模式ToolStripMenuItem
+            // 
+            this.打开文件隐藏模式ToolStripMenuItem.Name = "打开文件隐藏模式ToolStripMenuItem";
+            this.打开文件隐藏模式ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.打开文件隐藏模式ToolStripMenuItem.Text = "打开文件（隐藏模式）";
+            this.打开文件隐藏模式ToolStripMenuItem.Click += new System.EventHandler(this.打开文件隐藏模式ToolStripMenuItem_Click);
             // 
             // toolStrip3
             // 
@@ -807,24 +821,42 @@
             // treeView2
             // 
             this.treeView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView2.ImageIndex = 0;
+            this.treeView2.ImageList = this.imgListRegistryKey;
             this.treeView2.Location = new System.Drawing.Point(0, 0);
             this.treeView2.Name = "treeView2";
-            treeNode9.Name = "节点1";
-            treeNode9.Text = "HKEY_CLASSES_ROOT";
-            treeNode10.Name = "节点3";
-            treeNode10.Text = "HKEY_CURRENT_USER";
-            treeNode17.Name = "节点4";
-            treeNode17.Text = "HKEY_LOCAL_MACHINE";
-            treeNode18.Name = "节点5";
-            treeNode18.Text = "HKEY_USERS";
-            treeNode19.Name = "节点6";
-            treeNode19.Text = "HKEY_CURRENT_CONFIG";
-            treeNode20.Name = "节点0";
-            treeNode20.Text = "计算机";
+            treeNode3.Name = "节点1";
+            treeNode3.Tag = "ClassesRoot";
+            treeNode3.Text = "HKEY_CLASSES_ROOT";
+            treeNode4.Name = "节点3";
+            treeNode4.Tag = "CurrentUser ";
+            treeNode4.Text = "HKEY_CURRENT_USER";
+            treeNode5.Name = "节点4";
+            treeNode5.Tag = "LocalMachine ";
+            treeNode5.Text = "HKEY_LOCAL_MACHINE";
+            treeNode6.Name = "节点5";
+            treeNode6.Tag = "Users ";
+            treeNode6.Text = "HKEY_USERS";
+            treeNode7.Name = "节点6";
+            treeNode7.Tag = "CurrentConfig ";
+            treeNode7.Text = "HKEY_CURRENT_CONFIG";
+            treeNode8.ImageIndex = 1;
+            treeNode8.Name = "节点0";
+            treeNode8.SelectedImageIndex = 1;
+            treeNode8.Text = "计算机";
             this.treeView2.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode20});
+            treeNode8});
+            this.treeView2.SelectedImageIndex = 0;
             this.treeView2.Size = new System.Drawing.Size(326, 411);
             this.treeView2.TabIndex = 0;
+            this.treeView2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView2_MouseDoubleClick);
+            // 
+            // imgListRegistryKey
+            // 
+            this.imgListRegistryKey.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgListRegistryKey.ImageStream")));
+            this.imgListRegistryKey.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgListRegistryKey.Images.SetKeyName(0, "key.png");
+            this.imgListRegistryKey.Images.SetKeyName(1, "computer.png");
             // 
             // listView2
             // 
@@ -836,6 +868,7 @@
             this.listView2.Location = new System.Drawing.Point(0, 0);
             this.listView2.Name = "listView2";
             this.listView2.Size = new System.Drawing.Size(649, 411);
+            this.listView2.SmallImageList = this.imgListRegistryValue;
             this.listView2.TabIndex = 0;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
@@ -843,14 +876,17 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "名称";
+            this.columnHeader4.Width = 87;
             // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "类型";
+            this.columnHeader5.Width = 77;
             // 
             // columnHeader6
             // 
             this.columnHeader6.Text = "数据";
+            this.columnHeader6.Width = 91;
             // 
             // tabPage4
             // 
@@ -1084,8 +1120,6 @@
             this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(241)))), ((int)(((byte)(241)))));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件FToolStripMenuItem,
-            this.设置GToolStripMenuItem,
-            this.工具TToolStripMenuItem,
             this.帮助HToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -1095,30 +1129,18 @@
             // 
             // 文件FToolStripMenuItem
             // 
+            this.文件FToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.退出XToolStripMenuItem});
             this.文件FToolStripMenuItem.Name = "文件FToolStripMenuItem";
             this.文件FToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.文件FToolStripMenuItem.Text = "文件(&F)";
             // 
-            // 设置GToolStripMenuItem
+            // 退出XToolStripMenuItem
             // 
-            this.设置GToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.配置服务程序ToolStripMenuItem});
-            this.设置GToolStripMenuItem.Name = "设置GToolStripMenuItem";
-            this.设置GToolStripMenuItem.Size = new System.Drawing.Size(61, 21);
-            this.设置GToolStripMenuItem.Text = "设置(&G)";
-            // 
-            // 配置服务程序ToolStripMenuItem
-            // 
-            this.配置服务程序ToolStripMenuItem.Name = "配置服务程序ToolStripMenuItem";
-            this.配置服务程序ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.配置服务程序ToolStripMenuItem.Text = "配置服务程序";
-            this.配置服务程序ToolStripMenuItem.Click += new System.EventHandler(this.配置服务程序ToolStripMenuItem_Click);
-            // 
-            // 工具TToolStripMenuItem
-            // 
-            this.工具TToolStripMenuItem.Name = "工具TToolStripMenuItem";
-            this.工具TToolStripMenuItem.Size = new System.Drawing.Size(59, 21);
-            this.工具TToolStripMenuItem.Text = "工具(&T)";
+            this.退出XToolStripMenuItem.Name = "退出XToolStripMenuItem";
+            this.退出XToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.退出XToolStripMenuItem.Text = "退出(&X)";
+            this.退出XToolStripMenuItem.Click += new System.EventHandler(this.退出XToolStripMenuItem_Click);
             // 
             // 帮助HToolStripMenuItem
             // 
@@ -1141,19 +1163,16 @@
             this.skinEngine1.SkinFile = null;
             this.skinEngine1.SkinStreamMain = ((System.IO.Stream)(resources.GetObject("skinEngine1.SkinStreamMain")));
             // 
-            // 打开文件ToolStripMenuItem
+            // imgListRegistryValue
             // 
-            this.打开文件ToolStripMenuItem.Name = "打开文件ToolStripMenuItem";
-            this.打开文件ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.打开文件ToolStripMenuItem.Text = "打开文件";
-            this.打开文件ToolStripMenuItem.Click += new System.EventHandler(this.打开文件ToolStripMenuItem_Click);
-            // 
-            // 打开文件隐藏模式ToolStripMenuItem
-            // 
-            this.打开文件隐藏模式ToolStripMenuItem.Name = "打开文件隐藏模式ToolStripMenuItem";
-            this.打开文件隐藏模式ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
-            this.打开文件隐藏模式ToolStripMenuItem.Text = "打开文件（隐藏模式）";
-            this.打开文件隐藏模式ToolStripMenuItem.Click += new System.EventHandler(this.打开文件隐藏模式ToolStripMenuItem_Click);
+            this.imgListRegistryValue.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgListRegistryValue.ImageStream")));
+            this.imgListRegistryValue.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgListRegistryValue.Images.SetKeyName(0, "REG_BINARY");
+            this.imgListRegistryValue.Images.SetKeyName(1, "REG_DWORD");
+            this.imgListRegistryValue.Images.SetKeyName(2, "REG_EXPAND_SZ");
+            this.imgListRegistryValue.Images.SetKeyName(3, "RED_MULTI_SZ");
+            this.imgListRegistryValue.Images.SetKeyName(4, "RED_QWORD");
+            this.imgListRegistryValue.Images.SetKeyName(5, "REG_SZ");
             // 
             // FrmMain
             // 
@@ -1214,8 +1233,6 @@
         private Sunisoft.IrisSkin.SkinEngine skinEngine1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 文件FToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 设置GToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 工具TToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 帮助HToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
@@ -1307,11 +1324,13 @@
         private System.Windows.Forms.ToolStripMenuItem 刷新ToolStripMenuItem1;
         private System.Windows.Forms.ColumnHeader columnHeader16;
         private System.Windows.Forms.ToolStripMenuItem 结束进程ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 配置服务程序ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.Button buttonExeCode;
         private System.Windows.Forms.ToolStripMenuItem 打开文件ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 打开文件隐藏模式ToolStripMenuItem;
+        private System.Windows.Forms.ImageList imgListRegistryKey;
+        private System.Windows.Forms.ImageList imgListRegistryValue;
+        private System.Windows.Forms.ToolStripMenuItem 退出XToolStripMenuItem;
     }
 }
 

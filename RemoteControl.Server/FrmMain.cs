@@ -322,6 +322,52 @@ namespace RemoteControl.Server
                     }));
                 }
             }
+            else if (e.PacketType == ePacketType.PACKET_VIEW_REGISTRY_KEY_RESPONSE)
+            {
+                var resp = e.Obj as ResponseViewRegistryKey;
+                this.Invoke(new Action(() =>
+                {
+                    try
+                    {
+                        this.listView2.Clear();
+                        if (resp.KeyNames != null)
+                        {
+                            TreeNode curNode = this.treeView2.SelectedNode;
+                            curNode.Nodes.Clear();
+                            for (int i = 0; i < resp.KeyNames.Length; i++)
+                            {
+                                string keyName = resp.KeyNames[i];
+                                TreeNode node = new TreeNode(keyName, 0, 0);
+                                string newKeyPath = resp.KeyPath + @"\" + keyName;
+                                newKeyPath = newKeyPath.TrimStart('\\');
+                                node.Tag = new RequestViewRegistryKey(){
+                                    KeyRoot = resp.KeyRoot,
+                                    KeyPath = newKeyPath
+                                };
+                                curNode.Nodes.Add(node);
+                            }
+                            curNode.Expand();
+                        }
+                        if (resp.ValueNames != null)
+                        {
+                            int valueNameLen = resp.ValueNames.Length;
+                            for (int i = 0; i < valueNameLen; i++)
+                            {
+                                ListViewItem item = new ListViewItem(new string[]{
+                                    resp.ValueNames[i],
+                                    resp.ValueKinds[i].ToString(),
+                                    resp.Values[i].ToString()
+                                },resp.ValueKinds[i].ToString());
+                                this.listView2.Items.Add(item);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("", ex);
+                    }
+                }));
+            }
         }
 
         private System.IO.FileStream downloadFileStream;
@@ -1540,6 +1586,45 @@ namespace RemoteControl.Server
                     this.currentSession.Send(ePacketType.PACKET_RUN_EXEC_CODE_REQUEST, new RequestRunExecCode() { ID=codeId });
                     MsgBox.ShowInfo("代码插件已经提交到客户端，等待执行！");
                 }) { IsBackground = true }.Start();
+            }
+        }
+
+        private void 退出XToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        /// <summary>
+        /// 双击注册表项
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void treeView2_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.currentSession == null)
+                return;
+
+            TreeViewHitTestInfo ti = this.treeView2.HitTest(e.Location);
+            if (ti != null && ti.Node != null)
+            {
+                RequestViewRegistryKey req = new RequestViewRegistryKey();
+                if (ti.Node.Level == 0)
+                {
+                    return;
+                }
+                else if (ti.Node.Level == 1)
+                {
+                    // 根节点
+                    eRegistryHive keyRoot = (eRegistryHive)Enum.Parse(typeof(eRegistryHive), ti.Node.Tag as string);
+                    req.KeyRoot = keyRoot;
+                    req.KeyPath = null;
+                }
+                else
+                {
+                    // 非根节点
+                    req = ti.Node.Tag as RequestViewRegistryKey;
+                }
+                this.currentSession.Send(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, req);
             }
         }
     }

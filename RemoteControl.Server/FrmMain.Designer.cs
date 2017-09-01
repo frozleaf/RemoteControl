@@ -108,6 +108,8 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imgListRegistryValue = new System.Windows.Forms.ImageList(this.components);
+            this.textBoxRegistryPath = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.listView3 = new System.Windows.Forms.ListView();
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -143,7 +145,6 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinEngine1 = new Sunisoft.IrisSkin.SkinEngine(((System.ComponentModel.Component)(this)));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.imgListRegistryValue = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -795,6 +796,7 @@
             // 
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(241)))), ((int)(((byte)(241)))));
             this.tabPage3.Controls.Add(this.splitContainer3);
+            this.tabPage3.Controls.Add(this.textBoxRegistryPath);
             this.tabPage3.Location = new System.Drawing.Point(4, 29);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(979, 411);
@@ -814,7 +816,7 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.listView2);
-            this.splitContainer3.Size = new System.Drawing.Size(979, 411);
+            this.splitContainer3.Size = new System.Drawing.Size(979, 390);
             this.splitContainer3.SplitterDistance = 326;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -823,6 +825,7 @@
             this.treeView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView2.ImageIndex = 0;
             this.treeView2.ImageList = this.imgListRegistryKey;
+            this.treeView2.ItemHeight = 20;
             this.treeView2.Location = new System.Drawing.Point(0, 0);
             this.treeView2.Name = "treeView2";
             treeNode3.Name = "节点1";
@@ -847,7 +850,7 @@
             this.treeView2.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode8});
             this.treeView2.SelectedImageIndex = 0;
-            this.treeView2.Size = new System.Drawing.Size(326, 411);
+            this.treeView2.Size = new System.Drawing.Size(326, 390);
             this.treeView2.TabIndex = 0;
             this.treeView2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView2_MouseDoubleClick);
             // 
@@ -867,7 +870,7 @@
             this.listView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView2.Location = new System.Drawing.Point(0, 0);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(649, 411);
+            this.listView2.Size = new System.Drawing.Size(649, 390);
             this.listView2.SmallImageList = this.imgListRegistryValue;
             this.listView2.TabIndex = 0;
             this.listView2.UseCompatibleStateImageBehavior = false;
@@ -876,17 +879,38 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "名称";
-            this.columnHeader4.Width = 87;
+            this.columnHeader4.Width = 145;
             // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "类型";
-            this.columnHeader5.Width = 77;
+            this.columnHeader5.Width = 115;
             // 
             // columnHeader6
             // 
             this.columnHeader6.Text = "数据";
-            this.columnHeader6.Width = 91;
+            this.columnHeader6.Width = 298;
+            // 
+            // imgListRegistryValue
+            // 
+            this.imgListRegistryValue.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgListRegistryValue.ImageStream")));
+            this.imgListRegistryValue.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgListRegistryValue.Images.SetKeyName(0, "REG_BINARY");
+            this.imgListRegistryValue.Images.SetKeyName(1, "REG_DWORD");
+            this.imgListRegistryValue.Images.SetKeyName(2, "REG_EXPAND_SZ");
+            this.imgListRegistryValue.Images.SetKeyName(3, "RED_MULTI_SZ");
+            this.imgListRegistryValue.Images.SetKeyName(4, "RED_QWORD");
+            this.imgListRegistryValue.Images.SetKeyName(5, "REG_SZ");
+            this.imgListRegistryValue.Images.SetKeyName(6, "REG_NONE");
+            // 
+            // textBoxRegistryPath
+            // 
+            this.textBoxRegistryPath.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textBoxRegistryPath.Location = new System.Drawing.Point(0, 390);
+            this.textBoxRegistryPath.Name = "textBoxRegistryPath";
+            this.textBoxRegistryPath.ReadOnly = true;
+            this.textBoxRegistryPath.Size = new System.Drawing.Size(979, 21);
+            this.textBoxRegistryPath.TabIndex = 1;
             // 
             // tabPage4
             // 
@@ -1163,17 +1187,6 @@
             this.skinEngine1.SkinFile = null;
             this.skinEngine1.SkinStreamMain = ((System.IO.Stream)(resources.GetObject("skinEngine1.SkinStreamMain")));
             // 
-            // imgListRegistryValue
-            // 
-            this.imgListRegistryValue.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgListRegistryValue.ImageStream")));
-            this.imgListRegistryValue.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgListRegistryValue.Images.SetKeyName(0, "REG_BINARY");
-            this.imgListRegistryValue.Images.SetKeyName(1, "REG_DWORD");
-            this.imgListRegistryValue.Images.SetKeyName(2, "REG_EXPAND_SZ");
-            this.imgListRegistryValue.Images.SetKeyName(3, "RED_MULTI_SZ");
-            this.imgListRegistryValue.Images.SetKeyName(4, "RED_QWORD");
-            this.imgListRegistryValue.Images.SetKeyName(5, "REG_SZ");
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1209,6 +1222,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
@@ -1331,6 +1345,7 @@
         private System.Windows.Forms.ImageList imgListRegistryKey;
         private System.Windows.Forms.ImageList imgListRegistryValue;
         private System.Windows.Forms.ToolStripMenuItem 退出XToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBoxRegistryPath;
     }
 }
 

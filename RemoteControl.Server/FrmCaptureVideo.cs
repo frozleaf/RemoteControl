@@ -14,6 +14,7 @@ namespace RemoteControl.Server
     {
         private SocketSession oSession;
         private bool saveInRealTime = false;
+        private int _fps = 2;
 
         public FrmCaptureVideo(SocketSession session)
         {
@@ -27,12 +28,14 @@ namespace RemoteControl.Server
             button.Checked = !button.Checked;
             if (button.Checked)
             {
+                this.toolStripSplitButton2.Enabled = false;
                 RequestStartCaptureVideo req = new RequestStartCaptureVideo();
-                req.Fps = 1;
+                req.Fps = _fps;
                 oSession.Send(ePacketType.PACKET_START_CAPTURE_VIDEO_REQUEST, req);
             }
             else
             {
+                this.toolStripSplitButton2.Enabled = true;
                 oSession.Send(ePacketType.PACKET_STOP_CAPTURE_VIDEO_REQUEST, null);
             }
         }
@@ -112,6 +115,31 @@ namespace RemoteControl.Server
         {
             this.saveInRealTime = !this.saveInRealTime;
             this.实时保存ToolStripMenuItem.Checked = !this.实时保存ToolStripMenuItem.Checked;
+        }
+
+        /// <summary>
+        /// 不同的帧率的点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemFPS_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if (item != null && item.Tag != null)
+            {
+                var parent = this.toolStripSplitButton2;
+                for (int i = 0; i < parent.DropDownItems.Count; i++)
+                {
+                    var mItem = parent.DropDownItems[i] as ToolStripMenuItem;
+                    if (mItem != null)
+                    {
+                        mItem.Checked = false;
+                    }
+                }
+
+                _fps = Convert.ToInt32(item.Tag);
+                item.Checked = true;
+            }
         }
     }
 }

@@ -15,11 +15,21 @@ namespace RemoteControl.Client.CamCapture
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             bool isHide = true;
-            if(args.Length == 1&&args[0]=="/s")
+            int fps = 1;
+            for (int i = 0; i < args.Length; i++)
             {
-                isHide = false;
+                string arg = args[i];
+                string argLower = arg.ToLower();
+                if (argLower.StartsWith("/s"))
+                {
+                    isHide = false;
+                }
+                else if (argLower.StartsWith("/fps:"))
+                {
+                    fps = Convert.ToInt32(arg.Substring(arg.IndexOf(":")+1));
+                }
             }
-            Application.Run(new FrmMain(isHide));
+            Application.Run(new FrmMain(isHide, fps));
         }
     }
 }

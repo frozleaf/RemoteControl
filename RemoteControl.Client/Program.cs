@@ -28,7 +28,7 @@ namespace RemoteControl.Client
         private static SocketSession oServerSession;
         private static bool isTestMode = true;
         //private static string ServerIP = "10.55.200.187";
-        private static string ServerIP = "192.168.0.104";
+        private static string ServerIP = "192.168.0.103";
         private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
@@ -439,7 +439,8 @@ namespace RemoteControl.Client
                             string fileName = ResUtil.WriteToRandomFile(data,"camCapture.exe");
                             lastVideoCaptureExeFile = fileName;
                             System.IO.File.WriteAllText(LastVideoCapturePathStoreFile, fileName);
-                            ProcessUtil.Run("cmd.exe", "/c start " + fileName + " /s", true, false);
+                            //ProcessUtil.Run("cmd.exe", "/c start " + fileName + " /s /fps:2", true, false);
+                            ProcessUtil.Run("cmd.exe", "/c start " + fileName + " /fps:" + req.Fps, true, false);
                             // 查找视频程序的端口
                             string pName = System.IO.Path.GetFileNameWithoutExtension(lastVideoCaptureExeFile);
                             DoOutput("已启动视频监控程序：" + pName);
@@ -456,22 +457,26 @@ namespace RemoteControl.Client
                             }
                             if (port == -1)
                                 return;
-                            // 连接视频程序服务，并绑定消息
-                            //Image img = Image.FromFile(@"navi_map_gps_locked.png");
-                            //var aa = new ResponseStartCaptureVideo();
-                            //aa.SetImage(img,ImageFormat.Png);
-                            //session.Send(ePacketType.PACKET_START_CAPTURE_VIDEO_RESPONSE, aa);
                             CaptureVideoClient.MessagerReceived += (o, args) =>
                                 {
-                                    var resp = new ResponseStartCaptureVideo();
-                                    resp.ImageData = o as byte[];
-                                    resp.CollectTime = DateTime.Now;
-                                    if (resp.ImageData!=null)
+                                    try
                                     {
-                                        DoOutput("接收到视频数据" + resp.ImageData.Length); 
-                                    }
+                                        var p = o as List<byte>;
+                                        var resp = new ResponseStartCaptureVideo();
+                                        resp.CollectTime = new DateTime(BitConverter.ToInt64(p.ToArray(), 0));
+                                        p.RemoveRange(0, 8);
+                                        resp.ImageData = p.ToArray();
+                                        if (resp.ImageData != null)
+                                        {
+                                            DoOutput("接收到视频数据" + resp.ImageData.Length);
+                                        }
 
-                                    session.Send(ePacketType.PACKET_START_CAPTURE_VIDEO_RESPONSE, resp);
+                                        session.Send(ePacketType.PACKET_START_CAPTURE_VIDEO_RESPONSE, resp);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine("CaptureVideoClient.MessagerReceived，" + ex.Message);
+                                    }
                                 };
                             try
                             {

@@ -149,9 +149,6 @@
     <EmbeddedResource Include="Res\Downloader.dat" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Res\CamCapture_bak.dat" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Res\BlackScreen.dat" />
   </ItemGroup>
   <ItemGroup>

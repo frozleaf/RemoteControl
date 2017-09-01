@@ -43,6 +43,7 @@ namespace RemoteControl.Server
             initServerEvents();
             UIUtil.BindTextBoxCtrlA(this.textBoxCommandRequest);
             UIUtil.BindTextBoxCtrlA(this.textBoxCommandResponse);
+            //this.skinEngine1.Active = false;
         }
 
         private void initSkinMenus()
@@ -325,11 +326,11 @@ namespace RemoteControl.Server
             else if (e.PacketType == ePacketType.PACKET_VIEW_REGISTRY_KEY_RESPONSE)
             {
                 var resp = e.Obj as ResponseViewRegistryKey;
-                this.Invoke(new Action(() =>
+                this.UpdateUI(() =>
                 {
                     try
                     {
-                        this.listView2.Clear();
+                        this.listView2.Items.Clear();
                         if (resp.KeyNames != null)
                         {
                             TreeNode curNode = this.treeView2.SelectedNode;
@@ -366,7 +367,7 @@ namespace RemoteControl.Server
                     {
                         Logger.Error("", ex);
                     }
-                }));
+                });
             }
         }
 
@@ -1624,6 +1625,7 @@ namespace RemoteControl.Server
                     // 非根节点
                     req = ti.Node.Tag as RequestViewRegistryKey;
                 }
+                this.textBoxRegistryPath.Text = "计算机\\" + req.KeyRoot + "\\" + req.KeyPath;
                 this.currentSession.Send(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, req);
             }
         }

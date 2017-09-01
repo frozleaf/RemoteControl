@@ -100,8 +100,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="eRegistryHive.cs" />
-    <Compile Include="eRegistryValueKind.cs" />
+    <Compile Include="RegistryTool\eRegistryHive.cs" />
+    <Compile Include="RegistryTool\eRegistryValueKind.cs" />
     <Compile Include="Generate\ClientParameters.cs" />
     <Compile Include="Generate\ClientParametersManager.cs" />
     <Compile Include="Codec\ePacketType.cs" />

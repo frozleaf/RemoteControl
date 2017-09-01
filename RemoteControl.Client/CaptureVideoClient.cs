@@ -40,7 +40,7 @@ namespace RemoteControl.Client
                                 int len = BitConverter.ToInt32(data.ToArray(), 0) + 4;
                                 if (data.Count >= len)
                                 {
-                                    DoMessagerReceived(data.SplitBytes(4, len-4));
+                                    DoMessagerReceived(data.SplitBytes(4, len-4).ToList());
                                     data.RemoveRange(0, len);
                                 }
                                 else
@@ -72,7 +72,7 @@ namespace RemoteControl.Client
             }
         }
 
-        private static void DoMessagerReceived(byte[] data)
+        private static void DoMessagerReceived(List<byte> data)
         {
             if (MessagerReceived != null)
             {

@@ -8,10 +8,11 @@ namespace RemoteControl.Server
 {
     class Settings
     {
+        public int ServerPort;
+        public string SkinPath;
+
         private const string SettingFileName = "config.json";
         public static Settings CurrentSettings = new Settings();
-
-        public int ServerPort = 9001;
 
         static Settings()
         {

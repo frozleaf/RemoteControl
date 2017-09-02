@@ -28,7 +28,7 @@ namespace RemoteControl.Client
         private static SocketSession oServerSession;
         private static bool isTestMode = true;
         //private static string ServerIP = "10.55.200.187";
-        private static string ServerIP = "192.168.0.103";
+        private static string ServerIP = "192.168.0.106";
         private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();

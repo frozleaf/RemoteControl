@@ -60,7 +60,10 @@ namespace RemoteControl.Server
                     {
                         System.IO.Directory.CreateDirectory("CaptureVideo");
                     }
-                    string filename = string.Format("\\CaptureVideo\\{0}_{1}.bmp", oSession.SocketId, resp.CollectTime.ToString("yyyyMMddHHmmssfff"));
+                    string dir = Application.StartupPath + "\\CaptureVideo\\" + oSession.SocketId.Replace(":","-") + "\\";
+                    if (!System.IO.Directory.Exists(dir))
+                        System.IO.Directory.CreateDirectory(dir);
+                    string filename = dir + resp.CollectTime.ToString("yyyyMMddHHmmssfff") + ".jpg";
                     System.IO.File.WriteAllBytes(filename, resp.ImageData);
                 }
                 catch (Exception ex)
@@ -87,21 +90,26 @@ namespace RemoteControl.Server
         {
             if (this.pictureBox1.Image != null)
             {
-                Image img = (Image)this.pictureBox1.Image.Clone();
                 string fileName = "";
-                SaveFileDialog dialog = new SaveFileDialog();
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                // 直接从picturebox中调用save()的话，容易出现“GDI+ 发生一般性错误”。
+                // 此处用bitmap对象中专一次
+                using (Bitmap bmp = new Bitmap(this.pictureBox1.Image))
                 {
-                    fileName = dialog.FileName;
-                    try
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Filter = "*.bmp|*.bmp|*.jpg;*.jpeg|*.jpg;*.jpeg|*.*|*.*";
+                    dialog.FilterIndex = 1;
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        img.Save(fileName);
-                        img.Dispose();
-                        MsgBox.ShowInfo("保存成功!");
-                    }
-                    catch (Exception ex)
-                    {
-                        MsgBox.ShowInfo("保存失败，" + ex.Message);
+                        fileName = dialog.FileName;
+                        try
+                        {
+                            bmp.Save(fileName);
+                            MsgBox.ShowInfo("保存成功!");
+                        }
+                        catch (Exception ex)
+                        {
+                            MsgBox.ShowInfo("保存失败，" + ex.Message);
+                        }
                     }
                 }
             }

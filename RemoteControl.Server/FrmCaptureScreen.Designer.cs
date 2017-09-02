@@ -212,6 +212,7 @@
             this.KeyPreview = true;
             this.Name = "FrmCaptureScreen";
             this.Text = "抓取屏幕";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmCaptureScreen_FormClosing);
             this.Load += new System.EventHandler(this.FrmCaptureScreen_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmCaptureScreen_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FrmCaptureScreen_KeyUp);

@@ -27,7 +27,8 @@ namespace RemoteControl.Server
         private SocketSession currentSession = null;
         private Dictionary<string, Action<ResponseStartGetScreen>> sessionScreenHandlers = new Dictionary<string, Action<ResponseStartGetScreen>>();
         private Dictionary<string, Action<ResponseStartCaptureVideo>> sessionVideoHandlers = new Dictionary<string, Action<ResponseStartCaptureVideo>>();
-        private SendCommandHotKey sendCommandHotKey = SendCommandHotKey.Enter; 
+        private SendCommandHotKey sendCommandHotKey = SendCommandHotKey.Enter;
+        private ToolStripMenuItem menuSkins = null;
 
         public FrmMain()
         {
@@ -43,7 +44,7 @@ namespace RemoteControl.Server
             initServerEvents();
             UIUtil.BindTextBoxCtrlA(this.textBoxCommandRequest);
             UIUtil.BindTextBoxCtrlA(this.textBoxCommandResponse);
-            //this.skinEngine1.Active = false;
+            actChangeSkin(Settings.CurrentSettings.SkinPath);
         }
 
         private void initSkinMenus()
@@ -51,7 +52,7 @@ namespace RemoteControl.Server
             RSCApplication.lstSkins = RSCApplication.GetAllSkinFiles();
             if (RSCApplication.lstSkins.Count > 0)
             {
-                ToolStripMenuItem menuSkins = new ToolStripMenuItem("皮肤(&S)");
+                menuSkins = new ToolStripMenuItem("皮肤(&S)");
                 int iSkinCount = RSCApplication.lstSkins.Count;
                 for (int i = 0; i < iSkinCount; i++)
                 {
@@ -458,7 +459,24 @@ namespace RemoteControl.Server
 
         private void actChangeSkin(string sSkinFile)
         {
+            //this.skiActive = false;
             this.skinEngine1.SkinFile = sSkinFile;
+            Settings.CurrentSettings.SkinPath = sSkinFile;
+            if (menuSkins != null)
+            {
+                for (int j = 0; j < menuSkins.DropDownItems.Count; j++)
+                {
+                    var item = menuSkins.DropDownItems[j] as ToolStripMenuItem;
+                    if (menuSkins.DropDownItems[j].Tag.ToString() == Settings.CurrentSettings.SkinPath)
+                    {
+                        item.Checked = true;
+                    }
+                    else
+                    {
+                        item.Checked = false;
+                    }
+                }
+            }
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)

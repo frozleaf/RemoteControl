@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using RemoteControl.Protocals;
 using log4net;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace RemoteControl.Server
 {
@@ -75,21 +77,30 @@ namespace RemoteControl.Server
         {
             if (this.pictureBox1.Image != null)
             {
-                Image img = (Image)this.pictureBox1.Image.Clone();
                 string fileName = "";
-                SaveFileDialog dialog = new SaveFileDialog();
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                // 直接从picturebox中调用save()的话，容易出现“GDI+ 发生一般性错误”。
+                // 此处用bitmap对象中专一次
+                using (Bitmap bmp = new Bitmap(this.pictureBox1.Image))
                 {
-                    fileName = dialog.FileName;
-                    try
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Filter = "*.bmp|*.bmp|*.jpg;*.jpeg|*.jpg;*.jpeg|*.*|*.*";
+                    dialog.FilterIndex = 1;
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        img.Save(fileName);
-                        img.Dispose();
-                        MsgBox.ShowInfo("保存成功!");
-                    }
-                    catch (Exception ex)
-                    {
-                        MsgBox.ShowInfo("保存失败，" + ex.Message);
+                        fileName = dialog.FileName;
+                        try
+                        {
+                            using (var ms = new MemoryStream())
+                            {
+                                bmp.Save(ms, ImageFormat.Jpeg);
+                                System.IO.File.WriteAllBytes(fileName, ms.ToArray());
+                            }
+                            MsgBox.ShowInfo("保存成功!");
+                        }
+                        catch (Exception ex)
+                        {
+                            MsgBox.ShowInfo("保存失败，" + ex.Message);
+                        }
                     }
                 }
             }
@@ -252,6 +263,20 @@ namespace RemoteControl.Server
         {
             toolStripSplitButton1.ShowDropDown();
         } 
+        #endregion
+
+        #region 窗体关闭前事件
+
+        /// <summary>
+        /// 窗体关闭前事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmCaptureScreen_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            oSession.Send(ePacketType.PACKET_STOP_CAPTURE_SCREEN_REQUEST, null);
+        } 
+
         #endregion
     }
 }

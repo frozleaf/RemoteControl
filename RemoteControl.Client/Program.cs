@@ -28,7 +28,7 @@ namespace RemoteControl.Client
         private static SocketSession oServerSession;
         private static bool isTestMode = true;
         //private static string ServerIP = "10.55.200.187";
-        private static string ServerIP = "192.168.0.106";
+        private static string ServerIP = "192.168.1.136";
         private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
@@ -59,6 +59,7 @@ namespace RemoteControl.Client
         static void InitHandlers()
         {
             handlers.Add(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, new RequestViewRegistryKeyHandler());
+            handlers.Add(ePacketType.PACKET_ADD_AUTORUN_REQUEST, new RequestAddAutoRunHandler());
         }
 
         static void ReadParameters()
@@ -659,6 +660,10 @@ namespace RemoteControl.Client
                 ProcessUtil.Run(req.FilePath, "", req.IsHide, true);
             }
             else if (packetType == ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST)
+            {
+                handlers[packetType].Handle(session, obj);
+            }
+            else if (packetType == ePacketType.PACKET_ADD_AUTORUN_REQUEST)
             {
                 handlers[packetType].Handle(session, obj);
             }

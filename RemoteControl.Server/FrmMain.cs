@@ -370,6 +370,11 @@ namespace RemoteControl.Server
                     }
                 });
             }
+            else if (e.PacketType == ePacketType.PACKET_ADD_AUTORUN_RESPONSE)
+            {
+                var resp = e.Obj as ResponseAddAutoRun;
+                doOutput(resp.Message);
+            }
         }
 
         private System.IO.FileStream downloadFileStream;
@@ -1550,6 +1555,10 @@ namespace RemoteControl.Server
                     cms.Items.Add("重启客户端程序", null, (o, s) =>
                     {
                         client.Send(ePacketType.PACKET_RESTART_APP_REQUEST, null);
+                    });
+                    cms.Items.Add("添加开启自启", null, (o, s) =>
+                    {
+                        client.Send(ePacketType.PACKET_ADD_AUTORUN_REQUEST, new RequestAddAutoRun());
                     });
                     cms.Show(this.treeView1, e.Location);
                 }

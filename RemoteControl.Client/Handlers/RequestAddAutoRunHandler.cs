@@ -22,7 +22,9 @@ namespace RemoteControl.Client
                 RegistryKey rootKey = RegistryKey.OpenBaseKey(
                                                     RegistryHive.CurrentUser,
                                                     Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-                RegistryKey runKey = rootKey.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+                
+                // 注意：调用OpenSubKey函数时，将第二参数设备true，才可以修改value值
+                RegistryKey runKey = rootKey.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
                 bool runExists = runKey.GetValueNames().ToList().Contains("rc");
                 if (runExists)
                 {

@@ -60,11 +60,15 @@ namespace RemoteControl.Server
                 byte[] fileBytes = null;
                 if (System.IO.File.Exists("RemoteControl.Client.dat"))
                 {
+                    // 读取本地文件
                     fileBytes = System.IO.File.ReadAllBytes("RemoteControl.Client.dat");
                 }
                 else
                 {
-                    fileBytes = ResUtil.GetResFileData("RemoteControl.Client.dat"); 
+                    MsgBox.ShowInfo("RemoteControl.Client.dat文件丢失！");
+                    return;
+                    // 读取资源文件
+                    //fileBytes = ResUtil.GetResFileData("RemoteControl.Client.dat"); 
                 }
                 ClientParametersManager.WriteClientStyle(fileBytes,
                     this.checkBoxHideClient.Checked ? ClientParametersManager.ClientStyle.Hidden : ClientParametersManager.ClientStyle.Normal);

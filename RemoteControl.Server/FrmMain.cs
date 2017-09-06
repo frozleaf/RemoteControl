@@ -120,11 +120,17 @@ namespace RemoteControl.Server
                 doOutput(rb.Message);
                 return;
             }
+
             if (e.PacketType == ePacketType.PACKET_CLIENT_CLOSE_RESPONSE)
             {
                 e.Session.Close();
             }
-            else if (e.PacketType == ePacketType.PACKET_GET_DRIVES_RESPONSE)
+
+            // 过滤非当前会话
+            if (this.currentSession == null || e.Session.SocketId != this.currentSession.SocketId)
+                return;
+
+            if (e.PacketType == ePacketType.PACKET_GET_DRIVES_RESPONSE)
             {
                 ResponseGetDrives resp = e.Obj as ResponseGetDrives;
                 this.UpdateUI(() =>

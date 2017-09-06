@@ -1,6 +1,6 @@
 @echo off
-set OutputDir=E:\Projects\C#\RemoteControl\Output
-set ProjDir=E:\Projects\C#\RemoteControl
+set OutputDir=F:\Projects\我的项目\RemoteControl\Output
+set ProjDir=F:\Projects\我的项目\RemoteControl
 rmdir /s /q %OutputDir%
 md %OutputDir%
 md %OutputDir%\RemoteControl.Client
@@ -8,8 +8,8 @@ md %OutputDir%\RemoteControl.Server
 md %OutputDir%\RemoteControl.Plugin.Updater
 
 xcopy /s %ProjDir%\RemoteControl.Plugin.Updater\bin\Debug %OutputDir%\RemoteControl.Plugin.Updater
-xcopy /s %ProjDir%\RemoteControl.Server\bin\x86\Debug %OutputDir%\RemoteControl.Server
-xcopy /s %ProjDir%\RemoteControl.Client\bin\x86\Debug %OutputDir%\RemoteControl.Client
+xcopy /s %ProjDir%\RemoteControl.Server\bin\Debug %OutputDir%\RemoteControl.Server
+xcopy /s %ProjDir%\RemoteControl.Client\bin\Debug %OutputDir%\RemoteControl.Client
 
 %OutputDir%\RemoteControl.Client\combineDlls.bat
 copy /y %OutputDir%\RemoteControl.Client\RemoteControl.Client.dat %OutputDir%\RemoteControl.Server\RemoteControl.Client.dat

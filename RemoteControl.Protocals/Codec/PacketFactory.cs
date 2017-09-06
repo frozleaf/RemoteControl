@@ -169,6 +169,12 @@ namespace RemoteControl.Protocals
                 case ePacketType.PACKET_ADD_AUTORUN_RESPONSE:
                     obj = FromJsonBytes<ResponseAddAutoRun>(bodyData);
                     break;
+                case ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST:
+                    obj = FromJsonBytes<RequestOpeRegistryValueName>(bodyData);
+                    break;
+                case ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_RESPONSE:
+                    obj = FromJsonBytes<ResponseOpeRegistryValueName>(bodyData);
+                    break;
             }
         }
 

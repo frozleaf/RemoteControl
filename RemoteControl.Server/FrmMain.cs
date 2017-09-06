@@ -125,6 +125,20 @@ namespace RemoteControl.Server
             {
                 e.Session.Close();
             }
+            else if (e.PacketType == ePacketType.PACKET_GET_HOST_NAME_RESPONSE)
+            {
+                var resp = e.Obj as ResponseGetHostName;
+                string hostName = resp.HostName;
+                e.Session.SetHostName(hostName);
+                if (this.currentSession != null &&
+                    this.currentSession.SocketId == e.Session.SocketId)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        this.toolStripTextBox2.Text = hostName;
+                    }));
+                }
+            }
 
             // 过滤非当前会话
             if (this.currentSession == null || e.Session.SocketId != this.currentSession.SocketId)
@@ -316,19 +330,6 @@ namespace RemoteControl.Server
             {
                 var resp = e.Obj as ResponseMoveFile;
                 doOutput("移动" + resp.SourceFile + "成功!");
-            }
-            else if (e.PacketType == ePacketType.PACKET_GET_HOST_NAME_RESPONSE)
-            {
-                var resp = e.Obj as ResponseGetHostName;
-                string hostName = resp.HostName;
-                e.Session.SetHostName(hostName);
-                if (this.currentSession != null &&
-                    this.currentSession.SocketId == e.Session.SocketId)
-                {
-                    this.Invoke(new Action(()=>{
-                        this.toolStripTextBox2.Text = hostName;
-                    }));
-                }
             }
             else if (e.PacketType == ePacketType.PACKET_VIEW_REGISTRY_KEY_RESPONSE)
             {
@@ -1658,8 +1659,54 @@ namespace RemoteControl.Server
                     // 非根节点
                     req = ti.Node.Tag as RequestViewRegistryKey;
                 }
+                // 在listview上标注当前的key节点
+                this.listView2.Tag = req;
                 this.textBoxRegistryPath.Text = "计算机\\" + req.KeyRoot + "\\" + req.KeyPath;
                 this.currentSession.Send(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, req);
+            }
+        }
+
+        /// <summary>
+        /// 注册表值操作菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listView2_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.currentSession == null)
+                return;
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                var key = this.listView2.Tag as RequestViewRegistryKey;
+                if (key != null)
+                {
+                    if (this.listView2.SelectedItems.Count > 0)
+                    {
+                        string valueName = this.listView2.SelectedItems[0].Text;
+                        var req = new RequestOpeRegistryValueName();
+                        req.KeyRoot = key.KeyRoot;
+                        req.KeyPath = key.KeyPath;
+                        req.ValueName = valueName;
+
+                        ContextMenuStrip cms = new ContextMenuStrip();
+                        cms.Items.Add("删除", null, (o, args) =>
+                        {
+                            req.Operation = OpeType.Delete;
+                            this.currentSession.Send(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, req);
+                        });
+                        cms.Show(this.listView2, e.Location);
+                    }
+                    else
+                    {
+                        ContextMenuStrip cms = new ContextMenuStrip();
+                        cms.Items.Add("刷新", null, (o, args) =>
+                        {
+                            this.currentSession.Send(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, key);
+                        });
+                        cms.Show(this.listView2, e.Location);
+                    }
+                }
             }
         }
     }

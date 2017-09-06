@@ -26,8 +26,7 @@ namespace RemoteControl.Client
     {
         private static Socket oServer;
         private static SocketSession oServerSession;
-        private static bool isTestMode = true;
-        //private static string ServerIP = "10.55.200.187";
+        private static bool isTestMode = false;
         private static string ServerIP = "192.168.1.136";
         private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
@@ -47,7 +46,8 @@ namespace RemoteControl.Client
 
         static void Main(string[] args)
         {
-            Console.Title = "RC";
+            // 窗体隐藏时调用Console.Title会报错
+            //Console.Title = "RC";
             ReadParameters();
             InitHandlers();
             StartConnect();

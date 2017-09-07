@@ -11,5 +11,6 @@ namespace RemoteControl.Protocals.Response
     public class ResponseGetHostName:ResponseBase
     {
         public string HostName;
+        public string AppPath;
     }
 }

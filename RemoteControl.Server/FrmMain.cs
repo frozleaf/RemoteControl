@@ -130,6 +130,7 @@ namespace RemoteControl.Server
                 var resp = e.Obj as ResponseGetHostName;
                 string hostName = resp.HostName;
                 e.Session.SetHostName(hostName);
+                e.Session.SetAppPath(resp.AppPath);
                 if (this.currentSession != null &&
                     this.currentSession.SocketId == e.Session.SocketId)
                 {
@@ -376,11 +377,6 @@ namespace RemoteControl.Server
                         Logger.Error("", ex);
                     }
                 });
-            }
-            else if (e.PacketType == ePacketType.PACKET_ADD_AUTORUN_RESPONSE)
-            {
-                var resp = e.Obj as ResponseAddAutoRun;
-                doOutput(resp.Message);
             }
         }
 
@@ -1565,7 +1561,22 @@ namespace RemoteControl.Server
                     });
                     cms.Items.Add("添加开启自启", null, (o, s) =>
                     {
-                        client.Send(ePacketType.PACKET_ADD_AUTORUN_REQUEST, new RequestAddAutoRun());
+                        RequestOpeRegistryValueName req = new RequestOpeRegistryValueName();
+                        req.KeyRoot = eRegistryHive.CurrentUser;
+                        req.KeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
+                        req.Operation = OpeType.New;
+                        req.ValueName = "rc";
+                        req.Value = client.AppPath;
+                        client.Send(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, req);
+                    });
+                    cms.Items.Add("移除开启自启", null, (o, s) =>
+                    {
+                        RequestOpeRegistryValueName req = new RequestOpeRegistryValueName();
+                        req.KeyRoot = eRegistryHive.CurrentUser;
+                        req.KeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
+                        req.Operation = OpeType.Delete;
+                        req.ValueName = "rc";
+                        client.Send(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, req);
                     });
                     cms.Show(this.treeView1, e.Location);
                 }

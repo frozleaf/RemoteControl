@@ -112,7 +112,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaptureVideoClient.cs" />
-    <Compile Include="Handlers\RequestAddAutoRunHandler.cs" />
     <Compile Include="Handlers\RequestOpeRegistryValueNameHandler.cs" />
     <Compile Include="IRequestHandler.cs" />
     <Compile Include="KeyboardOpeUtil.cs" />

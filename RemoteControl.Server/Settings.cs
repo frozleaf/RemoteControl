@@ -8,11 +8,11 @@ namespace RemoteControl.Server
 {
     class Settings
     {
+        const string SettingFileName = "config.json";
+        public static Settings CurrentSettings = new Settings(); 
+        public ClientParas ClientPara = new ClientParas();
         public int ServerPort;
         public string SkinPath;
-
-        private const string SettingFileName = "config.json";
-        public static Settings CurrentSettings = new Settings();
 
         static Settings()
         {
@@ -33,5 +33,11 @@ namespace RemoteControl.Server
             string json = JsonConvert.SerializeObject(Settings.CurrentSettings);
             System.IO.File.WriteAllText(SettingFileName, json);
         }
+    }
+
+    class ClientParas
+    {
+        public string ServerIP;
+        public int ServerPort;
     }
 }

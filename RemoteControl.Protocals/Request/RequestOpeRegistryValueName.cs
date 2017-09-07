@@ -14,5 +14,7 @@ namespace RemoteControl.Protocals
         public eRegistryHive KeyRoot;
         public string KeyPath;
         public string ValueName;
+        public object Value;
+        public eRegistryValueKind ValueKind = eRegistryValueKind.REG_SZ;
     }
 }

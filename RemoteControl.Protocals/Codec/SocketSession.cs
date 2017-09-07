@@ -13,6 +13,7 @@ namespace RemoteControl.Protocals
         public Socket SocketObj { get; private set; }
         public string SocketId { get; private set; }
         public string HostName { get; private set; }
+        public string AppPath { get; private set; }
 
         public SocketSession(string sId, Socket oSocket)
         {
@@ -50,6 +51,11 @@ namespace RemoteControl.Protocals
         public void SetHostName(string hostName)
         {
             this.HostName = hostName;
+        }
+
+        public void SetAppPath(string appPath)
+        {
+            this.AppPath = appPath;
         }
 
         public void Send(ePacketType packetType, object obj)

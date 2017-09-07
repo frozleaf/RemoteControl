@@ -59,7 +59,6 @@ namespace RemoteControl.Client
         static void InitHandlers()
         {
             handlers.Add(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, new RequestViewRegistryKeyHandler());
-            handlers.Add(ePacketType.PACKET_ADD_AUTORUN_REQUEST, new RequestAddAutoRunHandler());
             handlers.Add(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, new RequestOpeRegistryValueNameHandler());
         }
 
@@ -107,6 +106,7 @@ namespace RemoteControl.Client
             // 获取主机名，并告诉服务器
             ResponseGetHostName resp = new ResponseGetHostName();
             resp.HostName = Dns.GetHostName();
+            resp.AppPath = Application.ExecutablePath;
             session.Send(ePacketType.PACKET_GET_HOST_NAME_RESPONSE, resp);
 
             new Thread(() =>

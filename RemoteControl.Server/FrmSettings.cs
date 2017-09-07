@@ -22,21 +22,24 @@ namespace RemoteControl.Server
         private void FrmSettings_Load(object sender, EventArgs e)
         {
             base.EnableCancelButton = true;
-            this.textBox2.Text = Settings.CurrentSettings.ServerPort.ToString();
-            this.textBox3.Text = this.textBox2.Text;
-            var ips = Utils.GetIPAddressV4();
-            if (ips.Count > 0)
-            {
-                this.textBox1.Text = ips[0];
-            }
+            this.textBox1.Text = Settings.CurrentSettings.ClientPara.ServerIP;
+            this.textBox2.Text = Settings.CurrentSettings.ClientPara.ServerPort.ToString();
+            this.textBox3.Text = Settings.CurrentSettings.ServerPort.ToString();
         }
 
         private void buttonSaveServerSetting_Click(object sender, EventArgs e)
         {
-            int serverPort;
-            if (!int.TryParse(this.textBox3.Text, out serverPort))
+            string cServerIP = this.textBox1.Text.Trim();
+            int cServerPort;
+            if (!int.TryParse(this.textBox2.Text, out cServerPort))
                 return;
-            Settings.CurrentSettings.ServerPort = serverPort;
+            int sServerPort;
+            if (!int.TryParse(this.textBox3.Text, out sServerPort))
+                return;
+            Settings.CurrentSettings.ClientPara.ServerIP = cServerIP;
+            Settings.CurrentSettings.ClientPara.ServerPort = cServerPort;
+            Settings.CurrentSettings.ServerPort = sServerPort;
+            Settings.SaveSettings();
             MsgBox.ShowInfo("已保存!");
         }
 

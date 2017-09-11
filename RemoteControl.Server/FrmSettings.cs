@@ -40,7 +40,7 @@ namespace RemoteControl.Server
             Settings.CurrentSettings.ClientPara.ServerPort = cServerPort;
             Settings.CurrentSettings.ServerPort = sServerPort;
             Settings.SaveSettings();
-            MsgBox.ShowInfo("已保存!");
+            this.Close();
         }
 
         private void buttonGenClient_Click(object sender, EventArgs e)
@@ -92,6 +92,11 @@ namespace RemoteControl.Server
                 });
             });
             cms.Show(this.buttonSelectIP, new Point(0, buttonSelectIP.Height));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -1329,8 +1329,8 @@ namespace RemoteControl.Server
         private void toolStripButtonSettings_Click(object sender, EventArgs e)
         {
             var frm = new FrmSettings();
-            frm.ShowDialog();
-            frm.Dispose();
+            frm.Owner = this;
+            frm.Show();
         }
 
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)

@@ -38,9 +38,10 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.buttonSaveServerSetting = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.buttonSaveServerSetting = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -48,13 +49,15 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Location = new System.Drawing.Point(8, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(438, 339);
+            this.tabControl1.Size = new System.Drawing.Size(492, 307);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -69,14 +72,14 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(430, 313);
+            this.tabPage1.Size = new System.Drawing.Size(484, 281);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "客户端配置";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // buttonSelectIP
             // 
-            this.buttonSelectIP.Location = new System.Drawing.Point(312, 31);
+            this.buttonSelectIP.Location = new System.Drawing.Point(378, 31);
             this.buttonSelectIP.Name = "buttonSelectIP";
             this.buttonSelectIP.Size = new System.Drawing.Size(34, 23);
             this.buttonSelectIP.TabIndex = 4;
@@ -89,7 +92,7 @@
             this.checkBoxHideClient.AutoSize = true;
             this.checkBoxHideClient.Checked = true;
             this.checkBoxHideClient.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxHideClient.Location = new System.Drawing.Point(105, 97);
+            this.checkBoxHideClient.Location = new System.Drawing.Point(171, 97);
             this.checkBoxHideClient.Name = "checkBoxHideClient";
             this.checkBoxHideClient.Size = new System.Drawing.Size(96, 16);
             this.checkBoxHideClient.TabIndex = 3;
@@ -108,7 +111,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(105, 60);
+            this.textBox2.Location = new System.Drawing.Point(171, 60);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(201, 21);
             this.textBox2.TabIndex = 1;
@@ -116,7 +119,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(22, 63);
+            this.label2.Location = new System.Drawing.Point(88, 63);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(77, 12);
             this.label2.TabIndex = 0;
@@ -124,7 +127,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(105, 33);
+            this.textBox1.Location = new System.Drawing.Point(171, 33);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(201, 21);
             this.textBox1.TabIndex = 1;
@@ -132,7 +135,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(34, 36);
+            this.label1.Location = new System.Drawing.Point(100, 36);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 0;
@@ -140,30 +143,19 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.buttonSaveServerSetting);
             this.tabPage2.Controls.Add(this.textBox3);
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(430, 313);
+            this.tabPage2.Size = new System.Drawing.Size(484, 281);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "服务端配置";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // buttonSaveServerSetting
-            // 
-            this.buttonSaveServerSetting.Location = new System.Drawing.Point(236, 128);
-            this.buttonSaveServerSetting.Name = "buttonSaveServerSetting";
-            this.buttonSaveServerSetting.Size = new System.Drawing.Size(75, 23);
-            this.buttonSaveServerSetting.TabIndex = 4;
-            this.buttonSaveServerSetting.Text = "保存";
-            this.buttonSaveServerSetting.UseVisualStyleBackColor = true;
-            this.buttonSaveServerSetting.Click += new System.EventHandler(this.buttonSaveServerSetting_Click);
-            // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(123, 28);
+            this.textBox3.Location = new System.Drawing.Point(191, 33);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(201, 21);
             this.textBox3.TabIndex = 3;
@@ -171,18 +163,45 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(40, 31);
+            this.label3.Location = new System.Drawing.Point(108, 36);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 12);
             this.label3.TabIndex = 2;
             this.label3.Text = "服务器端口：";
             // 
+            // buttonSaveServerSetting
+            // 
+            this.buttonSaveServerSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveServerSetting.Location = new System.Drawing.Point(340, 316);
+            this.buttonSaveServerSetting.Name = "buttonSaveServerSetting";
+            this.buttonSaveServerSetting.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveServerSetting.TabIndex = 5;
+            this.buttonSaveServerSetting.Text = "确定";
+            this.buttonSaveServerSetting.UseVisualStyleBackColor = true;
+            this.buttonSaveServerSetting.Click += new System.EventHandler(this.buttonSaveServerSetting_Click);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(421, 316);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "取消";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(438, 339);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(509, 343);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonSaveServerSetting);
             this.Controls.Add(this.tabControl1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FrmSettings";
             this.Text = "设置";
             this.Load += new System.EventHandler(this.FrmSettings_Load);
@@ -207,9 +226,10 @@
         private System.Windows.Forms.Button buttonGenClient;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button buttonSaveServerSetting;
         private System.Windows.Forms.CheckBox checkBoxHideClient;
         private System.Windows.Forms.Button buttonSelectIP;
+        private System.Windows.Forms.Button buttonSaveServerSetting;
+        private System.Windows.Forms.Button button1;
 
     }
 }

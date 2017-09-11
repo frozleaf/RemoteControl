@@ -868,6 +868,7 @@
             this.columnHeader5,
             this.columnHeader6});
             this.listView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView2.LabelWrap = false;
             this.listView2.Location = new System.Drawing.Point(0, 0);
             this.listView2.Name = "listView2";
             this.listView2.Size = new System.Drawing.Size(649, 390);

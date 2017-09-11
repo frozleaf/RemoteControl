@@ -93,7 +93,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>folder.ico</ApplicationIcon>
+    <ApplicationIcon>yh.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -171,6 +171,7 @@
   <ItemGroup>
     <Content Include="command.ico" />
     <Content Include="folder.ico" />
+    <Content Include="yh.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

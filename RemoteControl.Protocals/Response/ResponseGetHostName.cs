@@ -12,5 +12,6 @@ namespace RemoteControl.Protocals.Response
     {
         public string HostName;
         public string AppPath;
+        public string OnlineAvatar;
     }
 }

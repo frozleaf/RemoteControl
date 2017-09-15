@@ -164,6 +164,12 @@
     <Compile Include="FrmRename.Designer.cs">
       <DependentUpon>FrmRename.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmSelectAvatar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSelectAvatar.Designer.cs">
+      <DependentUpon>FrmSelectAvatar.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmSelectIcon.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -229,6 +235,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmRename.resx">
       <DependentUpon>FrmRename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSelectAvatar.resx">
+      <DependentUpon>FrmSelectAvatar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSelectIcon.resx">
       <DependentUpon>FrmSelectIcon.cs</DependentUpon>
@@ -301,6 +310,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
+    <None Include="bin\Debug\Avatars\16238_100.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Res\" />

@@ -11,9 +11,13 @@ namespace RemoteControl.Protocals
     public struct ClientParameters
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-        public byte[] Header;
-        public long ServerIP;
-        public int ServerPort;
+        public byte[] Header; // 头部标示字节
+        public long ServerIP; // 服务器ip地址
+        public int ServerPort; // 服务器端口
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst=24)]
+        public string OnlineAvatar; // 客户端上线图标名
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string ServiceName; // 客户端启动时的服务名
 
         public void SetServerIP(string ip)
         {

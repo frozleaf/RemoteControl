@@ -14,6 +14,7 @@ namespace RemoteControl.Protocals
         public string SocketId { get; private set; }
         public string HostName { get; private set; }
         public string AppPath { get; private set; }
+        public string OnlineAvatar { get; private set; }
 
         public SocketSession(string sId, Socket oSocket)
         {
@@ -56,6 +57,11 @@ namespace RemoteControl.Protocals
         public void SetAppPath(string appPath)
         {
             this.AppPath = appPath;
+        }
+
+        public void SetOnlineAvatar(string avatar)
+        {
+            this.OnlineAvatar = avatar;
         }
 
         public void Send(ePacketType packetType, object obj)

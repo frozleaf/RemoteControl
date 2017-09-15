@@ -100,6 +100,14 @@ namespace RemoteControl.Server
                     });
                 tsi.Tag = viewItem.Value;
 	        }
+
+            var avatars = RSCApplication.GetAllAvatarFiles();
+            for (int i = 0; i < avatars.Count; i++)
+            {
+                string avatarPath = avatars[i];
+                string avatarFileName = System.IO.Path.GetFileName(avatarPath);
+                this.imageList2.Images.Add(avatarFileName, Image.FromFile(avatarPath));
+            }
         }
 
         private void initServerEvents()
@@ -131,14 +139,26 @@ namespace RemoteControl.Server
                 string hostName = resp.HostName;
                 e.Session.SetHostName(hostName);
                 e.Session.SetAppPath(resp.AppPath);
+                e.Session.SetOnlineAvatar(resp.OnlineAvatar);
                 if (this.currentSession != null &&
                     this.currentSession.SocketId == e.Session.SocketId)
                 {
+                    // 更新主机名
                     this.Invoke(new Action(() =>
                     {
                         this.toolStripTextBox2.Text = hostName;
                     }));
                 }
+                this.Invoke(new Action(() =>
+                {
+                    // 修改节点图标
+                    TreeNode node = FindClientNode(e.Session);
+                    if (node != null && this.treeView1.ImageList.Images.ContainsKey(e.Session.OnlineAvatar))
+                    {
+                        node.ImageKey = e.Session.OnlineAvatar;
+                        node.SelectedImageKey = e.Session.OnlineAvatar;
+                    }
+                }));
             }
 
             // 过滤非当前会话
@@ -439,6 +459,20 @@ namespace RemoteControl.Server
             this.clientCount++;
             refreshClientCountShow();
             doOutput(oClient.SocketId.ToString() + " 上线了！");
+        }
+
+        private TreeNode FindClientNode(SocketSession oClient)
+        {
+            for (int i = this.InternetTreeNode.Nodes.Count - 1; i >= 0; i--)
+            {
+                TreeNode node = this.InternetTreeNode.Nodes[i];
+                SocketSession session = node.Tag as SocketSession;
+                if (session != null && session.SocketId == oClient.SocketId)
+                {
+                    return node;
+                }
+            }
+            return null;
         }
 
         private void RemoveClient(SocketSession oClient)

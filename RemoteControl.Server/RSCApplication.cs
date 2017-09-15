@@ -27,6 +27,9 @@ namespace RemoteControl.Server
                 case ePathType.SKINS_DIR:
                     sPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\Skins\\";
                     break;
+                case ePathType.AVATAR_DIR:
+                    sPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\Avatars\\";
+                    break;
 
             }
 
@@ -50,6 +53,19 @@ namespace RemoteControl.Server
             }
 
             return lstSkinFiles;
+        }
+
+        public static List<string> GetAllAvatarFiles()
+        {
+            List<string> files = new List<string>();
+
+            string path = GetPath(ePathType.AVATAR_DIR);
+            if (!System.IO.Directory.Exists(path))
+                return files;
+
+            files.AddRange(System.IO.Directory.GetFiles(path));
+
+            return files;
         }
 
         public static List<string> GetLocalIPV4s()

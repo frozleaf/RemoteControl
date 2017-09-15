@@ -39,5 +39,7 @@ namespace RemoteControl.Server
     {
         public string ServerIP;
         public int ServerPort;
+        public string ServiceName;
+        public string OnlineAvatar;
     }
 }

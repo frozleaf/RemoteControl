@@ -169,6 +169,12 @@ namespace RemoteControl.Protocals
                 case ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_RESPONSE:
                     obj = FromJsonBytes<ResponseOpeRegistryValueName>(bodyData);
                     break;
+                case ePacketType.PACKET_START_CAPTURE_AUDIO_REQUEST:
+                    obj = FromJsonBytes<RequestStartCaptureAudio>(bodyData);
+                    break;
+                case ePacketType.PACKET_START_CAPTURE_AUDIO_RESPONSE:
+                    obj = FromJsonBytes<ResponseStartCaptureAudio>(bodyData);
+                    break;
             }
         }
 

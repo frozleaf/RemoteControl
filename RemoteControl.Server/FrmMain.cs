@@ -15,6 +15,8 @@ using log4net;
 using RemoteControl.Protocals.Plugin;
 using RemoteControl.Protocals.Request;
 using RemoteControl.Protocals.Response;
+using RemoteControl.Audio;
+using RemoteControl.Audio.Codecs;
 
 namespace RemoteControl.Server
 {
@@ -29,6 +31,7 @@ namespace RemoteControl.Server
         private Dictionary<string, Action<ResponseStartCaptureVideo>> sessionVideoHandlers = new Dictionary<string, Action<ResponseStartCaptureVideo>>();
         private SendCommandHotKey sendCommandHotKey = SendCommandHotKey.Enter;
         private ToolStripMenuItem menuSkins = null;
+        private WaveOut _waveOut = null;
 
         public FrmMain()
         {
@@ -45,6 +48,10 @@ namespace RemoteControl.Server
             UIUtil.BindTextBoxCtrlA(this.textBoxCommandRequest);
             UIUtil.BindTextBoxCtrlA(this.textBoxCommandResponse);
             actChangeSkin(Settings.CurrentSettings.SkinPath);
+            if (WaveOut.Devices.Length > 0)
+            {
+                _waveOut = new WaveOut(WaveOut.Devices[0], 8000, 16, 1);
+            }
         }
 
         private void initSkinMenus()
@@ -397,6 +404,15 @@ namespace RemoteControl.Server
                         Logger.Error("", ex);
                     }
                 });
+            }
+            else if (e.PacketType == ePacketType.PACKET_START_CAPTURE_AUDIO_RESPONSE)
+            {
+                var resp = e.Obj as ResponseStartCaptureAudio;
+                if (_waveOut != null)
+                {
+                    byte[] decodedData = G711.Decode_aLaw(resp.AudioData, 0, resp.AudioData.Length);
+                    _waveOut.Play(decodedData, 0, decodedData.Length);
+                }
             }
         }
 

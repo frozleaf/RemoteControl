@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using RemoteControl.Protocals;
+using RemoteControl.Audio;
 
 namespace RemoteControl.Server
 {
@@ -15,6 +16,7 @@ namespace RemoteControl.Server
         private SocketSession oSession;
         private bool saveInRealTime = false;
         private int _fps = 2;
+        private bool _captureAudio = false;
 
         public FrmCaptureVideo(SocketSession session)
         {
@@ -81,11 +83,6 @@ namespace RemoteControl.Server
             this.pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
         }
 
-        private void toolStripButtonSave_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void toolStripButtonSave_ButtonClick(object sender, EventArgs e)
         {
             if (this.pictureBox1.Image != null)
@@ -147,6 +144,30 @@ namespace RemoteControl.Server
 
                 _fps = Convert.ToInt32(item.Tag);
                 item.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemCaptureAudio_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemCaptureAudio.Checked = !toolStripMenuItemCaptureAudio.Checked;
+            _captureAudio = toolStripMenuItemCaptureAudio.Checked;
+            if (_captureAudio)
+            {
+                RequestStartCaptureAudio req = new RequestStartCaptureAudio();
+                this.oSession.Send(ePacketType.PACKET_START_CAPTURE_AUDIO_REQUEST, req);
+            }
+            else
+            {
+                this.oSession.Send(ePacketType.PACKET_STOP_CAPTURE_AUDIO_REQUEST, null);
+            }
+        }
+
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+            ToolStripSplitButton btn = sender as ToolStripSplitButton;
+            if (btn != null)
+            {
+                btn.ShowDropDown();
             }
         }
     }

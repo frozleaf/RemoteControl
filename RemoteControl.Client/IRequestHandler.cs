@@ -8,6 +8,6 @@ namespace RemoteControl.Client
 {
     interface IRequestHandler
     {
-        void Handle(SocketSession session, object reqObj);
+        void Handle(SocketSession session, ePacketType reqType, object reqObj);
     }
 }

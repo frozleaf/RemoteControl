@@ -53,5 +53,10 @@ namespace RemoteControl.Protocals
 
             return result;
         }
+
+        public static string GetAppPath()
+        {
+            return AppDomain.CurrentDomain.BaseDirectory;
+        }
     }
 }

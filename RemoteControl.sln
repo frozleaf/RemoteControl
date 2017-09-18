@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RemoteControl.Client.Tools"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteControl.Plugin.CustomPlugin", "RemoteControl.Plugin.CustomPlugin\RemoteControl.Plugin.CustomPlugin.csproj", "{D7F4956C-2445-4C65-98AF-149C4B165A7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteControl.Audio", "RemoteControl.Audio\RemoteControl.Audio.csproj", "{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,16 @@ Global
 		{D7F4956C-2445-4C65-98AF-149C4B165A7F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D7F4956C-2445-4C65-98AF-149C4B165A7F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D7F4956C-2445-4C65-98AF-149C4B165A7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

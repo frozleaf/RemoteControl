@@ -12,7 +12,7 @@ namespace RemoteControl.Client
 {
     class RequestOpeRegistryValueNameHandler : IRequestHandler
     {
-        public void Handle(SocketSession session, object reqObj)
+        public void Handle(SocketSession session, ePacketType reqType, object reqObj)
         {
             RequestOpeRegistryValueName req = reqObj as RequestOpeRegistryValueName;
 

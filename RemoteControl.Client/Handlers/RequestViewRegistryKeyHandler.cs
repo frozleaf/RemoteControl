@@ -9,7 +9,7 @@ namespace RemoteControl.Client
 {
     class RequestViewRegistryKeyHandler:IRequestHandler
     {
-        public void Handle(SocketSession session, object reqObj)
+        public void Handle(SocketSession session, ePacketType reqType, object reqObj)
         {
             RequestViewRegistryKey req = reqObj as RequestViewRegistryKey;
 

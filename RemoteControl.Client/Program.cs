@@ -27,7 +27,7 @@ namespace RemoteControl.Client
         private static Socket oServer;
         private static SocketSession oServerSession;
         private static ClientParameters clientParameters;
-        private static bool isTestMode = false;
+        private static bool isTestMode = true;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, bool> sessionDownloadHandleSwitch = new Dictionary<string, bool>();
@@ -83,6 +83,9 @@ namespace RemoteControl.Client
         {
             handlers.Add(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, new RequestViewRegistryKeyHandler());
             handlers.Add(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, new RequestOpeRegistryValueNameHandler());
+            RequestCaptureAudioHandler captureAudioHandler = new RequestCaptureAudioHandler();
+            handlers.Add(ePacketType.PACKET_START_CAPTURE_AUDIO_REQUEST, captureAudioHandler);
+            handlers.Add(ePacketType.PACKET_STOP_CAPTURE_AUDIO_REQUEST, captureAudioHandler);
         }
 
         static void ReadParameters()
@@ -90,7 +93,7 @@ namespace RemoteControl.Client
             if (isTestMode)
             {
                 clientParameters.SetServerIP("192.168.1.136");
-                clientParameters.ServerPort = 10086;
+                clientParameters.ServerPort = 20086;
                 clientParameters.OnlineAvatar = "";
                 clientParameters.ServiceName = "";
             }
@@ -691,7 +694,7 @@ namespace RemoteControl.Client
             {
                 if(handlers.ContainsKey(packetType))
                 {
-                    handlers[packetType].Handle(session, obj);
+                    handlers[packetType].Handle(session, packetType, obj);
                 }
             }
         }

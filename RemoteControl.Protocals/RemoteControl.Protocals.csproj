@@ -138,6 +138,7 @@
     <Compile Include="Request\RequestOpenFile.cs" />
     <Compile Include="Request\RequestViewRegistryKey.cs" />
     <Compile Include="Request\RequestOpeRegistryValueName.cs" />
+    <Compile Include="Request\RequestStartCaptureAudio.cs" />
     <Compile Include="Response\ResponseAddAutoRun.cs" />
     <Compile Include="Response\ResponseCopyFile.cs" />
     <Compile Include="Response\ResponseGetHostName.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Response\ResponseStopUpload.cs" />
     <Compile Include="Response\ResponseViewRegistryKey.cs" />
     <Compile Include="Response\ResponseOpeRegistryValueName.cs" />
+    <Compile Include="Response\ResponseStartCaptureAudio.cs" />
     <Compile Include="Utilities\ProcessUtil.cs" />
     <Compile Include="Utilities\ResUtil.cs" />
     <Compile Include="Utilities\Utils.cs" />

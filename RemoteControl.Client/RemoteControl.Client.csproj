@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="CaptureVideoClient.cs" />
     <Compile Include="Handlers\RequestOpeRegistryValueNameHandler.cs" />
+    <Compile Include="Handlers\RequestCaptureAudioHandler.cs" />
     <Compile Include="IRequestHandler.cs" />
     <Compile Include="KeyboardOpeUtil.cs" />
     <Compile Include="MouseOpeUtil.cs" />
@@ -144,6 +145,10 @@
     <ProjectReference Include="..\Newtonsoft.Json.Lite\Newtonsoft.Json.Lite.csproj">
       <Project>{B96FFFBB-9262-40CB-B75E-F5BFBB0366E9}</Project>
       <Name>Newtonsoft.Json.Lite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteControl.Audio\RemoteControl.Audio.csproj">
+      <Project>{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}</Project>
+      <Name>RemoteControl.Audio</Name>
     </ProjectReference>
     <ProjectReference Include="..\RemoteControl.Protocals\RemoteControl.Protocals.csproj">
       <Project>{506B585C-B02E-4F2B-9889-1A4AC49C8A29}</Project>

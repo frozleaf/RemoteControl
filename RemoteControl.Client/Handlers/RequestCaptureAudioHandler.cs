@@ -21,8 +21,8 @@ namespace RemoteControl.Client
             _session = session;
             if (reqType == ePacketType.PACKET_STOP_CAPTURE_AUDIO_REQUEST)
             {
-                StopTest();
-                return;
+                //StopTest();
+                //return;
                 if(_waveIn!=null)
                 {
                     _waveIn.Dispose();
@@ -39,8 +39,8 @@ namespace RemoteControl.Client
                     {
                         return;
                     }
-                    StartTest();
-                    return;
+                    //StartTest();
+                    //return;
                     if (WaveIn.Devices.Length > 0)
                     {
                         _waveIn = new WaveIn(WaveIn.Devices[0], 8000, 16, 1, 400);

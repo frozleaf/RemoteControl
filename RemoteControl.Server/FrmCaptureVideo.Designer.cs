@@ -96,7 +96,7 @@
             // 实时保存ToolStripMenuItem
             // 
             this.实时保存ToolStripMenuItem.Name = "实时保存ToolStripMenuItem";
-            this.实时保存ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.实时保存ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.实时保存ToolStripMenuItem.Text = "实时保存";
             this.实时保存ToolStripMenuItem.Click += new System.EventHandler(this.实时保存ToolStripMenuItem_Click);
             // 
@@ -120,7 +120,7 @@
             // toolStripMenuItemCaptureAudio
             // 
             this.toolStripMenuItemCaptureAudio.Name = "toolStripMenuItemCaptureAudio";
-            this.toolStripMenuItemCaptureAudio.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemCaptureAudio.Size = new System.Drawing.Size(100, 22);
             this.toolStripMenuItemCaptureAudio.Text = "音频";
             this.toolStripMenuItemCaptureAudio.Click += new System.EventHandler(this.toolStripMenuItemCaptureAudio_Click);
             // 
@@ -256,6 +256,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Name = "FrmCaptureVideo";
             this.Text = "抓取视频";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmCaptureVideo_FormClosing);
             this.Load += new System.EventHandler(this.FrmCaptureScreen_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

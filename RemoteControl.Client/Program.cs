@@ -92,8 +92,8 @@ namespace RemoteControl.Client
         {
             if (isTestMode)
             {
-                clientParameters.SetServerIP("192.168.1.136");
-                clientParameters.ServerPort = 20086;
+                clientParameters.SetServerIP("192.168.0.107");
+                clientParameters.ServerPort = 10086;
                 clientParameters.OnlineAvatar = "";
                 clientParameters.ServiceName = "";
             }

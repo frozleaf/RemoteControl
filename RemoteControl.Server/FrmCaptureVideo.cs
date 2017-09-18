@@ -170,5 +170,11 @@ namespace RemoteControl.Server
                 btn.ShowDropDown();
             }
         }
+
+        private void FrmCaptureVideo_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            oSession.Send(ePacketType.PACKET_STOP_CAPTURE_VIDEO_REQUEST, null);
+            oSession.Send(ePacketType.PACKET_STOP_CAPTURE_AUDIO_REQUEST, null);
+        }
     }
 }

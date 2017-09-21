@@ -75,7 +75,7 @@ namespace RemoteControl.Client
         {
             new Thread(() => {
                 _isTestRunning = true;
-                using (FileStream fs = File.OpenRead(Utils.GetAppPath() + "\\audio\\futurama.raw"))
+                using (FileStream fs = File.OpenRead(CommonUtil.GetAppPath() + "\\audio\\futurama.raw"))
                 {
                     byte[] buffer = new byte[400];
                     int readedCount = fs.Read(buffer, 0, buffer.Length);

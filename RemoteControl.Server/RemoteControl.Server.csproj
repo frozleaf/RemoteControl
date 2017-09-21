@@ -209,6 +209,8 @@
     <Compile Include="FrmCaptureVideo.Designer.cs">
       <DependentUpon>FrmCaptureVideo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\IconChanger.cs" />
+    <Compile Include="Utils\IconChangerExtensions.cs" />
     <EmbeddedResource Include="FrmAbout.resx">
       <DependentUpon>FrmAbout.cs</DependentUpon>
     </EmbeddedResource>
@@ -316,9 +318,7 @@
     <Content Include="app.ico" />
     <None Include="bin\Debug\Avatars\16238_100.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Res\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

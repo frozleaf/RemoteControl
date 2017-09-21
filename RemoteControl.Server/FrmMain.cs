@@ -17,6 +17,7 @@ using RemoteControl.Protocals.Request;
 using RemoteControl.Protocals.Response;
 using RemoteControl.Audio;
 using RemoteControl.Audio.Codecs;
+using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Server
 {
@@ -31,6 +32,7 @@ namespace RemoteControl.Server
         private Dictionary<string, Action<ResponseStartCaptureVideo>> sessionVideoHandlers = new Dictionary<string, Action<ResponseStartCaptureVideo>>();
         private SendCommandHotKey sendCommandHotKey = SendCommandHotKey.Enter;
         private ToolStripMenuItem menuSkins = null;
+        private ToolStripMenuItem menuTools = null;
         private WaveOut _waveOut = null;
 
         public FrmMain()
@@ -75,6 +77,25 @@ namespace RemoteControl.Server
                     menuSkins.DropDownItems.Add(menuSkin);
                 }
                 this.menuStrip1.Items.Insert(this.menuStrip1.Items.Count - 1, menuSkins);
+            }
+            var tools = RSCApplication.GetAllTools();
+            if (tools.Count > 0)
+            {
+                menuTools = new ToolStripMenuItem("工具(&T)");
+                for (int i = 0; i < tools.Count; i++)
+                {
+                    string tool = tools[i];
+                    string menuText = System.IO.Path.GetFileNameWithoutExtension(tool);
+                    ToolStripMenuItem menuItem = new ToolStripMenuItem(menuText, null, (o, e) =>
+                    {
+                        ToolStripMenuItem m = o as ToolStripMenuItem;
+                        string sFile = m.Tag as string;
+                        ProcessUtil.Run(sFile, "", false);
+                    });
+                    menuItem.Tag = tool;
+                    menuTools.DropDownItems.Add(menuItem);
+                }
+                this.menuStrip1.Items.Insert(this.menuStrip1.Items.Count - 2, menuTools);
             }
         }
 
@@ -217,7 +238,7 @@ namespace RemoteControl.Server
                             string extension = System.IO.Path.GetExtension(path).ToLower();
                             if (!this.imageList1.Images.ContainsKey(extension))
                             {
-                                this.imageList1.Images.Add(extension, Utils.GetIcon(extension, true));
+                                this.imageList1.Images.Add(extension, CommonUtil.GetIcon(extension, true));
                             }
                             ListViewItem item = new ListViewItem(new string[] { itemText, GetFileSizeDesc(fileObj.Size), fileObj.LastWriteTime.ToString(),"<文件>" }, extension);
                             ListViewItemFileOrDirTag tag = new ListViewItemFileOrDirTag();
@@ -1566,7 +1587,7 @@ namespace RemoteControl.Server
             string path;
             if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
             {
-                MsgBox.ShowInfo("不支持文件夹的剪切！");
+                MsgBox.ShowInfo("不支持文件夹的重命名！");
                 return;
             }
 

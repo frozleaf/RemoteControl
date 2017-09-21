@@ -30,7 +30,9 @@ namespace RemoteControl.Server
                 case ePathType.AVATAR_DIR:
                     sPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\Avatars\\";
                     break;
-
+                case ePathType.TOOL_DIR:
+                    sPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\Tools\\";
+                    break;
             }
 
             return sPath;
@@ -64,6 +66,19 @@ namespace RemoteControl.Server
                 return files;
 
             files.AddRange(System.IO.Directory.GetFiles(path));
+
+            return files;
+        }
+
+        public static List<string> GetAllTools()
+        {
+            List<string> files = new List<string>();
+
+            string path = GetPath(ePathType.TOOL_DIR);
+            if (!System.IO.Directory.Exists(path))
+                return files;
+
+            files.AddRange(System.IO.Directory.GetFiles(path, "*.exe"));
 
             return files;
         }

@@ -9,7 +9,7 @@ using System.Net;
 
 namespace RemoteControl.Protocals
 {
-    public class Utils
+    public class CommonUtil
     {
         /// <summary>
         /// 根据扩展名（或文件名）获取系统中所关联的图标

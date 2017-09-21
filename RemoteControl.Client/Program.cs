@@ -27,7 +27,7 @@ namespace RemoteControl.Client
         private static Socket oServer;
         private static SocketSession oServerSession;
         private static ClientParameters clientParameters;
-        private static bool isTestMode = true;
+        private static bool isTestMode = false;
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, bool> sessionDownloadHandleSwitch = new Dictionary<string, bool>();

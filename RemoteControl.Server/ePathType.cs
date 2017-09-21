@@ -10,6 +10,7 @@ namespace RemoteControl.Server
         APP,
         APP_DIR,
         SKINS_DIR,
-        AVATAR_DIR
+        AVATAR_DIR,
+        TOOL_DIR
     }
 }

@@ -160,7 +160,7 @@
     <Compile Include="Response\ResponseStartCaptureAudio.cs" />
     <Compile Include="Utilities\ProcessUtil.cs" />
     <Compile Include="Utilities\ResUtil.cs" />
-    <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Utilities\CommonUtil.cs" />
     <Compile Include="Utilities\Win32API.cs" />
     <Compile Include="Request\RequestDeleteFileOrDir.cs" />
     <Compile Include="Response\ResponseDeleteFileOrDir.cs" />

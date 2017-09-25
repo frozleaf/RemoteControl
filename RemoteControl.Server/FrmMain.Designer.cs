@@ -141,6 +141,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItemTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItemUsualFolders = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItemSkins = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助HToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinEngine1 = new Sunisoft.IrisSkin.SkinEngine(((System.ComponentModel.Component)(this)));
@@ -1146,6 +1149,9 @@
             this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(241)))), ((int)(((byte)(241)))));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件FToolStripMenuItem,
+            this.ToolStripMenuItemTools,
+            this.ToolStripMenuItemUsualFolders,
+            this.ToolStripMenuItemSkins,
             this.帮助HToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -1167,6 +1173,24 @@
             this.退出XToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.退出XToolStripMenuItem.Text = "退出(&X)";
             this.退出XToolStripMenuItem.Click += new System.EventHandler(this.退出XToolStripMenuItem_Click);
+            // 
+            // ToolStripMenuItemTools
+            // 
+            this.ToolStripMenuItemTools.Name = "ToolStripMenuItemTools";
+            this.ToolStripMenuItemTools.Size = new System.Drawing.Size(59, 21);
+            this.ToolStripMenuItemTools.Text = "工具(&T)";
+            // 
+            // ToolStripMenuItemUsualFolders
+            // 
+            this.ToolStripMenuItemUsualFolders.Name = "ToolStripMenuItemUsualFolders";
+            this.ToolStripMenuItemUsualFolders.Size = new System.Drawing.Size(82, 21);
+            this.ToolStripMenuItemUsualFolders.Text = "常用目录(&F)";
+            // 
+            // ToolStripMenuItemSkins
+            // 
+            this.ToolStripMenuItemSkins.Name = "ToolStripMenuItemSkins";
+            this.ToolStripMenuItemSkins.Size = new System.Drawing.Size(59, 21);
+            this.ToolStripMenuItemSkins.Text = "皮肤(&S)";
             // 
             // 帮助HToolStripMenuItem
             // 
@@ -1348,6 +1372,9 @@
         private System.Windows.Forms.ImageList imgListRegistryValue;
         private System.Windows.Forms.ToolStripMenuItem 退出XToolStripMenuItem;
         private System.Windows.Forms.TextBox textBoxRegistryPath;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemSkins;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemTools;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemUsualFolders;
     }
 }
 

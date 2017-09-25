@@ -34,7 +34,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.checkBoxAppIcon = new System.Windows.Forms.CheckBox();
             this.pictureBoxAppIcon = new System.Windows.Forms.PictureBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.pictureBoxAvatar = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxServiceName = new System.Windows.Forms.TextBox();
@@ -95,7 +94,6 @@
             // 
             this.tabPage1.Controls.Add(this.checkBoxAppIcon);
             this.tabPage1.Controls.Add(this.pictureBoxAppIcon);
-            this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.pictureBoxAvatar);
             this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.textBoxServiceName);
@@ -118,12 +116,11 @@
             // checkBoxAppIcon
             // 
             this.checkBoxAppIcon.AutoSize = true;
-            this.checkBoxAppIcon.Checked = true;
-            this.checkBoxAppIcon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAppIcon.Location = new System.Drawing.Point(79, 201);
+            this.checkBoxAppIcon.Location = new System.Drawing.Point(81, 201);
             this.checkBoxAppIcon.Name = "checkBoxAppIcon";
-            this.checkBoxAppIcon.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAppIcon.Size = new System.Drawing.Size(84, 16);
             this.checkBoxAppIcon.TabIndex = 11;
+            this.checkBoxAppIcon.Text = "程序图标：";
             this.checkBoxAppIcon.UseVisualStyleBackColor = true;
             this.checkBoxAppIcon.CheckedChanged += new System.EventHandler(this.checkBoxAppIcon_CheckedChanged);
             // 
@@ -139,15 +136,6 @@
             this.pictureBoxAppIcon.TabStop = false;
             this.pictureBoxAppIcon.Tag = "";
             this.pictureBoxAppIcon.Click += new System.EventHandler(this.pictureBoxAppIcon_Click);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(100, 201);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(65, 12);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "程序图标：";
             // 
             // pictureBoxAvatar
             // 
@@ -327,7 +315,6 @@
         private System.Windows.Forms.PictureBox pictureBoxAvatar;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.PictureBox pictureBoxAppIcon;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox checkBoxAppIcon;
 
     }

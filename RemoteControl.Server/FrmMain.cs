@@ -31,8 +31,6 @@ namespace RemoteControl.Server
         private Dictionary<string, Action<ResponseStartGetScreen>> sessionScreenHandlers = new Dictionary<string, Action<ResponseStartGetScreen>>();
         private Dictionary<string, Action<ResponseStartCaptureVideo>> sessionVideoHandlers = new Dictionary<string, Action<ResponseStartCaptureVideo>>();
         private SendCommandHotKey sendCommandHotKey = SendCommandHotKey.Enter;
-        private ToolStripMenuItem menuSkins = null;
-        private ToolStripMenuItem menuTools = null;
         private WaveOut _waveOut = null;
 
         public FrmMain()
@@ -61,7 +59,6 @@ namespace RemoteControl.Server
             RSCApplication.lstSkins = RSCApplication.GetAllSkinFiles();
             if (RSCApplication.lstSkins.Count > 0)
             {
-                menuSkins = new ToolStripMenuItem("皮肤(&S)");
                 int iSkinCount = RSCApplication.lstSkins.Count;
                 for (int i = 0; i < iSkinCount; i++)
                 {
@@ -74,29 +71,46 @@ namespace RemoteControl.Server
                             actChangeSkin(sFile);
                         });
                     menuSkin.Tag = sSkinFile;
-                    menuSkins.DropDownItems.Add(menuSkin);
+                    this.ToolStripMenuItemSkins.DropDownItems.Add(menuSkin);
                 }
-                this.menuStrip1.Items.Insert(this.menuStrip1.Items.Count - 1, menuSkins);
             }
             var tools = RSCApplication.GetAllTools();
             if (tools.Count > 0)
             {
-                menuTools = new ToolStripMenuItem("工具(&T)");
                 for (int i = 0; i < tools.Count; i++)
                 {
                     string tool = tools[i];
                     string menuText = System.IO.Path.GetFileNameWithoutExtension(tool);
-                    ToolStripMenuItem menuItem = new ToolStripMenuItem(menuText, null, (o, e) =>
+                    Bitmap bmp = System.Drawing.Icon.ExtractAssociatedIcon(tool).ToBitmap();
+                    ToolStripMenuItem menuItem = new ToolStripMenuItem(menuText, bmp, (o, e) =>
                     {
                         ToolStripMenuItem m = o as ToolStripMenuItem;
                         string sFile = m.Tag as string;
                         ProcessUtil.Run(sFile, "", false);
                     });
                     menuItem.Tag = tool;
-                    menuTools.DropDownItems.Add(menuItem);
+                    this.ToolStripMenuItemTools.DropDownItems.Add(menuItem);
                 }
-                this.menuStrip1.Items.Insert(this.menuStrip1.Items.Count - 2, menuTools);
             }
+
+            Dictionary<ePathType, string> paths = new Dictionary<ePathType,string>();
+            paths.Add(ePathType.APP_DIR, "根目录");
+            paths.Add(ePathType.AVATAR_DIR,"头像目录");
+            paths.Add(ePathType.SKINS_DIR,"皮肤目录");
+            paths.Add(ePathType.TOOL_DIR,"工具目录");
+            foreach (var pair in paths)
+	        {
+                string path = RSCApplication.GetPath(pair.Key);
+                string menuText = pair.Value;
+                ToolStripMenuItem menuItem = new ToolStripMenuItem(menuText, null, (o, e) =>
+                {
+                    ToolStripMenuItem m = o as ToolStripMenuItem;
+                    string sFile = m.Tag as string;
+                    ProcessUtil.Run("explorer.exe", sFile, false);
+                });
+                menuItem.Tag = path;
+                this.ToolStripMenuItemUsualFolders.DropDownItems.Add(menuItem);
+	        }
         }
 
         private void initIcons()
@@ -541,12 +555,12 @@ namespace RemoteControl.Server
             //this.skiActive = false;
             this.skinEngine1.SkinFile = sSkinFile;
             Settings.CurrentSettings.SkinPath = sSkinFile;
-            if (menuSkins != null)
+            if (this.ToolStripMenuItemSkins != null)
             {
-                for (int j = 0; j < menuSkins.DropDownItems.Count; j++)
+                for (int j = 0; j < this.ToolStripMenuItemSkins.DropDownItems.Count; j++)
                 {
-                    var item = menuSkins.DropDownItems[j] as ToolStripMenuItem;
-                    if (menuSkins.DropDownItems[j].Tag.ToString() == Settings.CurrentSettings.SkinPath)
+                    var item = this.ToolStripMenuItemSkins.DropDownItems[j] as ToolStripMenuItem;
+                    if (this.ToolStripMenuItemSkins.DropDownItems[j].Tag.ToString() == Settings.CurrentSettings.SkinPath)
                     {
                         item.Checked = true;
                     }

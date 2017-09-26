@@ -18,6 +18,7 @@ namespace RemoteControl.Server
         {
             InitializeComponent();
             this.EnableCancelButton = true;
+            this.pictureBoxAppIcon.Visible = false;
         }
 
         private void FrmSettings_Load(object sender, EventArgs e)
@@ -66,6 +67,7 @@ namespace RemoteControl.Server
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "可执行程序(*.exe)|*.exe|所有文件(*.*)|*.*";
             dialog.FilterIndex = 1;
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 ClientParameters para = new ClientParameters();

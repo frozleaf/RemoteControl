@@ -142,6 +142,10 @@ namespace RemoteControl.Server
             ofd.Title = "请选择图标";
             ofd.Filter = "*.ico|*.ico";
             ofd.FilterIndex = 1;
+            // %appdata%\iconmaster\output
+            string initFolder = System.IO.Path.Combine(Environment.GetEnvironmentVariable("appdata"), @"iconmaster\output");
+            if(System.IO.Directory.Exists(initFolder))
+                ofd.InitialDirectory = initFolder;
             if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
                 return;

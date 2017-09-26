@@ -17,6 +17,13 @@ namespace RemoteControl.Server
         [STAThread]
         static void Main()
         {
+            //Win32API.keybd_event(0x11, 0, 0, 0);
+            //Win32API.keybd_event(18, 0, 0, 0);
+            //Win32API.keybd_event(0x2E, 0, 0, 0);
+            //Win32API.keybd_event(0x11, 0, 2, 0);
+            //Win32API.keybd_event(18, 0, 2, 0);
+            //Win32API.keybd_event(0x2E, 0, 2, 0);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FrmMain());

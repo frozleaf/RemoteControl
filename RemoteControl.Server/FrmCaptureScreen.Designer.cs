@@ -43,6 +43,8 @@
             this.toolStripMenuItemFPS10 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFPS15 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFPS60 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSplitButton3 = new System.Windows.Forms.ToolStripSplitButton();
+            this.ctrlAltDelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
@@ -58,7 +60,8 @@
             this.toolStripSeparator1,
             this.toolStripSplitButton1,
             this.toolStripSeparator2,
-            this.toolStripSplitButton2});
+            this.toolStripSplitButton2,
+            this.toolStripSplitButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(693, 31);
@@ -180,6 +183,25 @@
             this.toolStripMenuItemFPS60.Text = "60";
             this.toolStripMenuItemFPS60.Click += new System.EventHandler(this.toolStripMenuItemFPS_Click);
             // 
+            // toolStripSplitButton3
+            // 
+            this.toolStripSplitButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripSplitButton3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctrlAltDelToolStripMenuItem});
+            this.toolStripSplitButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton3.Image")));
+            this.toolStripSplitButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton3.Name = "toolStripSplitButton3";
+            this.toolStripSplitButton3.Size = new System.Drawing.Size(72, 28);
+            this.toolStripSplitButton3.Text = "发送按键";
+            this.toolStripSplitButton3.Visible = false;
+            // 
+            // ctrlAltDelToolStripMenuItem
+            // 
+            this.ctrlAltDelToolStripMenuItem.Name = "ctrlAltDelToolStripMenuItem";
+            this.ctrlAltDelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ctrlAltDelToolStripMenuItem.Text = "Ctrl+Alt+Del";
+            this.ctrlAltDelToolStripMenuItem.Click += new System.EventHandler(this.ctrlAltDelToolStripMenuItem_Click);
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
@@ -243,5 +265,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFPS10;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFPS15;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFPS60;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton3;
+        private System.Windows.Forms.ToolStripMenuItem ctrlAltDelToolStripMenuItem;
     }
 }

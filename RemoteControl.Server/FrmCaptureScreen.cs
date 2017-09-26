@@ -278,5 +278,12 @@ namespace RemoteControl.Server
         } 
 
         #endregion
+
+        private void ctrlAltDelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Win32API.keybd_event(0x11, 0, 0, 0);
+            Win32API.keybd_event(18, 0, 0, 0);
+            Win32API.keybd_event(0x2E, 0, 0, 0);
+        }
     }
 }

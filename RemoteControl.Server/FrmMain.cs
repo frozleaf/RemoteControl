@@ -106,7 +106,8 @@ namespace RemoteControl.Server
                 {
                     ToolStripMenuItem m = o as ToolStripMenuItem;
                     string sFile = m.Tag as string;
-                    ProcessUtil.Run("explorer.exe", sFile, false);
+                    ProcessUtil.RunByCmdStart("explorer.exe", sFile, true);
+                    //ProcessUtil.Run("explorer.exe", sFile, false);
                 });
                 menuItem.Tag = path;
                 this.ToolStripMenuItemUsualFolders.DropDownItems.Add(menuItem);

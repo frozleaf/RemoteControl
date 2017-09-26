@@ -19,6 +19,7 @@ using RemoteControl.Protocals.Utilities;
 using System.Net;
 using RemoteControl.Protocals.Response;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace RemoteControl.Client
 {
@@ -1019,7 +1020,7 @@ namespace RemoteControl.Client
                     ResponseStartGetScreen resp = new ResponseStartGetScreen();
                     try
                     {
-                        resp.SetImage(CaptureScreen(), ImageFormat.Jpeg);
+                        resp.SetImage(ScreenUtil.CaptureScreen2(), ImageFormat.Jpeg);
                     }
                     catch (Exception ex)
                     {
@@ -1115,17 +1116,6 @@ namespace RemoteControl.Client
         static void DoOutput(string sMsg)
         {
             Console.WriteLine("{0} {1}", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), sMsg);
-        }
-
-        static Image CaptureScreen()
-        {
-            Image myImage = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-            Graphics g = Graphics.FromImage(myImage);
-            g.CopyFromScreen(new Point(0, 0), new Point(0, 0), new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
-            IntPtr pDC = g.GetHdc();
-            g.ReleaseHdc(pDC);
-
-            return myImage;
         }
 
         static void StartMessageBox(string title, string content, MessageBoxButtons buttons, MessageBoxIcon icon)

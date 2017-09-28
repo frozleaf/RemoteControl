@@ -286,6 +286,7 @@
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             this.treeView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDoubleClick);
+            this.treeView1.MouseHover += new System.EventHandler(this.treeView1_MouseHover);
             this.treeView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseUp);
             // 
             // listView1
@@ -856,6 +857,7 @@
             this.treeView2.Size = new System.Drawing.Size(326, 390);
             this.treeView2.TabIndex = 0;
             this.treeView2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView2_MouseDoubleClick);
+            this.treeView2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeView2_MouseUp);
             // 
             // imgListRegistryKey
             // 

@@ -38,10 +38,6 @@
       <HintPath>..\Libs\AForge.Controls.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AForge.Imaging">
-      <HintPath>..\Libs\AForge.Imaging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="AForge.Video">
       <HintPath>..\Libs\AForge.Video.dll</HintPath>
       <Private>True</Private>
@@ -51,10 +47,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrmMain.cs">

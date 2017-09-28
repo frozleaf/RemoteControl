@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -397,16 +396,74 @@ namespace RemoteControl.Server
             }
             else if (e.PacketType == ePacketType.PACKET_VIEW_REGISTRY_KEY_RESPONSE)
             {
+                // 查看注册表项
                 var resp = e.Obj as ResponseViewRegistryKey;
                 this.UpdateUI(() =>
                 {
                     try
                     {
+                        // 清除右侧value值列表
                         this.listView2.Items.Clear();
                         if (resp.KeyNames != null)
                         {
-                            TreeNode curNode = this.treeView2.SelectedNode;
+                            TreeView tv = this.treeView2;
+                            // 查找根节点
+                            TreeNode rootNode = null;
+                            for (int j = 0; j < tv.Nodes[0].Nodes.Count; j++)
+                            {
+                                TreeNode node = tv.Nodes[0].Nodes[j];
+                                string str = node.Tag.ToString();
+                                eRegistryHive erh = (eRegistryHive)Enum.Parse(typeof(eRegistryHive), str);
+                                if (erh == resp.KeyRoot)
+                                {
+                                    rootNode = node;
+                                    break;
+                                }
+                            }
+                            if (rootNode == null)
+                            {
+                                doOutput("未找到Registry根节点");
+                                return;
+                            }
+                            TreeNode curNode = rootNode;
+                            if (resp.KeyPath != null)
+                            {
+                                // 查找目标的节点
+                                string[] keyNames = resp.KeyPath.Split("\\".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                for (int i = 0; i < keyNames.Length; i++)
+                                {
+                                    var keyName = keyNames[i];
+                                    var found = false;
+                                    for (int k = 0; k < curNode.Nodes.Count; k++)
+                                    {
+                                        var node = curNode.Nodes[k];
+                                        if (node.Text == keyName)
+                                        {
+                                            found = true;
+                                            curNode = node;
+                                            break;
+                                        }
+                                    }
+                                    if (!found)
+                                    {
+                                        TreeNode node = new TreeNode(keyName, 0, 0);
+                                        List<string> curKeys = new List<string>();
+                                        for (int ii = 0; ii <= i; ii++)
+                                        {
+                                            curKeys.Add(keyNames[ii]);
+                                        }
+                                        node.Tag = new RequestViewRegistryKey() {
+                                            KeyRoot = resp.KeyRoot,
+                                            KeyPath = string.Join("\\",curKeys)
+                                        };
+                                        curNode.Nodes.Add(node);
+                                        curNode = node;
+                                    }
+                                }
+                            }
+                            // 清除目标节点的子节点
                             curNode.Nodes.Clear();
+                            // 重新添加目标节点的子节点
                             for (int i = 0; i < resp.KeyNames.Length; i++)
                             {
                                 string keyName = resp.KeyNames[i];
@@ -420,9 +477,13 @@ namespace RemoteControl.Server
                                 curNode.Nodes.Add(node);
                             }
                             curNode.Expand();
+                            tv.SelectedNode = curNode;
+
+                            this.textBoxRegistryPath.Text = "计算机\\" + resp.KeyRoot + "\\" + resp.KeyPath;
                         }
                         if (resp.ValueNames != null)
                         {
+                            // 添加右侧value值列表
                             int valueNameLen = resp.ValueNames.Length;
                             for (int i = 0; i < valueNameLen; i++)
                             {
@@ -597,17 +658,33 @@ namespace RemoteControl.Server
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            SocketSession oSession = e.Node.Tag as SocketSession;
-            if (oSession != null)
+            SocketSession session = e.Node.Tag as SocketSession;
+            if (session != null)
             {
-                this.toolStripTextBox1.Text = oSession.SocketId;
-                this.toolStripTextBox2.Text = oSession.HostName;
+                var mousePos = Control.MousePosition;
+                var tv = sender as TreeView;
+                var loc = tv.PointToClient(mousePos);
+                loc.Offset(10, 0);
+                this.toolTip1.Show(session.HostName, tv, loc, 2000);
             }
-            else
-            {
-                this.toolStripTextBox1.Text = string.Empty;
-                this.toolStripTextBox2.Text = string.Empty;
-            }
+        }
+
+        private void treeView1_MouseHover(object sender, EventArgs e)
+        {
+            //var mousePos = Control.MousePosition;
+            //var tv = sender as TreeView;
+            //var loc = tv.PointToClient(mousePos);
+
+            //TreeViewHitTestInfo hitTestInfo = tv.HitTest(loc);
+            //if (hitTestInfo != null && hitTestInfo.Node != null)
+            //{
+            //    SocketSession session = hitTestInfo.Node.Tag as SocketSession;
+            //    if (session != null)
+            //    {
+            //        loc.Offset(5, 0);
+            //        this.toolTip1.Show(string.Format("{0},{1}", session.SocketId, session.HostName), tv, loc, 2000);
+            //    }
+            //}
         }
 
         private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -615,11 +692,32 @@ namespace RemoteControl.Server
             TreeViewHitTestInfo hitTestInfo = this.treeView1.HitTest(e.Location);
             if (hitTestInfo != null && hitTestInfo.Node != null)
             {
-                SocketSession client = hitTestInfo.Node.Tag as SocketSession;
-                this.currentSession = client;
-                if (client != null)
+                SocketSession session = hitTestInfo.Node.Tag as SocketSession;
+                if (session != null)
                 {
-                    client.Send(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
+                    if (session != this.currentSession)
+                    {
+                        bool isChange = true;
+                        if (this.currentSession != null)
+                        {
+                            if (MsgBox.ShowYesNo("是否要切换当前连接?") != System.Windows.Forms.DialogResult.Yes)
+                            {
+                                isChange = false;
+                            }
+                        }
+                        if (isChange)
+                        {
+                            this.currentSession = session;
+                            this.toolStripTextBox1.Text = session.SocketId;
+                            this.toolStripTextBox2.Text = session.HostName;
+                            session.Send(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
+                        }
+                    }
+                }
+                else
+                {
+                    this.toolStripTextBox1.Text = string.Empty;
+                    this.toolStripTextBox2.Text = string.Empty;
                 }
             }
         }
@@ -1733,6 +1831,9 @@ namespace RemoteControl.Server
         /// <param name="e"></param>
         private void treeView2_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (e.Button != System.Windows.Forms.MouseButtons.Left)
+                return;
+
             if (this.currentSession == null)
                 return;
 
@@ -1761,6 +1862,64 @@ namespace RemoteControl.Server
                 this.textBoxRegistryPath.Text = "计算机\\" + req.KeyRoot + "\\" + req.KeyPath;
                 this.currentSession.Send(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, req);
             }
+        }
+
+        /// <summary>
+        /// 注册表项右键菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void treeView2_MouseUp(object sender, MouseEventArgs e)
+        {
+            if(e.Button!= System.Windows.Forms.MouseButtons.Right)
+                return;
+
+            ContextMenuStrip cms = new System.Windows.Forms.ContextMenuStrip();
+            cms.Items.Add("切换", null, (o, args) => {
+                if (this.currentSession == null)
+                    return;
+
+                TreeViewHitTestInfo ti = this.treeView2.HitTest(e.Location);
+                if (ti != null && ti.Node != null)
+                {
+                    RequestViewRegistryKey req = new RequestViewRegistryKey();
+                    if (ti.Node.Level == 0)
+                    {
+                        return;
+                    }
+                    else if (ti.Node.Level == 1)
+                    {
+                        // 根节点
+                        eRegistryHive keyRoot = (eRegistryHive)Enum.Parse(typeof(eRegistryHive), ti.Node.Tag as string);
+                        req.KeyRoot = keyRoot;
+                        req.KeyPath = null;
+                    }
+                    else
+                    {
+                        // 非根节点
+                        req = ti.Node.Tag as RequestViewRegistryKey;
+                    }
+                    var frm = new FrmInputUrl();
+                    frm.Text = "请输入注册表相对地址";
+                    frm.ShowDialog();
+                    if (frm.InputText!=null)
+                    {
+                        if (req.KeyPath == null)
+                        {
+                            req.KeyPath = frm.InputText;
+                        }
+                        else
+                        {
+                            req.KeyPath += "\\" + frm.InputText;
+                        }
+                        this.currentSession.Send(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, req);
+                    }
+                }
+
+                
+            });
+            cms.Show(sender as TreeView, e.Location);
+
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Net;
+using System.Threading;
 
 namespace RemoteControl.Protocals
 {
@@ -57,6 +58,22 @@ namespace RemoteControl.Protocals
         public static string GetAppPath()
         {
             return AppDomain.CurrentDomain.BaseDirectory;
+        }
+
+        /// <summary>
+        /// 是否多开
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsMultiRun(string mutexName)
+        {
+            bool isNotStarted = false;
+            Mutex mutex = new Mutex(true, mutexName, out isNotStarted);
+            if (isNotStarted)
+            {
+                mutex.WaitOne();
+            }
+
+            return !isNotStarted;
         }
     }
 }

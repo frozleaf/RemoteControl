@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -63,6 +62,9 @@ namespace RemoteControl.Server
                 return;
             string serviceName = this.textBoxServiceName.Text.Trim();
             string avatar = this.pictureBoxAvatar.Tag.ToString();
+
+            // 保存配置
+            this.buttonSaveServerSetting.PerformClick();
 
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "可执行程序(*.exe)|*.exe|所有文件(*.*)|*.*";

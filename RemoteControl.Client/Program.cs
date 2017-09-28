@@ -11,7 +11,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Media;
 using System.Drawing.Imaging;
-using Newtonsoft.Json;
 using Microsoft.VisualBasic.Devices;
 using RemoteControl.Protocals.Request;
 using RemoteControl.Protocals.Plugin;
@@ -43,6 +42,7 @@ namespace RemoteControl.Client
         private static bool isClosing = false;
         private static Thread heartbeatThread = null;
         private static Dictionary<ePacketType, IRequestHandler> handlers = new Dictionary<ePacketType, IRequestHandler>();
+        const string MutexName = "RemoteControl.Client";
 
         static void Main(string[] args)
         {
@@ -72,6 +72,8 @@ namespace RemoteControl.Client
             else if (args.Length == 1 && args[0] == "/r")
             {
                 // 进行运行操作
+                if (CommonUtil.IsMultiRun(MutexName))
+                    return;
                 InitHandlers();
                 StartConnect();
                 heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };

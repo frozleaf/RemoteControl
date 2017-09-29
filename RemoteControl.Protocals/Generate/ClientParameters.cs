@@ -36,7 +36,7 @@ namespace RemoteControl.Protocals
 
         public void InitHeader()
         {
-            this.Header = new byte[] { 0xff, 0xfe, 0xfd, 0xfc };
+            this.Header = new byte[] { 0xff, 0xff, 0xff, 0xff };
         }
     }
 }

@@ -131,6 +131,7 @@
     <Compile Include="Request\RequestViewRegistryKey.cs" />
     <Compile Include="Request\RequestOpeRegistryValueName.cs" />
     <Compile Include="Request\RequestStartCaptureAudio.cs" />
+    <Compile Include="Request\RequestGetProcesses.cs" />
     <Compile Include="Response\ResponseAddAutoRun.cs" />
     <Compile Include="Response\ResponseCopyFile.cs" />
     <Compile Include="Response\ResponseGetHostName.cs" />

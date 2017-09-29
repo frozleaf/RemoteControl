@@ -26,7 +26,21 @@ namespace RemoteControl.Server
             this.textBoxServerIP.Text = Settings.CurrentSettings.ClientPara.ServerIP;
             this.textBoxServerPort.Text = Settings.CurrentSettings.ClientPara.ServerPort.ToString();
             this.textBoxLocalServerPort.Text = Settings.CurrentSettings.ServerPort.ToString();
-            //this.pictureBoxAppIcon.BackgroundImage = Image.FromFile(@"C:\Users\Administrator\AppData\Roaming\iconmaster\output\control.ico");
+            this.checkBoxHideClient.Checked = Settings.CurrentSettings.ClientPara.IsHide;
+            string onlineAvatar = Settings.CurrentSettings.ClientPara.OnlineAvatar;
+            string onlineAvatarPath = RSCApplication.GetPath(ePathType.AVATAR_DIR) + onlineAvatar;
+            if (!string.IsNullOrWhiteSpace(onlineAvatarPath) && System.IO.File.Exists(onlineAvatarPath))
+            {
+                this.pictureBoxAvatar.Tag = onlineAvatar;
+                this.pictureBoxAvatar.BackgroundImage = Image.FromFile(onlineAvatarPath);
+            }
+            string clientIconPath = Settings.CurrentSettings.ClientPara.ClientIconPath;
+            if (!string.IsNullOrWhiteSpace(clientIconPath) && System.IO.File.Exists(clientIconPath))
+            {
+                this.pictureBoxAppIcon.Tag = clientIconPath;
+                this.pictureBoxAppIcon.BackgroundImage = Image.FromFile(clientIconPath);
+                checkBoxAppIcon.Checked = true;
+            }
         }
 
         private void buttonSaveServerSetting_Click(object sender, EventArgs e)
@@ -46,6 +60,17 @@ namespace RemoteControl.Server
             Settings.CurrentSettings.ClientPara.ServerPort = cServerPort;
             Settings.CurrentSettings.ClientPara.ServiceName = serviceName;
             Settings.CurrentSettings.ClientPara.OnlineAvatar = avatar;
+            Settings.CurrentSettings.ClientPara.IsHide = this.checkBoxHideClient.Checked;
+            if (checkBoxAppIcon.Checked == false)
+            {
+                Settings.CurrentSettings.ClientPara.ClientIconPath = null;
+            }
+            else
+            {
+                Settings.CurrentSettings.ClientPara.ClientIconPath = pictureBoxAppIcon.Tag == null
+                    ? null
+                    : pictureBoxAppIcon.Tag.ToString();
+            }
             Settings.CurrentSettings.ServerPort = sServerPort;
             Settings.SaveSettings();
             this.Close();

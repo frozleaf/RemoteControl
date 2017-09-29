@@ -88,6 +88,30 @@ namespace RemoteControl.Protocals.Utilities
             return list;
         }
 
+        public static List<ProcessProperty> GetProcessProperyListBySimple()
+        {
+            List<ProcessProperty> list = new List<ProcessProperty>();
+
+            var pros = System.Diagnostics.Process.GetProcesses();
+            for (int i = 0; i < pros.Length; i++)
+            {
+                Process process = pros[i];
+                ProcessProperty property = new ProcessProperty();
+                property.ProcessName = process.ProcessName;
+                property.PID = process.Id;
+                property.ThreadCount = process.Threads.Count;
+                if (process.MainWindowHandle != IntPtr.Zero)
+                {
+                    property.ExecutablePath = process.MainModule.FileName;
+                    property.FileDescription = System.IO.Path.GetFileName(property.ExecutablePath);
+                }
+
+                list.Add(property);
+            }
+
+            return list;
+        }
+
         private static float GetProcessPrivateMeory(string processName)
         {
             PerformanceCounter pc = new PerformanceCounter("Process", "Working Set - Private", processName);

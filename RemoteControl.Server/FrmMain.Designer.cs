@@ -60,6 +60,9 @@
             this.刷新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.打开文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.打开文件隐藏模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.播放印业ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.停止播放音乐ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.远程下载到此处ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
@@ -122,6 +125,7 @@
             this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.刷新急速ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.刷新ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.结束进程ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -337,9 +341,12 @@
             this.复制全路径ToolStripMenuItem,
             this.刷新ToolStripMenuItem,
             this.打开文件ToolStripMenuItem,
-            this.打开文件隐藏模式ToolStripMenuItem});
+            this.打开文件隐藏模式ToolStripMenuItem,
+            this.播放印业ToolStripMenuItem,
+            this.停止播放音乐ToolStripMenuItem,
+            this.远程下载到此处ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 158);
             // 
             // 复制全路径ToolStripMenuItem
             // 
@@ -368,6 +375,27 @@
             this.打开文件隐藏模式ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.打开文件隐藏模式ToolStripMenuItem.Text = "打开文件（隐藏模式）";
             this.打开文件隐藏模式ToolStripMenuItem.Click += new System.EventHandler(this.打开文件隐藏模式ToolStripMenuItem_Click);
+            // 
+            // 播放印业ToolStripMenuItem
+            // 
+            this.播放印业ToolStripMenuItem.Name = "播放印业ToolStripMenuItem";
+            this.播放印业ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.播放印业ToolStripMenuItem.Text = "播放音乐";
+            this.播放印业ToolStripMenuItem.Click += new System.EventHandler(this.播放音乐ToolStripMenuItem_Click);
+            // 
+            // 停止播放音乐ToolStripMenuItem
+            // 
+            this.停止播放音乐ToolStripMenuItem.Name = "停止播放音乐ToolStripMenuItem";
+            this.停止播放音乐ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.停止播放音乐ToolStripMenuItem.Text = "停止播放音乐";
+            this.停止播放音乐ToolStripMenuItem.Click += new System.EventHandler(this.停止播放音乐ToolStripMenuItem_Click);
+            // 
+            // 远程下载到此处ToolStripMenuItem
+            // 
+            this.远程下载到此处ToolStripMenuItem.Name = "远程下载到此处ToolStripMenuItem";
+            this.远程下载到此处ToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.远程下载到此处ToolStripMenuItem.Text = "远程下载到此处";
+            this.远程下载到此处ToolStripMenuItem.Click += new System.EventHandler(this.远程下载到此处ToolStripMenuItem_Click);
             // 
             // toolStrip3
             // 
@@ -713,7 +741,7 @@
             this.buttonExeCode.Name = "buttonExeCode";
             this.buttonExeCode.Size = new System.Drawing.Size(122, 34);
             this.buttonExeCode.TabIndex = 4;
-            this.buttonExeCode.Text = "执行代码";
+            this.buttonExeCode.Text = "更新客户端";
             this.buttonExeCode.UseVisualStyleBackColor = true;
             this.buttonExeCode.Click += new System.EventHandler(this.buttonExeCode_Click);
             // 
@@ -998,22 +1026,30 @@
             // contextMenuStrip2
             // 
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.刷新急速ToolStripMenuItem,
             this.刷新ToolStripMenuItem1,
             this.结束进程ToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(125, 48);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(133, 70);
+            // 
+            // 刷新急速ToolStripMenuItem
+            // 
+            this.刷新急速ToolStripMenuItem.Name = "刷新急速ToolStripMenuItem";
+            this.刷新急速ToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.刷新急速ToolStripMenuItem.Text = "刷新(急速)";
+            this.刷新急速ToolStripMenuItem.Click += new System.EventHandler(this.刷新急速ToolStripMenuItem_Click);
             // 
             // 刷新ToolStripMenuItem1
             // 
             this.刷新ToolStripMenuItem1.Name = "刷新ToolStripMenuItem1";
-            this.刷新ToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
-            this.刷新ToolStripMenuItem1.Text = "刷新";
+            this.刷新ToolStripMenuItem1.Size = new System.Drawing.Size(132, 22);
+            this.刷新ToolStripMenuItem1.Text = "刷新(详细)";
             this.刷新ToolStripMenuItem1.Click += new System.EventHandler(this.刷新ToolStripMenuItem1_Click);
             // 
             // 结束进程ToolStripMenuItem
             // 
             this.结束进程ToolStripMenuItem.Name = "结束进程ToolStripMenuItem";
-            this.结束进程ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.结束进程ToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.结束进程ToolStripMenuItem.Text = "结束进程";
             this.结束进程ToolStripMenuItem.Click += new System.EventHandler(this.结束进程ToolStripMenuItem_Click);
             // 
@@ -1377,6 +1413,10 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemSkins;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemTools;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemUsualFolders;
+        private System.Windows.Forms.ToolStripMenuItem 刷新急速ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 播放印业ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 停止播放音乐ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 远程下载到此处ToolStripMenuItem;
     }
 }
 

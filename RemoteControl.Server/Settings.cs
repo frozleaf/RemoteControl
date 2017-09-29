@@ -41,5 +41,7 @@ namespace RemoteControl.Server
         public int ServerPort;
         public string ServiceName;
         public string OnlineAvatar;
+        public bool IsHide;
+        public string ClientIconPath;
     }
 }

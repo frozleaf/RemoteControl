@@ -478,6 +478,7 @@ namespace RemoteControl.Server
                             }
                             curNode.Expand();
                             tv.SelectedNode = curNode;
+                            this.listView2.Tag = curNode.Tag;
 
                             this.textBoxRegistryPath.Text = "计算机\\" + resp.KeyRoot + "\\" + resp.KeyPath;
                         }
@@ -1806,24 +1807,33 @@ namespace RemoteControl.Server
                     {
                         client.Send(ePacketType.PACKET_RESTART_APP_REQUEST, null);
                     });
-                    cms.Items.Add("添加开启自启", null, (o, s) =>
+                    cms.Items.Add("添加开机自启(注册表)", null, (o, s) =>
                     {
-                        RequestOpeRegistryValueName req = new RequestOpeRegistryValueName();
-                        req.KeyRoot = eRegistryHive.CurrentUser;
-                        req.KeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-                        req.Operation = OpeType.New;
-                        req.ValueName = "rc";
-                        req.Value = client.AppPath;
-                        client.Send(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, req);
+                        RequestAutoRun req = new RequestAutoRun();
+                        req.AutoRunMode = eAutoRunMode.ByRegistry;
+                        req.OperationMode = OpeType.New;
+                        client.Send(ePacketType.PACKET_AUTORUN_REQUEST, req);
                     });
-                    cms.Items.Add("移除开启自启", null, (o, s) =>
+                    cms.Items.Add("移除开机自启(注册表)", null, (o, s) =>
                     {
-                        RequestOpeRegistryValueName req = new RequestOpeRegistryValueName();
-                        req.KeyRoot = eRegistryHive.CurrentUser;
-                        req.KeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-                        req.Operation = OpeType.Delete;
-                        req.ValueName = "rc";
-                        client.Send(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, req);
+                        RequestAutoRun req = new RequestAutoRun();
+                        req.AutoRunMode = eAutoRunMode.ByRegistry;
+                        req.OperationMode = OpeType.Delete;
+                        client.Send(ePacketType.PACKET_AUTORUN_REQUEST, req);
+                    });
+                    cms.Items.Add("添加开机自启(计划任务)", null, (o, s) =>
+                    {
+                        RequestAutoRun req = new RequestAutoRun();
+                        req.AutoRunMode = eAutoRunMode.BySchedualTask;
+                        req.OperationMode = OpeType.New;
+                        client.Send(ePacketType.PACKET_AUTORUN_REQUEST, req);
+                    });
+                    cms.Items.Add("移除开机自启(计划任务)", null, (o, s) =>
+                    {
+                        RequestAutoRun req = new RequestAutoRun();
+                        req.AutoRunMode = eAutoRunMode.BySchedualTask;
+                        req.OperationMode = OpeType.Delete;
+                        client.Send(ePacketType.PACKET_AUTORUN_REQUEST, req);
                     });
                     cms.Show(this.treeView1, e.Location);
                 }

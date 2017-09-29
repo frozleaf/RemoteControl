@@ -19,23 +19,7 @@ namespace RemoteControl.Client
             ResponseOpeRegistryValueName resp = new ResponseOpeRegistryValueName();
             try
             {
-                RegistryKey rootKey = RegistryKey.OpenBaseKey(
-                                                    (RegistryHive)req.KeyRoot,
-                                                    Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
-
-                RegistryKey subKey = rootKey.OpenSubKey(req.KeyPath, true);
-                bool valueNameExists = subKey.GetValueNames().ToList().Contains(req.ValueName);
-                if (req.Operation == OpeType.Delete)
-                {
-                    if (valueNameExists)
-                    {
-                        subKey.DeleteValue(req.ValueName);
-                    }
-                }
-                else if (req.Operation == OpeType.New || req.Operation == OpeType.Edit)
-                {
-                    subKey.SetValue(req.ValueName, req.Value, (RegistryValueKind)req.ValueKind);
-                }
+                OpeRegistry(req);
             }
             catch (Exception ex)
             {
@@ -45,6 +29,27 @@ namespace RemoteControl.Client
             }
 
             session.Send(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_RESPONSE, resp);
+        }
+
+        public static void OpeRegistry(RequestOpeRegistryValueName req)
+        {
+            RegistryKey rootKey = RegistryKey.OpenBaseKey(
+                                                    (RegistryHive)req.KeyRoot,
+                                                    Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
+
+            RegistryKey subKey = rootKey.OpenSubKey(req.KeyPath, true);
+            bool valueNameExists = subKey.GetValueNames().ToList().Contains(req.ValueName);
+            if (req.Operation == OpeType.Delete)
+            {
+                if (valueNameExists)
+                {
+                    subKey.DeleteValue(req.ValueName);
+                }
+            }
+            else if (req.Operation == OpeType.New || req.Operation == OpeType.Edit)
+            {
+                subKey.SetValue(req.ValueName, req.Value, (RegistryValueKind)req.ValueKind);
+            }
         }
     }
 }

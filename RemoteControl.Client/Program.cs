@@ -102,6 +102,7 @@ namespace RemoteControl.Client
             RequestGetProcessesHandler getProcessesHandler = new RequestGetProcessesHandler();
             handlers.Add(ePacketType.PACKET_GET_PROCESSES_REQUEST, getProcessesHandler);
             handlers.Add(ePacketType.PACKET_KILL_PROCESS_REQUEST, getProcessesHandler);
+            handlers.Add(ePacketType.PACKET_AUTORUN_REQUEST, new RequestAutoRunHandler());
         }
 
         static void ReadParameters()
@@ -603,14 +604,14 @@ namespace RemoteControl.Client
             }
             else if (packetType == ePacketType.PACKET_QUIT_APP_REQUEST)
             {
-                Environment.Exit(0);
+                OnFireQuit(null,null);
             }
             else if (packetType == ePacketType.PACKET_RESTART_APP_REQUEST)
             {
                 string path = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
                 var thread = ProcessUtil.Run(path, "/r", true);
                 thread.Join();
-                Environment.Exit(0);
+                OnFireQuit(null, null);
             }
             else if (packetType == ePacketType.PACKET_TRANSPORT_EXEC_CODE_REQUEST)
             {

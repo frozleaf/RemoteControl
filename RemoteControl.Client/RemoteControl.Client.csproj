@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\RequestGetProcessesHandler.cs" />
+    <Compile Include="Handlers\RequestAutoRunHandler.cs" />
     <Compile Include="Tools\CaptureVideoClient.cs" />
     <Compile Include="Handlers\RequestOpeRegistryValueNameHandler.cs" />
     <Compile Include="Handlers\RequestCaptureAudioHandler.cs" />

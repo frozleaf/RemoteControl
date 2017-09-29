@@ -106,7 +106,7 @@
     <Compile Include="Codec\PacketFactory.cs" />
     <Compile Include="Request\ProcessProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Request\RequestAddAutoRun.cs" />
+    <Compile Include="Request\RequestAutoRun.cs" />
     <Compile Include="Request\RequestCommand.cs" />
     <Compile Include="Request\RequestCreateFileOrDir.cs" />
     <Compile Include="Request\RequestDownloadWebFile.cs" />
@@ -132,7 +132,7 @@
     <Compile Include="Request\RequestOpeRegistryValueName.cs" />
     <Compile Include="Request\RequestStartCaptureAudio.cs" />
     <Compile Include="Request\RequestGetProcesses.cs" />
-    <Compile Include="Response\ResponseAddAutoRun.cs" />
+    <Compile Include="Response\ResponseAutoRun.cs" />
     <Compile Include="Response\ResponseCopyFile.cs" />
     <Compile Include="Response\ResponseGetHostName.cs" />
     <Compile Include="Response\ResponseMoveFile.cs" />
@@ -154,6 +154,7 @@
     <Compile Include="Utilities\ProcessUtil.cs" />
     <Compile Include="Utilities\ResUtil.cs" />
     <Compile Include="Utilities\CommonUtil.cs" />
+    <Compile Include="Utilities\SchTaskUtil.cs" />
     <Compile Include="Utilities\Win32API.cs" />
     <Compile Include="Request\RequestDeleteFileOrDir.cs" />
     <Compile Include="Response\ResponseDeleteFileOrDir.cs" />

@@ -66,6 +66,8 @@ namespace RemoteControl.Protocals
             _decodeMapping.Add(ePacketType.PACKET_START_CAPTURE_AUDIO_REQUEST, typeof(RequestStartCaptureAudio));
             _decodeMapping.Add(ePacketType.PACKET_START_CAPTURE_AUDIO_RESPONSE, typeof(ResponseStartCaptureAudio));
             _decodeMapping.Add(ePacketType.PACKET_GET_PROCESSES_REQUEST, typeof(RequestGetProcesses));
+            _decodeMapping.Add(ePacketType.PACKET_AUTORUN_REQUEST, typeof(RequestAutoRun));
+            _decodeMapping.Add(ePacketType.PACKET_AUTORUN_RESPONSE, typeof(ResponseAutoRun));
         }
         public static byte[] EncodeOject(ePacketType packetType, object obj)
         {

@@ -55,9 +55,22 @@ namespace RemoteControl.Protocals
             return result;
         }
 
-        public static string GetAppPath()
+        /// <summary>
+        /// 获取入口程序路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetEntryExecutablePath()
         {
-            return AppDomain.CurrentDomain.BaseDirectory;
+            return System.Reflection.Assembly.GetEntryAssembly().Location;
+        }
+
+        /// <summary>
+        /// 获取入口启动目录
+        /// </summary>
+        /// <returns></returns>
+        public static string GetEntryStartupPath()
+        {
+            return System.IO.Path.GetDirectoryName(GetEntryExecutablePath());
         }
 
         /// <summary>

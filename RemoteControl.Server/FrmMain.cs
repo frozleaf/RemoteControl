@@ -320,10 +320,29 @@ namespace RemoteControl.Server
                 string fileName = System.IO.Path.GetFileName(downloadHeader.Path);
                 this.DownloadHeader = downloadHeader;
 
+                // 处理资源释放
+                if (this.downloadFileStream != null)
+                {
+                    this.downloadFileStream.Close();
+                    this.downloadFileStream = null;
+                }
+                this.recvSize = 0;
+                this.UpdateDownloadProgressAction = null;
+
                 new Thread(() =>
                 {
-                    var frm = new FrmDownload(() => 
+                    var frm = new FrmDownload(() =>
                     {
+                        // 处理资源释放
+                        if (this.downloadFileStream != null)
+                        {
+                            this.downloadFileStream.Close();
+                            this.downloadFileStream = null;
+                        }
+                        this.recvSize = 0;
+                        this.UpdateDownloadProgressAction = null;
+
+                        // 发送终止下载请求
                         this.currentSession.Send(ePacketType.PACKET_STOP_DOWNLOAD_REQUEST, null);
                     }, downloadHeader.Path, downloadHeader.SavePath, downloadHeader.FileSize);
                     this.DownloadWindow = frm;
@@ -333,6 +352,7 @@ namespace RemoteControl.Server
             }
             else if (e.PacketType == ePacketType.PACKET_START_DOWNLOAD_RESPONSE)
             {
+                ResponseStartDownload resp = e.Obj as ResponseStartDownload;
                 try
                 {
                     string localFull = this.DownloadHeader.SavePath;
@@ -340,25 +360,33 @@ namespace RemoteControl.Server
                     {
                         System.IO.File.Create(localFull).Close();
                     }
-                    byte[] data = e.Obj as byte[];
+                    byte[] data = resp.Data;
                     if (downloadFileStream == null)
                     {
                         downloadFileStream = new FileStream(localFull, FileMode.Open, FileAccess.Write);
                     }
                     downloadFileStream.Write(data, 0, data.Length);
-
                     this.recvSize += data.Length;
 
+                    // 显示进度
                     if (this.DownloadWindow!=null)
                     {
-                        this.DownloadWindow.UpdateProgress(this.recvSize); 
+                        this.DownloadWindow.UpdateProgress(this.recvSize);
                     }
 
+                    // 下载完成
                     if (this.recvSize == this.DownloadHeader.FileSize)
                     {
                         this.DownloadWindow.Close();
-                        downloadFileStream.Close();
-                        downloadFileStream = null;
+
+                        // 处理资源释放
+                        if (this.downloadFileStream != null)
+                        {
+                            this.downloadFileStream.Close();
+                            this.downloadFileStream = null;
+                        }
+                        this.recvSize = 0;
+                        this.UpdateDownloadProgressAction = null;
                     }
                 }
                 catch (Exception ex)
@@ -696,24 +724,20 @@ namespace RemoteControl.Server
                 SocketSession session = hitTestInfo.Node.Tag as SocketSession;
                 if (session != null)
                 {
-                    if (session != this.currentSession)
+                    if (session != this.currentSession) // 与当前会话不同
                     {
-                        bool isChange = true;
-                        if (this.currentSession != null)
+                        if (this.currentSession != null) // 当前会话非空，判断是否切换
                         {
                             if (MsgBox.ShowYesNo("是否要切换当前连接?") != System.Windows.Forms.DialogResult.Yes)
                             {
-                                isChange = false;
+                                return;
                             }
                         }
-                        if (isChange)
-                        {
-                            this.currentSession = session;
-                            this.toolStripTextBox1.Text = session.SocketId;
-                            this.toolStripTextBox2.Text = session.HostName;
-                            session.Send(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
-                        }
+                        this.currentSession = session;
+                        this.toolStripTextBox1.Text = session.SocketId;
+                        this.toolStripTextBox2.Text = session.HostName;
                     }
+                    session.Send(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
                 }
                 else
                 {
@@ -736,8 +760,7 @@ namespace RemoteControl.Server
                         this.listView1.Tag = tag.Path;
                         RequestGetSubFilesOrDirs req = new RequestGetSubFilesOrDirs();
                         req.parentDir = tag.Path;
-                        byte[] packet = PacketFactory.EncodeOject(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, req);
-                        this.currentSession.SocketObj.Send(packet);
+                        this.currentSession.Send(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, req);
                     }
                 }
             }
@@ -756,14 +779,12 @@ namespace RemoteControl.Server
                         string parent = parentDirInfo.FullName;
                         RequestGetSubFilesOrDirs req = new RequestGetSubFilesOrDirs();
                         req.parentDir = parent;
-                        byte[] packet = PacketFactory.EncodeOject(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, req);
-                        this.currentSession.SocketObj.Send(packet);
+                        this.currentSession.Send(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, req);
                         this.listView1.Tag = parent;
                     }
                     else
                     {
-                        byte[] packet = PacketFactory.EncodeOject(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
-                        this.currentSession.SocketObj.Send(packet);
+                        this.currentSession.Send(ePacketType.PACKET_GET_DRIVES_REQUEST, null);
                     }
                 }
             }

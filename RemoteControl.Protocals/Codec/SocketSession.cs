@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using RemoteControl.Protocals;
+using RemoteControl.Protocals.Codec;
 
 namespace RemoteControl.Protocals
 {
@@ -68,7 +69,7 @@ namespace RemoteControl.Protocals
         {
             try
             {
-                this.SocketObj.Send(PacketFactory.EncodeOject(packetType, obj));
+                this.SocketObj.Send(CodecFactory.Instance.EncodeOject(packetType, obj));
             }
             catch (Exception ex)
             {

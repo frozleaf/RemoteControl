@@ -92,6 +92,7 @@
     <Reference Include="System.Management" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Codec\CodecFactoryBase.cs" />
     <Compile Include="OpeType.cs" />
     <Compile Include="RegistryTool\eRegistryHive.cs" />
     <Compile Include="RegistryTool\eRegistryValueKind.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Plugin\PluginLoader.cs" />
     <Compile Include="Request\ePathType.cs" />
     <Compile Include="Extension\MyExtensions.cs" />
-    <Compile Include="Codec\PacketFactory.cs" />
+    <Compile Include="Codec\CodecFactory.cs" />
     <Compile Include="Request\ProcessProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\RequestAutoRun.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Response\ResponseGetDrives.cs" />
     <Compile Include="Response\ResponseGetProcesses.cs" />
     <Compile Include="Response\ResponseStartCaptureVideo.cs" />
+    <Compile Include="Response\ResponseStartDownload.cs" />
     <Compile Include="Response\ResponseStartDownloadHeader.cs" />
     <Compile Include="Response\ResponseStartGetScreen.cs" />
     <Compile Include="Response\ResponseGetSubFilesOrDirs.cs" />

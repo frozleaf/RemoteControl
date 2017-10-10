@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using RemoteControl.Protocals;
+using RemoteControl.Protocals.Codec;
 
 namespace RemoteControl.Server
 {
@@ -124,7 +125,7 @@ namespace RemoteControl.Server
         {
             ePacketType packetType;
             object obj;
-            PacketFactory.DecodeObject(packet, out packetType, out obj);
+            CodecFactory.Instance.DecodeObject(packet, out packetType, out obj);
             if (PacketReceived != null)
             {
                 PacketReceivedEventArgs args = new PacketReceivedEventArgs();

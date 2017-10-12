@@ -237,7 +237,7 @@ namespace RemoteControl.Server
                             var dirObj = resp.dirs[i];
                             string path = dirObj.DirPath;
                             string itemText = System.IO.Path.GetFileName(path);
-                            ListViewItem item = new ListViewItem(new string[] { itemText, "", dirObj.LastWriteTime.ToString(),"<文件夹>" }, 3);
+                            ListViewItem item = new ListViewItem(new string[] { itemText, "", dirObj.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"),"<文件夹>" }, 3);
                             ListViewItemFileOrDirTag tag = new ListViewItemFileOrDirTag();
                             tag.IsFile = false;
                             tag.Path = path;
@@ -254,7 +254,7 @@ namespace RemoteControl.Server
                             {
                                 this.imageList1.Images.Add(extension, CommonUtil.GetIcon(extension, true));
                             }
-                            ListViewItem item = new ListViewItem(new string[] { itemText, GetFileSizeDesc(fileObj.Size), fileObj.LastWriteTime.ToString(),"<文件>" }, extension);
+                            ListViewItem item = new ListViewItem(new string[] { itemText, GetFileSizeDesc(fileObj.Size), fileObj.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"), "<文件>" }, extension);
                             ListViewItemFileOrDirTag tag = new ListViewItemFileOrDirTag();
                             tag.IsFile = true;
                             tag.Path = path;

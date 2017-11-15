@@ -65,6 +65,16 @@ namespace RemoteControl.Protocals
             this.OnlineAvatar = avatar;
         }
 
+        public string GetSocketIPById()
+        {
+            if(SocketId==null)
+                return string.Empty;
+            string[] array = SocketId.Split(':');
+            if (array.Length != 2)
+                return string.Empty;
+            return array[0];
+        }
+
         public void Send(ePacketType packetType, object obj)
         {
             try

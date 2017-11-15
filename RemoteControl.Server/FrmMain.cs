@@ -195,10 +195,14 @@ namespace RemoteControl.Server
                 {
                     // 修改节点图标
                     TreeNode node = FindClientNode(e.Session);
-                    if (node != null && this.treeView1.ImageList.Images.ContainsKey(e.Session.OnlineAvatar))
+                    if (node != null)
                     {
-                        node.ImageKey = e.Session.OnlineAvatar;
-                        node.SelectedImageKey = e.Session.OnlineAvatar;
+                        node.Text = string.Format("{0}({1})", e.Session.GetSocketIPById(), e.Session.HostName);
+                        if (this.treeView1.ImageList.Images.ContainsKey(e.Session.OnlineAvatar))
+                        {
+                            node.ImageKey = e.Session.OnlineAvatar;
+                            node.SelectedImageKey = e.Session.OnlineAvatar; 
+                        }
                     }
                 }));
             }
@@ -593,7 +597,7 @@ namespace RemoteControl.Server
                 this.Invoke(new Action<SocketSession>(AddClient), oClient);
                 return;
             }
-            TreeNode treeNode = new TreeNode(oClient.SocketId);
+            TreeNode treeNode = new TreeNode(oClient.GetSocketIPById());
             treeNode.Tag = oClient;
             treeNode.ImageKey = "qq";
             treeNode.SelectedImageKey = "qq";

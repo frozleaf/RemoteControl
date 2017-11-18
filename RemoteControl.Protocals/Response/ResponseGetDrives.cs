@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RemoteControl.Protocals
 {
-    public class ResponseGetDrives
+    public class ResponseGetDrives : ResponseBase
     {
         public List<string> drives;
     }

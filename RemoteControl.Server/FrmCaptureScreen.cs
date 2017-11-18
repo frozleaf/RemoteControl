@@ -9,6 +9,7 @@ using RemoteControl.Protocals;
 using log4net;
 using System.IO;
 using System.Drawing.Imaging;
+using RemoteControl.Server.Utils;
 
 namespace RemoteControl.Server
 {
@@ -94,18 +95,18 @@ namespace RemoteControl.Server
                                 bmp.Save(ms, ImageFormat.Jpeg);
                                 System.IO.File.WriteAllBytes(fileName, ms.ToArray());
                             }
-                            MsgBox.ShowInfo("保存成功!");
+                            MsgBox.Info("保存成功!");
                         }
                         catch (Exception ex)
                         {
-                            MsgBox.ShowInfo("保存失败，" + ex.Message);
+                            MsgBox.Info("保存失败，" + ex.Message);
                         }
                     }
                 }
             }
             else
             {
-                MsgBox.ShowInfo("暂无图像，无法保存！");
+                MsgBox.Info("暂无图像，无法保存！");
             }
         }
 

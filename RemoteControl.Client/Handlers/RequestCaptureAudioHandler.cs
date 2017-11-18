@@ -9,7 +9,7 @@ using RemoteControl.Audio.Codecs;
 using System.Threading;
 using System.IO;
 
-namespace RemoteControl.Client
+namespace RemoteControl.Client.Handlers
 {
     class RequestCaptureAudioHandler : IRequestHandler
     {

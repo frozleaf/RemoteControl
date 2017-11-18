@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RemoteControl.Protocals
 {
-    public class ResponseGetSubFilesOrDirs
+    public class ResponseGetSubFilesOrDirs:ResponseBase
     {
         public List<DirectoryProperty> dirs;
         public List<FileProperty> files;

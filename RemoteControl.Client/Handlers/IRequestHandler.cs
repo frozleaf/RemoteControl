@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using RemoteControl.Protocals;
 
-namespace RemoteControl.Client
+namespace RemoteControl.Client.Handlers
 {
     interface IRequestHandler
     {

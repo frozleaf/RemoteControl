@@ -50,7 +50,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.listView1 = new SortableListView();
+            this.listView1 = new RemoteControl.Server.SortableListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1264,6 +1264,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FrmMain";
             this.Text = "远程控制服务端";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMain_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -1331,7 +1332,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ToolStrip toolStrip3;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton7;
@@ -1417,6 +1417,7 @@
         private System.Windows.Forms.ToolStripMenuItem 播放印业ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 停止播放音乐ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 远程下载到此处ToolStripMenuItem;
+        private SortableListView listView1;
     }
 }
 

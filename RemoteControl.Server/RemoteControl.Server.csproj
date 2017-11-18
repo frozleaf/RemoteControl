@@ -179,7 +179,6 @@
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="ListViewItemFileOrDirTag.cs" />
-    <Compile Include="MsgBox.cs" />
     <Compile Include="PacketReceivedEventArgs.cs" />
     <Compile Include="PasteInfo.cs" />
     <Compile Include="Program.cs" />
@@ -204,6 +203,7 @@
     </Compile>
     <Compile Include="Utils\IconChanger.cs" />
     <Compile Include="Utils\IconChangerExtensions.cs" />
+    <Compile Include="Utils\MsgBox.cs" />
     <EmbeddedResource Include="FrmAbout.resx">
       <DependentUpon>FrmAbout.cs</DependentUpon>
     </EmbeddedResource>

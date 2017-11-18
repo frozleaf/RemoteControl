@@ -9,7 +9,7 @@ using RemoteControl.Protocals.Request;
 using System.Windows.Forms;
 using RemoteControl.Protocals.Utilities;
 
-namespace RemoteControl.Client
+namespace RemoteControl.Client.Handlers
 {
     class RequestAutoRunHandler : IRequestHandler
     {

@@ -108,16 +108,23 @@
   <ItemGroup>
     <Compile Include="Handlers\RequestGetProcessesHandler.cs" />
     <Compile Include="Handlers\RequestAutoRunHandler.cs" />
-    <Compile Include="Tools\CaptureVideoClient.cs" />
+    <Compile Include="Handlers\RequestGetDrivesHandler.cs" />
+    <Compile Include="Handlers\RequestGetSubFilesOrDirsHandler.cs" />
+    <Compile Include="Handlers\RequestCreateFileOrDirHandler.cs" />
+    <Compile Include="Handlers\RequestDeleteFileOrDirHandler.cs" />
+    <Compile Include="Handlers\RequestPowerHandler.cs" />
+    <Compile Include="Handlers\RequestOpenUrlHandler.cs" />
+    <Compile Include="Handlers\RequestCommandHandler.cs" />
+    <Compile Include="Services\CaptureVideoClient.cs" />
     <Compile Include="Handlers\RequestOpeRegistryValueNameHandler.cs" />
     <Compile Include="Handlers\RequestCaptureAudioHandler.cs" />
     <Compile Include="Handlers\IRequestHandler.cs" />
-    <Compile Include="Tools\KeyboardOpeUtil.cs" />
-    <Compile Include="Tools\MouseOpeUtil.cs" />
+    <Compile Include="Utils\KeyboardOpeUtil.cs" />
+    <Compile Include="Utils\MouseOpeUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Handlers\RequestViewRegistryKeyHandler.cs" />
-    <Compile Include="Tools\ScreenUtil.cs" />
+    <Compile Include="Utils\ScreenUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

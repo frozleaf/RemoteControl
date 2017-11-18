@@ -11,7 +11,7 @@ using System.IO;
 using RemoteControl.Protocals.Utilities;
 using System.Diagnostics;
 
-namespace RemoteControl.Client
+namespace RemoteControl.Client.Handlers
 {
     class RequestGetProcessesHandler : IRequestHandler
     {

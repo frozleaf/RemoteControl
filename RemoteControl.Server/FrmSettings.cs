@@ -111,7 +111,7 @@ namespace RemoteControl.Server
                 }
                 else
                 {
-                    MsgBox.ShowInfo("RemoteControl.Client.dat文件丢失！");
+                    MsgBox.Info("RemoteControl.Client.dat文件丢失！");
                     return;
                     // 读取资源文件
                     //fileBytes = ResUtil.GetResFileData("RemoteControl.Client.dat"); 
@@ -129,7 +129,7 @@ namespace RemoteControl.Server
                     this.checkBoxHideClient.Checked ? ClientParametersManager.ClientStyle.Hidden : ClientParametersManager.ClientStyle.Normal);
                 // 修改参数
                 ClientParametersManager.WriteParameters(fileBytes, dialog.FileName, para);
-                MsgBox.ShowInfo("客户端生成成功！");
+                MsgBox.Info("客户端生成成功！");
             }
         }
 

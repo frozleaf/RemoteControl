@@ -17,6 +17,7 @@ using RemoteControl.Protocals.Response;
 using RemoteControl.Audio;
 using RemoteControl.Audio.Codecs;
 using RemoteControl.Protocals.Utilities;
+using RemoteControl.Server.Utils;
 
 namespace RemoteControl.Server
 {
@@ -732,7 +733,7 @@ namespace RemoteControl.Server
                     {
                         if (this.currentSession != null) // 当前会话非空，判断是否切换
                         {
-                            if (MsgBox.ShowYesNo("是否要切换当前连接?") != System.Windows.Forms.DialogResult.Yes)
+                            if (MsgBox.Question("是否要切换当前连接?", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
                             {
                                 return;
                             }
@@ -798,7 +799,7 @@ namespace RemoteControl.Server
         {
             if (this.currentSession == null)
             {
-                MsgBox.ShowInfo("请先选择客户端！");
+                MsgBox.Info("请先选择客户端！");
                 return;
             }
             var frm = new FrmCaptureScreen(this.currentSession);
@@ -925,7 +926,7 @@ namespace RemoteControl.Server
             string remoteFileDir = this.listView1.Tag as string;
             if (remoteFileDir == null)
             {
-                MsgBox.ShowInfo("当前目录无法上传文件!");
+                MsgBox.Info("当前目录无法上传文件!");
                 return;
             }
 
@@ -1012,7 +1013,7 @@ namespace RemoteControl.Server
                     fs.Dispose();
                     fs = null;
 
-                    MsgBox.ShowInfo("上传完成!");
+                    MsgBox.Info("上传完成!");
                 }
                 if (frm != null)
                 {
@@ -1123,7 +1124,7 @@ namespace RemoteControl.Server
             if (!IsCurrentSessionValid())
                 return;
 
-            if (MsgBox.ShowOkCancel("确定要锁定计算机:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要锁定计算机:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PACKET_LOCK_REQUEST, null);
@@ -1139,7 +1140,7 @@ namespace RemoteControl.Server
             if (!IsCurrentSessionValid())
                 return;
 
-            if (MsgBox.ShowOkCancel("确定要重启计算机:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要重启计算机:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PACKET_REBOOT_REQUEST, null);
@@ -1155,7 +1156,7 @@ namespace RemoteControl.Server
             if (!IsCurrentSessionValid())
                 return;
 
-            if (MsgBox.ShowOkCancel("确定要睡眠计算机:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要睡眠计算机:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PACKET_SLEEP_REQUEST, null);
@@ -1171,7 +1172,7 @@ namespace RemoteControl.Server
             if (!IsCurrentSessionValid())
                 return;
 
-            if (MsgBox.ShowOkCancel("确定要关闭计算机:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要关闭计算机:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PACKET_SHUTDOWN_REQUEST, null);
@@ -1187,7 +1188,7 @@ namespace RemoteControl.Server
             if (!IsCurrentSessionValid())
                 return;
 
-            if (MsgBox.ShowOkCancel("确定要休眠计算机:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要休眠计算机:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PACKET_HIBERNATE_REQUEST, null);
@@ -1245,7 +1246,7 @@ namespace RemoteControl.Server
         {
             if (this.currentSession == null)
             {
-                MsgBox.ShowInfo("请先选择一台计算机");
+                MsgBox.Info("请先选择一台计算机");
                 return false;
             }
 
@@ -1302,7 +1303,7 @@ namespace RemoteControl.Server
                     int seconds;
                     if (!int.TryParse(frm.InputText, out seconds))
                     {
-                        MsgBox.ShowInfo("必须输入数字!");
+                        MsgBox.Info("必须输入数字!");
                         return;
                     }
                     RequestLockMouse req = new RequestLockMouse();
@@ -1314,7 +1315,7 @@ namespace RemoteControl.Server
 
         private void buttonUnLockMouse_Click(object sender, EventArgs e)
         {
-            if (MsgBox.ShowOkCancel("确定要取消锁定鼠标:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要取消锁定鼠标:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PACKET_UNLOCK_MOUSE_REQUEST, null);
@@ -1327,7 +1328,7 @@ namespace RemoteControl.Server
 
         private void buttonUnBlackScreen_Click(object sender, EventArgs e)
         {
-            if (MsgBox.ShowOkCancel("确定要取消黑屏:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要取消黑屏:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PAKCET_UN_BLACK_SCREEN_REQUEST, null);
@@ -1364,7 +1365,7 @@ namespace RemoteControl.Server
 
         private void buttonStopPlayMusic_Click(object sender, EventArgs e)
         {
-            if (MsgBox.ShowOkCancel("确定要停止播放音乐:" + this.currentSession.SocketId) == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要停止播放音乐:" + this.currentSession.SocketId, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
             PostRequstWithCurrentSession(ePacketType.PACKET_STOP_PLAY_MUSIC_REQUEST, null);
@@ -1440,7 +1441,7 @@ namespace RemoteControl.Server
             }
             catch (Exception ex)
             {
-                MsgBox.ShowInfo("复制到剪切板失败！");
+                MsgBox.Info("复制到剪切板失败！");
             }
         }
 
@@ -1452,7 +1453,7 @@ namespace RemoteControl.Server
             string path;
             if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
             {
-                MsgBox.ShowInfo("请选择一个音频文件！");
+                MsgBox.Info("请选择一个音频文件！");
                 return;
             }
 
@@ -1460,7 +1461,7 @@ namespace RemoteControl.Server
             List<string> exts = new List<string>(){".mp3",".wma",".flac",".ogg"};
             if (!exts.Contains(ext))
             {
-                MsgBox.ShowInfo("请选择一个音频文件！");
+                MsgBox.Info("请选择一个音频文件！");
                 return;
             }
 
@@ -1510,7 +1511,7 @@ namespace RemoteControl.Server
             string path;
             if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
             {
-                MsgBox.ShowInfo("请选择一个文件！");
+                MsgBox.Info("请选择一个文件！");
                 return;
             }
 
@@ -1531,7 +1532,7 @@ namespace RemoteControl.Server
             string path;
             if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
             {
-                MsgBox.ShowInfo("请选择一个文件！");
+                MsgBox.Info("请选择一个文件！");
                 return;
             }
 
@@ -1562,7 +1563,7 @@ namespace RemoteControl.Server
         {
             if (this.listView3.SelectedItems.Count < 1)
             {
-                MsgBox.ShowInfo("请先选择进程！");
+                MsgBox.Info("请先选择进程！");
                 return;
             }
             RequestKillProcesses req = new RequestKillProcesses();
@@ -1583,7 +1584,7 @@ namespace RemoteControl.Server
         {
             if (this.currentSession == null)
             {
-                MsgBox.ShowInfo("请先选择客户端！");
+                MsgBox.Info("请先选择客户端！");
                 return;
             }
             var frm = new FrmCaptureVideo(this.currentSession);
@@ -1633,14 +1634,14 @@ namespace RemoteControl.Server
         { 
             if (this.listView1.SelectedItems.Count < 1)
             {
-                MsgBox.ShowInfo("请选择一个文件！");
+                MsgBox.Info("请选择一个文件！");
                 return;
             }
 
             string path;
             if(!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
             {
-                MsgBox.ShowInfo("不支持文件夹的复制！");
+                MsgBox.Info("不支持文件夹的复制！");
                 return;
             }
 
@@ -1663,14 +1664,14 @@ namespace RemoteControl.Server
         {
             if (this.listView1.SelectedItems.Count < 1)
             {
-                MsgBox.ShowInfo("请选择一个文件！");
+                MsgBox.Info("请选择一个文件！");
                 return;
             }
 
             string path;
             if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
             {
-                MsgBox.ShowInfo("不支持文件夹的剪切！");
+                MsgBox.Info("不支持文件夹的剪切！");
                 return;
             }
 
@@ -1694,7 +1695,7 @@ namespace RemoteControl.Server
             PasteInfo pi = toolStripButton8.Tag as PasteInfo;
             if (pi == null)
             {
-                MsgBox.ShowInfo("请先复制或移动一个文件！");
+                MsgBox.Info("请先复制或移动一个文件！");
                 return;
             }
 
@@ -1702,10 +1703,10 @@ namespace RemoteControl.Server
             string curDir = this.listView1.Tag as string;
             if (curDir == null)
             {
-                MsgBox.ShowInfo("不能" + pastMode + "到当前目录！");
+                MsgBox.Info("不能" + pastMode + "到当前目录！");
                 return;
             }
-            if (MsgBox.ShowOkCancel("确定要" + pastMode + "文件" + pi.SourceFilePath + "?") == System.Windows.Forms.DialogResult.Cancel)
+            if (MsgBox.Question("确定要" + pastMode + "文件" + pi.SourceFilePath + "?", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                 return;
             string fileName = Path.GetFileName(pi.SourceFilePath);
             string destPath = Path.Combine(curDir, fileName);
@@ -1782,14 +1783,14 @@ namespace RemoteControl.Server
         {
             if (this.listView1.SelectedItems.Count < 1)
             {
-                MsgBox.ShowInfo("请选择一个文件！");
+                MsgBox.Info("请选择一个文件！");
                 return;
             }
 
             string path;
             if (!IsListViewItemAFile(this.listView1.SelectedItems[0], out path))
             {
-                MsgBox.ShowInfo("不支持文件夹的重命名！");
+                MsgBox.Info("不支持文件夹的重命名！");
                 return;
             }
 
@@ -1874,7 +1875,7 @@ namespace RemoteControl.Server
         {
             if (this.currentSession == null)
             {
-                MsgBox.ShowInfo("请先选择客户端！");
+                MsgBox.Info("请先选择客户端！");
                 return;
             }
             OpenFileDialog ofd = new OpenFileDialog();
@@ -1913,7 +1914,7 @@ namespace RemoteControl.Server
                         FileArguments = "/delay:5000",
                         IsKillMySelf = true
                     });
-                    MsgBox.ShowInfo("客户端更新指令已发送！");
+                    MsgBox.Info("客户端更新指令已发送！");
                 }) { IsBackground = true }.Start();
             }
         }
@@ -2062,6 +2063,14 @@ namespace RemoteControl.Server
                         cms.Show(this.listView2, e.Location);
                     }
                 }
+            }
+        }
+
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MsgBox.Question("确定要退出远程控制程序?", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+            {
+                e.Cancel = true;
             }
         }
     }

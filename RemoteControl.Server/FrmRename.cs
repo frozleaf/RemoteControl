@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using RemoteControl.Server.Utils;
 
 namespace RemoteControl.Server
 {
@@ -23,7 +24,7 @@ namespace RemoteControl.Server
             this.NewName = this.textBox1.Text.Trim();
             if (this.NewName.Length < 1)
             {
-                MsgBox.ShowInfo("新名称不能为空！");
+                MsgBox.Info("新名称不能为空！");
                 return;
             }
 

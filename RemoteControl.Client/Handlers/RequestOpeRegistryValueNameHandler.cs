@@ -8,7 +8,7 @@ using RemoteControl.Protocals.Response;
 using RemoteControl.Protocals.Request;
 using System.Windows.Forms;
 
-namespace RemoteControl.Client
+namespace RemoteControl.Client.Handlers
 {
     class RequestOpeRegistryValueNameHandler : IRequestHandler
     {

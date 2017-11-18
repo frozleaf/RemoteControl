@@ -5,7 +5,7 @@ using System.Text;
 using RemoteControl.Protocals;
 using Microsoft.Win32;
 
-namespace RemoteControl.Client
+namespace RemoteControl.Client.Handlers
 {
     class RequestViewRegistryKeyHandler:IRequestHandler
     {

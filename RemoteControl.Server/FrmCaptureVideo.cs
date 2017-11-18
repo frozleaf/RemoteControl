@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using RemoteControl.Protocals;
 using RemoteControl.Audio;
+using RemoteControl.Server.Utils;
 
 namespace RemoteControl.Server
 {
@@ -100,18 +101,18 @@ namespace RemoteControl.Server
                         try
                         {
                             bmp.Save(fileName);
-                            MsgBox.ShowInfo("保存成功!");
+                            MsgBox.Info("保存成功!");
                         }
                         catch (Exception ex)
                         {
-                            MsgBox.ShowInfo("保存失败，" + ex.Message);
+                            MsgBox.Info("保存失败，" + ex.Message);
                         }
                     }
                 }
             }
             else
             {
-                MsgBox.ShowInfo("暂无图像，无法保存！");
+                MsgBox.Info("暂无图像，无法保存！");
             }
         }
 

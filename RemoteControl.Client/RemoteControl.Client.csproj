@@ -168,9 +168,6 @@
     <EmbeddedResource Include="Res\MsgBox.dat" />
     <EmbeddedResource Include="Res\MusicPlayer.dat" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="command.ico" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

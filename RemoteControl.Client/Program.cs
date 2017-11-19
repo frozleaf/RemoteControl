@@ -30,15 +30,10 @@ namespace RemoteControl.Client
         private static SocketSession oServerSession;
         private static ClientParameters clientParameters;
         private static bool isTestMode = false;
-        private static Dictionary<string, RequestStartGetScreen> sessionScreenHandleSwitch = new Dictionary<string, RequestStartGetScreen>();
         private static Dictionary<string, bool> sessionVideoHandleSwitch = new Dictionary<string, bool>();
-        private static Dictionary<string, bool> sessionDownloadHandleSwitch = new Dictionary<string, bool>();
-        private static Dictionary<string, RequestLockMouse> sessionLockMouseHandleSwitch = new Dictionary<string, RequestLockMouse>();
         private static readonly string LastVideoCapturePathStoreFile = Environment.GetEnvironmentVariable("temp") + "\\vcpsf.dat";
         private static Dictionary<string, FileStream> fileUploadDic = new Dictionary<string, FileStream>();
         private static string lastVideoCaptureExeFile = null;
-        private static string lastMsgBoxExeFile = null;
-        private static string lastPlayMusicExeFile = null;
         private static Dictionary<string, List<byte>> codePluginDic = new Dictionary<string, List<byte>>();
         private static bool isClosing = false;
         private static Thread heartbeatThread = null;
@@ -104,8 +99,12 @@ namespace RemoteControl.Client
             handlers.Add(ePacketType.PACKET_AUTORUN_REQUEST, new RequestAutoRunHandler());
             handlers.Add(ePacketType.PACKET_GET_DRIVES_REQUEST, new RequestGetDrivesHandler());
             handlers.Add(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, new RequestGetSubFilesOrDirsHandler());
-            handlers.Add(ePacketType.PACKET_CREATE_FILE_OR_DIR_REQUEST, new RequestCreateFileOrDirHandler());
-            handlers.Add(ePacketType.PACKET_DELETE_FILE_OR_DIR_REQUEST, new RequestDeleteFileOrDirHandler());
+            RequestOpeFileOrDirHandler opeFileOrDirHandler = new RequestOpeFileOrDirHandler();
+            handlers.Add(ePacketType.PACKET_CREATE_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
+            handlers.Add(ePacketType.PACKET_DELETE_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
+            handlers.Add(ePacketType.PACKET_COPY_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
+            handlers.Add(ePacketType.PACKET_MOVE_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
+            handlers.Add(ePacketType.PACKET_RENAME_FILE_REQUEST, opeFileOrDirHandler);
             RequestPowerHandler powerHandler = new RequestPowerHandler();
             handlers.Add(ePacketType.PACKET_SHUTDOWN_REQUEST, powerHandler);
             handlers.Add(ePacketType.PACKET_REBOOT_REQUEST, powerHandler);
@@ -114,6 +113,25 @@ namespace RemoteControl.Client
             handlers.Add(ePacketType.PACKET_LOCK_REQUEST, powerHandler);
             handlers.Add(ePacketType.PACKET_OPEN_URL_REQUEST, new RequestOpenUrlHandler());
             handlers.Add(ePacketType.PACKET_COMMAND_REQUEST, new RequestCommandHandler());
+            RequestCaptureScreenHandler captureScreenHandler = new RequestCaptureScreenHandler();
+            handlers.Add(ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST, captureScreenHandler);
+            handlers.Add(ePacketType.PACKET_STOP_CAPTURE_SCREEN_REQUEST, captureScreenHandler);
+            RequestDownloadHandler downloadHandler = new RequestDownloadHandler();
+            handlers.Add(ePacketType.PACKET_START_DOWNLOAD_REQUEST, downloadHandler);
+            handlers.Add(ePacketType.PACKET_STOP_DOWNLOAD_REQUEST, downloadHandler);
+            RequestLockMouseHandler lockMouseHandler = new RequestLockMouseHandler();
+            handlers.Add(ePacketType.PACKET_LOCK_MOUSE_REQUEST, lockMouseHandler);
+            handlers.Add(ePacketType.PACKET_UNLOCK_MOUSE_REQUEST, lockMouseHandler);
+            RequestBlackScreenHandler blackScreenHandler = new RequestBlackScreenHandler();
+            handlers.Add(ePacketType.PAKCET_BLACK_SCREEN_REQUEST, blackScreenHandler);
+            handlers.Add(ePacketType.PAKCET_UN_BLACK_SCREEN_REQUEST, blackScreenHandler);
+            handlers.Add(ePacketType.PACKET_MESSAGEBOX_REQUEST, new RequestMsgBoxHandler());
+            RequestOpeCDHandler opeCDHandler = new RequestOpeCDHandler();
+            handlers.Add(ePacketType.PACKET_OPEN_CD_REQUEST, opeCDHandler);
+            handlers.Add(ePacketType.PACKET_CLOSE_CD_REQUEST, opeCDHandler);
+            RequestPlayMusicHandler playMusicHandler = new RequestPlayMusicHandler();
+            handlers.Add(ePacketType.PACKET_PLAY_MUSIC_REQUEST, playMusicHandler);
+            handlers.Add(ePacketType.PACKET_STOP_PLAY_MUSIC_REQUEST, playMusicHandler);
         }
 
         static void ReadParameters()
@@ -214,115 +232,7 @@ namespace RemoteControl.Client
             CodecFactory.Instance.DecodeObject(packet, out packetType, out obj);
             Console.WriteLine(packetType.ToString());
 
-            string sessionId = session.SocketId;
-            if (packetType == ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST)
-            {
-                RequestStartGetScreen req = obj as RequestStartGetScreen;
-                if (!sessionScreenHandleSwitch.ContainsKey(sessionId))
-                {
-                    sessionScreenHandleSwitch.Add(sessionId, req);
-                    new Thread(() => StartClientCaptureScreen(session)) { IsBackground = true }.Start();
-                }
-                else
-                {
-                    sessionScreenHandleSwitch[sessionId].fps = req.fps;
-                }
-            }
-            else if (packetType == ePacketType.PACKET_STOP_CAPTURE_SCREEN_REQUEST)
-            {
-                if (sessionScreenHandleSwitch.ContainsKey(sessionId))
-                {
-                    sessionScreenHandleSwitch.Remove(sessionId);
-                }
-            }
-            else if (packetType == ePacketType.PACKET_START_DOWNLOAD_REQUEST)
-            {
-                RequestStartDownload req = obj as RequestStartDownload;
-                ResponseStartDownloadHeader resp = new ResponseStartDownloadHeader();
-                // 获取文件大小
-                var fs = System.IO.File.OpenRead(req.Path);
-                resp.FileSize = fs.Length;
-                resp.Path = req.Path;
-                resp.SavePath = req.SavePath;
-                fs.Close();
-                session.Send(ePacketType.PACKET_START_DOWNLOAD_HEADER_RESPONSE, resp);
-                if (sessionDownloadHandleSwitch.ContainsKey(session.SocketId))
-                    return;
-                sessionDownloadHandleSwitch.Add(session.SocketId, true);
-                new Thread(() => StartClientDownload(session, req)) { IsBackground = true }.Start();
-            }
-            else if (packetType == ePacketType.PACKET_STOP_DOWNLOAD_REQUEST)
-            {
-                if (sessionDownloadHandleSwitch.ContainsKey(session.SocketId))
-                {
-                    sessionDownloadHandleSwitch.Remove(session.SocketId);
-                }
-            }
-            else if (packetType == ePacketType.PACKET_MESSAGEBOX_REQUEST)
-            {
-                var req = obj as RequestMessageBox;
-                StartShowMsgBox(session, req);
-            }
-            else if (packetType == ePacketType.PACKET_LOCK_MOUSE_REQUEST)
-            {
-                var req = obj as RequestLockMouse;
-                if (!sessionLockMouseHandleSwitch.ContainsKey(session.SocketId))
-                {
-                    sessionLockMouseHandleSwitch.Add(session.SocketId, req);
-                    new Thread(() => StartLockMouse(session)) { IsBackground = true }.Start();
-                }
-                else{
-                    sessionLockMouseHandleSwitch[session.SocketId] = req;
-                }
-            }
-            else if (packetType == ePacketType.PACKET_UNLOCK_MOUSE_REQUEST)
-            {
-                if (sessionLockMouseHandleSwitch.ContainsKey(session.SocketId))
-                {
-                    sessionLockMouseHandleSwitch.Remove(session.SocketId);
-                }
-            }
-            else if (packetType == ePacketType.PAKCET_BLACK_SCREEN_REQUEST)
-            {
-                new Thread(() => StartBlackScreen(session)) { IsBackground = true }.Start();
-            }
-            else if (packetType == ePacketType.PAKCET_UN_BLACK_SCREEN_REQUEST)
-            {
-                new Thread(() => StartUnBlackScreen(session)) { IsBackground = true }.Start();
-            }
-            else if (packetType == ePacketType.PACKET_OPEN_CD_REQUEST)
-            {
-                try
-                {
-                    Win32API.mciSendString("Set cdaudio door open wait", "", 0, IntPtr.Zero);//打开
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            else if (packetType == ePacketType.PACKET_CLOSE_CD_REQUEST)
-            {
-                try
-                {
-                    Win32API.mciSendString("Set cdaudio door Closed wait", "", 0, IntPtr.Zero);//关闭
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            else if (packetType == ePacketType.PACKET_PLAY_MUSIC_REQUEST)
-            {
-                var req = obj as RequestPlayMusic;
-                StopMusic();
-                StartPlayMusic(session, req.MusicFilePath);
-            }
-            else if (packetType == ePacketType.PACKET_STOP_PLAY_MUSIC_REQUEST)
-            {
-                StopMusic();
-            }
-            else if (packetType == ePacketType.PACKET_DOWNLOAD_WEBFILE_REQUEST)
+            if (packetType == ePacketType.PACKET_DOWNLOAD_WEBFILE_REQUEST)
             {
                 var req = obj as RequestDownloadWebFile;
                 StartDownloadWebFile(session, req);
@@ -457,31 +367,6 @@ namespace RemoteControl.Client
                     fileUploadDic.Remove(req.Id);
                 }
             }
-            else if (packetType == ePacketType.PACKET_COPY_FILE_OR_DIR_REQUEST)
-            {
-                var req = obj as RequestCopyFile;
-                new Thread(() => CopyFile(session, req.SourceFile, req.DestinationFile, false)) { IsBackground = true }.Start();
-            }
-            else if (packetType == ePacketType.PACKET_MOVE_FILE_OR_DIR_REQUEST)
-            {
-                var req = obj as RequestMoveFile;
-                new Thread(() => CopyFile(session, req.SourceFile, req.DestinationFile, true)) { IsBackground = true }.Start();
-            }
-            else if(packetType == ePacketType.PACKET_RENAME_FILE_REQUEST)
-            {
-                var req = obj as RequestRenameFile;
-
-                try
-                {
-                    Computer c = new Computer();
-                    c.FileSystem.RenameFile(req.SourceFile, req.DestinationFileName);
-                    DoOutput("重命名成功" + req.SourceFile + "=>" + req.DestinationFileName);
-                }
-                catch (Exception ex)
-                {
-                    DoOutput("重命名失败" + req.SourceFile + "," + ex.Message);
-                }
-            }
             else if (packetType == ePacketType.PACKET_QUIT_APP_REQUEST)
             {
                 OnFireQuit(null,null);
@@ -601,58 +486,6 @@ namespace RemoteControl.Client
             }
         }
 
-        static void CopyFile(SocketSession session, string sourceFile, string destFile, bool isDeleteSourceFile)
-        {
-            ResponseBase resp = null;
-            if (isDeleteSourceFile)
-            {
-                resp = new ResponseMoveFile() { SourceFile = sourceFile, DestinationFile = destFile };
-            }
-            else
-            {
-                resp = new ResponseCopyFile() { SourceFile = sourceFile, DestinationFile = destFile };
-            }
-            try
-            {
-                string dir = System.IO.Path.GetDirectoryName(destFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(destFile);
-                string ext = System.IO.Path.GetExtension(destFile);
-                string newDestFile = destFile;
-                for (int i = 0; ; i++)
-                {
-                    if (System.IO.File.Exists(newDestFile))
-                    {
-                        newDestFile = dir + "\\" + fileName + " - 副本" + (i==0?"" : " (" + i + ")") + ext;
-                    }
-                    else{
-                        break;
-                    }
-                }
-                DoOutput(string.Format("正在将文件{0}{1}到{2}...", sourceFile, isDeleteSourceFile ? "移动" : "复制", newDestFile));
-                System.IO.File.Copy(sourceFile, newDestFile);
-                if (isDeleteSourceFile)
-                {
-                    System.IO.File.Delete(sourceFile);
-                }
-                DoOutput(string.Format("完成将文件{0}{1}到{2}！", sourceFile, isDeleteSourceFile ? "移动" : "复制", newDestFile));
-            }
-            catch (Exception ex)
-            {
-                resp.Result = false;
-                resp.Message = (isDeleteSourceFile ? "移动" : "复制") + "失败," + ex.Message;
-                resp.Detail = ex.StackTrace;
-                DoOutput(ex.Message);
-            }
-            if (isDeleteSourceFile)
-            {
-                session.Send(ePacketType.PACKET_MOVE_FILE_OR_DIR_RESPONSE, resp);
-            }
-            else
-            {
-                session.Send(ePacketType.PACKET_COPY_FILE_OR_DIR_RESPONSE, resp);
-            }
-        }
-
         static int FindServerPortByProcessName(string processName)
         {
             var pros = Process.GetProcesses();
@@ -712,15 +545,6 @@ namespace RemoteControl.Client
             return -1;
         }
 
-        static void StopMusic()
-        {
-            if (lastPlayMusicExeFile != null)
-            {
-                ProcessUtil.KillProcess(lastPlayMusicExeFile);
-            }
-            //Win32API.mciSendString("close mymusic", null, 0, IntPtr.Zero);//关闭
-        }
-
         static void StartDownloadWebFile(SocketSession session, RequestDownloadWebFile req)
         {
             try
@@ -735,157 +559,6 @@ namespace RemoteControl.Client
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-        }
-
-        static void StartShowMsgBox(SocketSession session, RequestMessageBox req)
-        {
-            try
-            {
-                if (lastMsgBoxExeFile == null || !System.IO.File.Exists(lastMsgBoxExeFile))
-                {
-                    // 释放弹窗程序
-                    byte[] data = ResUtil.GetResFileData("MsgBox.dat");
-                    string fileName = ResUtil.WriteToRandomFile(data);
-                    lastMsgBoxExeFile = fileName;
-                }
-                // 启动弹窗程序
-                string msgBoxArguments = string.Format("{0} {1} {2} {3}", req.Content,req.Title,req.MessageBoxButtons,req.MessageBoxIcons);
-                ProcessUtil.Run("cmd.exe", "/c start " + lastMsgBoxExeFile + " " + msgBoxArguments, true, false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        static void StartPlayMusic(SocketSession session, string musicFilePath)
-        {
-            try
-            {
-                // 释放音乐播放程序
-                byte[] data = ResUtil.GetResFileData("MusicPlayer.dat");
-                string musicPlayerFileName = ResUtil.WriteToRandomFile(data);
-                lastPlayMusicExeFile = System.IO.Path.GetFileNameWithoutExtension(musicPlayerFileName);
-                // 启动音乐播放程序
-                ProcessUtil.Run("cmd.exe", "/c start " + musicPlayerFileName + " " + musicFilePath, true, false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        static void StartBlackScreen(SocketSession session)
-        {
-            try
-            {
-                // 释放黑屏程序
-                byte[] data = ResUtil.GetResFileData("BlackScreen.dat");
-                string blackScreenFileName = ResUtil.WriteToRandomFile(data, "blackscreen.exe");
-                // 启动黑屏程序
-                ProcessUtil.RunByCmdStart(blackScreenFileName, true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        static void StartUnBlackScreen(SocketSession session)
-        {
-            try
-            {
-                ProcessUtil.KillProcess("blackscreen");
-
-                Win32API.ShowWindow(Win32API.FindWindow(Win32API.Shell_TrayWnd_Name,null), Win32API.SW_SHOW);
-            }
-            catch (Exception ex)
-            {
-                
-            }
-        }
-
-        static void StartLockMouse(SocketSession session)
-        {
-            var req = sessionLockMouseHandleSwitch[session.SocketId];
-            for (int i = 0; i < req.LockSeconds; i++)
-            {
-                req = sessionLockMouseHandleSwitch[session.SocketId];
-                for (int j = 0; j < 100; j++)
-                {
-                    MouseOpeUtil.MouseMove(0, 0);
-                    Thread.Sleep(10);
-                }
-                if (!sessionLockMouseHandleSwitch.ContainsKey(session.SocketId))
-                    return;
-            }
-            if (sessionLockMouseHandleSwitch.ContainsKey(session.SocketId))
-            {
-                sessionLockMouseHandleSwitch.Remove(session.SocketId);
-            }
-        }
-
-        static void StartClientDownload(SocketSession session, RequestStartDownload req)
-        {
-            FileStream fs = new FileStream(req.Path, FileMode.Open, FileAccess.Read);
-            byte[] buffer = new byte[2048];
-            while (true)
-            {
-                if (!sessionDownloadHandleSwitch.ContainsKey(session.SocketId))
-                {
-                    Console.WriteLine("文件下载被终止！");
-                    break;
-                }
-                int size = fs.Read(buffer, 0, buffer.Length);
-                if (size < 1)
-                    break;
-
-                ResponseStartDownload resp = new ResponseStartDownload();
-                resp.Data = new byte[size];
-                for (int i = 0; i < size; i++)
-                {
-                    resp.Data[i] = buffer[i];
-                }
-                session.Send(ePacketType.PACKET_START_DOWNLOAD_RESPONSE, resp);
-            }
-            fs.Close();
-            if (sessionDownloadHandleSwitch.ContainsKey(session.SocketId))
-            {
-                sessionDownloadHandleSwitch.Remove(session.SocketId);
-            }
-        }
-
-        static void StartClientCaptureScreen(SocketSession session)
-        {
-            RequestStartGetScreen req = null;
-            int sleepValue = 1000;
-            int fpsValue = 1;
-            while (true)
-            {
-                if (!sessionScreenHandleSwitch.ContainsKey(session.SocketId))
-                {
-                    return;
-                }
-                req = sessionScreenHandleSwitch[session.SocketId];
-                fpsValue = req.fps;
-                sleepValue = 1000 / fpsValue;
-                for (int i = 0; i < fpsValue; i++)
-                {
-                    ResponseStartGetScreen resp = new ResponseStartGetScreen();
-                    try
-                    {
-                        resp.SetImage(ScreenUtil.CaptureScreen2(), ImageFormat.Jpeg);
-                    }
-                    catch (Exception ex)
-                    {
-                        resp.Result = false;
-                        resp.Message = ex.Message;
-                        resp.Detail = ex.StackTrace;
-                    }
-                    session.Send(ePacketType.PACKET_START_CAPTURE_SCREEN_RESPONSE, resp);
-                    Thread.Sleep(sleepValue);
-                }
             }
         }
 
@@ -926,14 +599,6 @@ namespace RemoteControl.Client
         static void DoOutput(string sMsg)
         {
             Console.WriteLine("{0} {1}", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), sMsg);
-        }
-
-        static void StartMessageBox(string title, string content, MessageBoxButtons buttons, MessageBoxIcon icon)
-        {
-            new Thread(() =>
-                {
-                    MessageBox.Show(content, title, buttons, icon);
-                }) { IsBackground = true }.Start();
         }
 
         static void OnFireQuit(object sender, EventArgs e)

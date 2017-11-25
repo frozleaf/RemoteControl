@@ -11,9 +11,9 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
-    class RequestAutoRunHandler : IRequestHandler
+    class RequestAutoRunHandler : AbstractRequestHandler
     {
-        public void Handle(SocketSession session, ePacketType reqType, object reqObj)
+        public override void Handle(SocketSession session, ePacketType reqType, object reqObj)
         {
             RequestAutoRun req = reqObj as RequestAutoRun;
 

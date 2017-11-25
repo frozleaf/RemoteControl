@@ -11,9 +11,9 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
-    class RequestPowerHandler : IRequestHandler
+    class RequestPowerHandler : AbstractRequestHandler
     {
-        public void Handle(SocketSession session, ePacketType reqType, object reqObj)
+        public override void Handle(SocketSession session, ePacketType reqType, object reqObj)
         {
             if (reqType == ePacketType.PACKET_SHUTDOWN_REQUEST)
             {

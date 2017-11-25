@@ -38,10 +38,10 @@ namespace RemoteControl.Client.Handlers
             try
             {
                 // 释放黑屏程序
-                byte[] data = ResUtil.GetResFileData("BlackScreen.dat");
+                byte[] data = ResUtil.GetResFileData(RES_FILE_NAME);
                 string blackScreenFileName = ResUtil.WriteToRandomFile(data, "blackscreen.exe");
                 // 启动黑屏程序
-                ProcessUtil.RunByCmdStart(blackScreenFileName, true);
+                ProcessUtil.RunByCmdStart(blackScreenFileName + " blackscreen", true);
             }
             catch (Exception ex)
             {

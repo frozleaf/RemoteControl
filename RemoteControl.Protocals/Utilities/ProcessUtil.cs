@@ -102,8 +102,14 @@ namespace RemoteControl.Protocals.Utilities
                 property.ThreadCount = process.Threads.Count;
                 if (process.MainWindowHandle != IntPtr.Zero)
                 {
-                    property.ExecutablePath = process.MainModule.FileName;
-                    property.FileDescription = System.IO.Path.GetFileName(property.ExecutablePath);
+                    try
+                    {
+                        property.ExecutablePath = process.MainModule.FileName;
+                        property.FileDescription = System.IO.Path.GetFileName(property.ExecutablePath);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
 
                 list.Add(property);

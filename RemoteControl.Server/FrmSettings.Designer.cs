@@ -48,6 +48,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxLocalServerPort = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.checkBoxShowOriginalFileName = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppIcon)).BeginInit();
@@ -92,6 +93,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkBoxShowOriginalFileName);
             this.tabPage1.Controls.Add(this.checkBoxAppIcon);
             this.tabPage1.Controls.Add(this.pictureBoxAppIcon);
             this.tabPage1.Controls.Add(this.pictureBoxAvatar);
@@ -194,9 +196,9 @@
             this.checkBoxHideClient.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxHideClient.Location = new System.Drawing.Point(276, 127);
             this.checkBoxHideClient.Name = "checkBoxHideClient";
-            this.checkBoxHideClient.Size = new System.Drawing.Size(96, 16);
+            this.checkBoxHideClient.Size = new System.Drawing.Size(72, 16);
             this.checkBoxHideClient.TabIndex = 3;
-            this.checkBoxHideClient.Text = "是否隐藏窗体";
+            this.checkBoxHideClient.Text = "隐藏窗体";
             this.checkBoxHideClient.UseVisualStyleBackColor = true;
             // 
             // buttonGenClient
@@ -269,6 +271,16 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "服务器端口：";
             // 
+            // checkBoxShowOriginalFileName
+            // 
+            this.checkBoxShowOriginalFileName.AutoSize = true;
+            this.checkBoxShowOriginalFileName.Location = new System.Drawing.Point(279, 159);
+            this.checkBoxShowOriginalFileName.Name = "checkBoxShowOriginalFileName";
+            this.checkBoxShowOriginalFileName.Size = new System.Drawing.Size(108, 16);
+            this.checkBoxShowOriginalFileName.TabIndex = 12;
+            this.checkBoxShowOriginalFileName.Text = "显示原始文件名";
+            this.checkBoxShowOriginalFileName.UseVisualStyleBackColor = true;
+            // 
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -316,6 +328,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.PictureBox pictureBoxAppIcon;
         private System.Windows.Forms.CheckBox checkBoxAppIcon;
+        private System.Windows.Forms.CheckBox checkBoxShowOriginalFileName;
 
     }
 }

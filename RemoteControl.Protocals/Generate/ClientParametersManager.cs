@@ -40,6 +40,32 @@ namespace RemoteControl.Protocals
             sourceFileData[0xdc] = (byte)style;
         }
 
+        public static void HideOriginalFilename(byte[] sourceFileData)
+        {
+            // 4f0072006900670069006e00
+            byte[] flag = new byte[] {0x4f, 0x00, 0x72, 0x00, 0x69, 0x00, 0x67, 0x00, 0x69, 0x00, 0x6e, 0x00};
+            int index = 0;
+            for (int i = 0; i < sourceFileData.Length; i++)
+            {
+                if (index == flag.Length)
+                {
+                    sourceFileData[i - flag.Length] = 0x61;
+                    break;
+                }
+                else
+                {
+                    if (sourceFileData[i] == flag[index])
+                    {
+                        index++;
+                    }
+                    else
+                    {
+                        index = 0;
+                    }
+                }
+            }
+        }
+
         public static void WriteClientStyle(string filePath, ClientStyle style)
         {
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Write);

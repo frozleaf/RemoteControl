@@ -1,0 +1,8 @@
+.vs/
+Output/
+obj/
+bin/
+Debug/
+Release/
+*.suo
+*.csproj.user

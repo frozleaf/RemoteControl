@@ -141,7 +141,6 @@
             // 
             // pictureBoxAvatar
             // 
-            this.pictureBoxAvatar.BackgroundImage = global::RemoteControl.Server.Properties.Resources._16238_100;
             this.pictureBoxAvatar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBoxAvatar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxAvatar.Cursor = System.Windows.Forms.Cursors.Hand;

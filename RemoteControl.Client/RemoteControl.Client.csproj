@@ -175,6 +175,13 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>cd "$(TargetDir)"
+"$(SolutionDir)\Libs\ilmerge.exe" /ndebug /targetplatform:v4 /target:exe /out:RemoteControl.Client_c.exe /log RemoteControl.Client.exe RemoteControl.Audio.dll RemoteControl.Protocals.dll Newtonsoft.Json.Lite.dll 
+copy /y RemoteControl.Client_c.exe RemoteControl.Client.dat
+del RemoteControl.Client_c.exe
+copy /y RemoteControl.Client.dat "$(SolutionDir)\Output\RemoteControl.Client.dat"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

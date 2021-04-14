@@ -29,7 +29,7 @@ namespace RemoteControl.Client
         private static Socket oServer;
         private static SocketSession oServerSession;
         private static ClientParameters clientParameters;
-        private static bool isTestMode = true;
+        private static bool isTestMode = false;
         private static bool isClosing = false;
         private static Thread heartbeatThread = null;
         private static Dictionary<ePacketType, IRequestHandler> handlers = new Dictionary<ePacketType, IRequestHandler>();

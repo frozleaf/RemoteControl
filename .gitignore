@@ -6,3 +6,4 @@ Debug/
 Release/
 *.suo
 *.csproj.user
+packages/

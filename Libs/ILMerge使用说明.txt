@@ -1,5 +1,0 @@
-合并file1.dll、file2.dll以及myApp.exe到newApp.exe
-
-ILmerge /ndebug /target:winexe /out:C:\newApp.exe /log C:\myapp.exe C:\file1.dll C:\file2.dll
-
-注意：合并为exe时，myapp.exe必须写在file1.dll、file2.dll前面

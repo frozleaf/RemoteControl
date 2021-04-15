@@ -675,6 +675,7 @@ namespace RemoteControl.Server
             if (tsButton.Checked)
             {
                 List<string> ips = RSCApplication.GetLocalIPV4s();
+                ips.Add("127.0.0.1"); // 支持127.0.0.1作为服务器ip
                 int iServerPort = Settings.CurrentSettings.ServerPort;
                 RSCApplication.oRemoteControlServer.Start(ips, iServerPort);
                 this.Text = APP_TITLE + " " + string.Join(",", ips.ToArray());

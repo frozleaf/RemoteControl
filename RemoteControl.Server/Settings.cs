@@ -18,8 +18,28 @@ namespace RemoteControl.Server
         {
             try
             {
-                string json = System.IO.File.ReadAllText(SettingFileName);
-                Settings.CurrentSettings = JsonConvert.DeserializeObject<Settings>(json);
+                if (System.IO.File.Exists(SettingFileName))
+                {
+                    string json = System.IO.File.ReadAllText(SettingFileName);
+                    Settings.CurrentSettings = JsonConvert.DeserializeObject<Settings>(json);
+                }
+                else
+                {
+                    Settings.CurrentSettings = new Settings()
+                    {
+                        ServerPort = 10010,
+                        SkinPath = null,
+                        ClientPara = new ClientParas()
+                        {
+                            ServerIP = "127.0.0.1",
+                            ServerPort = 10010,
+                            ServiceName = "360se.exe",
+                            OnlineAvatar = "16238_100.png",
+                            IsHide = true,
+                            ClientIconPath = null
+                        }
+                    };
+                }
             }
             catch (Exception ex)
             {

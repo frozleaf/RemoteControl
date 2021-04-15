@@ -833,7 +833,7 @@ namespace RemoteControl.Server
                 this.Invoke(new Action<string>(doOutput), sMsg);
                 return;
             }
-            this.richTextBox1.Text = DateTime.Now.ToString("yyyy/mm/dd HH:mm:ss") + " " + sMsg + "\r\n" + this.richTextBox1.Text;
+            this.richTextBox1.Text = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + " " + sMsg + "\r\n" + this.richTextBox1.Text;
         }
 
         private void refreshClientCountShow()

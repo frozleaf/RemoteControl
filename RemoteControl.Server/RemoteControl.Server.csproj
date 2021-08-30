@@ -38,7 +38,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -312,9 +312,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /e "$(SolutionDir)\libs\Avatars" "$(OutDir)\Avatars\"
-xcopy /y /e "$(SolutionDir)\libs\Skins" "$(OutDir)\Skins\"
-xcopy /y /e "$(SolutionDir)\libs\Tools" "$(OutDir)\Tools\"
+    <PostBuildEvent>xcopy /y /e "$(SolutionDir)\libs\Avatars" "$(TargetDir)\Avatars\"
+xcopy /y /e "$(SolutionDir)\libs\Skins" "$(TargetDir)\Skins\"
+xcopy /y /e "$(SolutionDir)\libs\Tools" "$(TargetDir)\Tools\"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

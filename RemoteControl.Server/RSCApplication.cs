@@ -86,7 +86,7 @@ namespace RemoteControl.Server
         public static List<string> GetLocalIPV4s()
         {
             IPAddress[] ips = Dns.GetHostAddresses(Dns.GetHostName());
-            return ips.ToList().FindAll(m => m.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).Select(s => s.ToString()).ToList();
+            return ips.ToList().FindAll(m => m.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).Select(s => s.ToString()).Distinct().ToList();
         }
     }
 }

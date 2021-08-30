@@ -670,24 +670,32 @@ namespace RemoteControl.Server
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            ToolStripButton tsButton = sender as ToolStripButton;
-            tsButton.Checked = !tsButton.Checked;
-            if (tsButton.Checked)
+            try
             {
-                List<string> ips = RSCApplication.GetLocalIPV4s();
-                ips.Add("127.0.0.1"); // 支持127.0.0.1作为服务器ip
-                int iServerPort = Settings.CurrentSettings.ServerPort;
-                RSCApplication.oRemoteControlServer.Start(ips, iServerPort);
-                this.Text = APP_TITLE + " " + string.Join(",", ips.ToArray());
-                doOutput("已开启自动上线服务，端口：" + iServerPort);
+                ToolStripButton tsButton = sender as ToolStripButton;
+                tsButton.Checked = !tsButton.Checked;
+                if (tsButton.Checked)
+                {
+                    List<string> ips = RSCApplication.GetLocalIPV4s();
+                    ips.Add("127.0.0.1"); // 支持127.0.0.1作为服务器ip
+                    int iServerPort = Settings.CurrentSettings.ServerPort;
+                    RSCApplication.oRemoteControlServer.Start(ips, iServerPort);
+                    this.Text = APP_TITLE + " " + string.Join(",", ips.ToArray());
+                    doOutput("已开启自动上线服务，端口：" + iServerPort);
+                }
+                else
+                {
+                    RSCApplication.oRemoteControlServer.Stop();
+                    this.Text = APP_TITLE;
+                    doOutput("已停止自动上线服务！");
+                    this.clientCount = 0;
+                    refreshClientCountShow();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                RSCApplication.oRemoteControlServer.Stop();
-                this.Text = APP_TITLE;
-                doOutput("已停止自动上线服务！");
-                this.clientCount = 0;
-                refreshClientCountShow();
+                doOutput($"服务开启失败，{ex.Message}\r\n{ex.StackTrace}");
+                MessageBox.Show($"服务开启失败，{ex.Message}");
             }
         }
 

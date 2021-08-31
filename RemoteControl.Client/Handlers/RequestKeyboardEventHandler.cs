@@ -11,6 +11,7 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_KEYBOARD_EVENT_REQUEST)]
     class RequestKeyboardEventHandler : AbstractRequestHandler
     {
         public override void Handle(SocketSession session, ePacketType reqType, object reqObj)

@@ -12,6 +12,9 @@ using RemoteControl.Protocals.Response;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_START_UPLOAD_HEADER_REQUEST)]
+    [PacketType(ePacketType.PACKET_START_UPLOAD_RESPONSE)]
+    [PacketType(ePacketType.PACKET_STOP_UPLOAD_REQUEST)]
     class RequestUploadHandler : AbstractRequestHandler
     {
         private RequestStartDownload _request = null;

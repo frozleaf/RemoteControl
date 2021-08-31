@@ -12,6 +12,8 @@ using RemoteControl.Protocals.Response;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_START_DOWNLOAD_REQUEST)]
+    [PacketType(ePacketType.PACKET_STOP_DOWNLOAD_REQUEST)]
     class RequestDownloadHandler : AbstractRequestHandler
     {
         private bool _isRunning = false;

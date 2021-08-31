@@ -13,6 +13,8 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST)]
+    [PacketType(ePacketType.PACKET_STOP_CAPTURE_SCREEN_REQUEST)]
     class RequestCaptureScreenHandler : AbstractRequestHandler
     {
         private bool _isRunning = false;

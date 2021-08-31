@@ -12,6 +12,8 @@ using RemoteControl.Protocals.Response;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_LOCK_MOUSE_REQUEST)]
+    [PacketType(ePacketType.PACKET_UNLOCK_MOUSE_REQUEST)]
     class RequestLockMouseHandler : AbstractRequestHandler
     {
         private bool _isRunning = false;

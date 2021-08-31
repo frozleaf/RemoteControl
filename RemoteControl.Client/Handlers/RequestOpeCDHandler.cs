@@ -11,6 +11,8 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_OPEN_CD_REQUEST)]
+    [PacketType(ePacketType.PACKET_CLOSE_CD_REQUEST)]
     class RequestOpeCDHandler : IRequestHandler
     {
         public void Handle(SocketSession session, ePacketType reqType, object reqObj)

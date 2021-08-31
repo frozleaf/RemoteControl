@@ -11,6 +11,7 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_DOWNLOAD_WEBFILE_REQUEST)]
     class RequestDownloadWebFileHandler : AbstractRequestHandler
     {
         public override void Handle(SocketSession session, ePacketType reqType, object reqObj)

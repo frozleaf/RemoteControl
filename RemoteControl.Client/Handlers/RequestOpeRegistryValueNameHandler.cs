@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST)]
     class RequestOpeRegistryValueNameHandler : IRequestHandler
     {
         public void Handle(SocketSession session, ePacketType reqType, object reqObj)

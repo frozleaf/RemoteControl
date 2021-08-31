@@ -11,14 +11,12 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_QUIT_APP_REQUEST)]
     class RequestQuitAppHandler : AbstractRequestHandler
     {
         public override void Handle(SocketSession session, ePacketType reqType, object reqObj)
         {
-            if (OnFireQuit != null)
-            {
-                OnFireQuit(null, null);
-            }
+            RemoteControlApplication.FireQuitEvent();
         }
     }
 }

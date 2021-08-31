@@ -11,6 +11,7 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_RESTART_APP_REQUEST)]
     class RequestRestartAppHandler : AbstractRequestHandler
     {
         public override void Handle(SocketSession session, ePacketType reqType, object reqObj)
@@ -18,10 +19,7 @@ namespace RemoteControl.Client.Handlers
             string path = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
             var thread = ProcessUtil.Run(path, "/r", true);
             thread.Join();
-            if (OnFireQuit != null)
-            {
-                OnFireQuit(null, null);
-            }
+            RemoteControlApplication.FireQuitEvent();
         }
     }
 }

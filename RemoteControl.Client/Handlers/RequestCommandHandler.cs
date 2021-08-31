@@ -4,6 +4,7 @@ using RemoteControl.Protocals;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_COMMAND_REQUEST)]
     class RequestCommandHandler : IRequestHandler
     {
         private Process _cmd;

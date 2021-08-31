@@ -12,6 +12,7 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_GET_SUBFILES_OR_DIRS_REQUEST)]
     class RequestGetSubFilesOrDirsHandler : IRequestHandler
     {
         public void Handle(SocketSession session, ePacketType reqType, object reqObj)

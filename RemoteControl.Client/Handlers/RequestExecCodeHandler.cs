@@ -14,6 +14,8 @@ using RemoteControl.Protocals.Plugin;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_TRANSPORT_EXEC_CODE_REQUEST)]
+    [PacketType(ePacketType.PACKET_RUN_EXEC_CODE_REQUEST)]
     class RequestExecCodeHandler : AbstractRequestHandler
     {
         private Dictionary<string, List<byte>> codePluginDic = new Dictionary<string, List<byte>>();
@@ -62,10 +64,7 @@ namespace RemoteControl.Client.Handlers
                         if (req.IsKillMySelf)
                         {
                             // 结束当前进程
-                            if (OnFireQuit!=null)
-                            {
-                                OnFireQuit(null, null); 
-                            }
+                            RemoteControlApplication.FireQuitEvent();
                         }
                     }
                 }

@@ -11,6 +11,7 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_OPEN_URL_REQUEST)]
     class RequestOpenUrlHandler : IRequestHandler
     {
         public void Handle(SocketSession session, ePacketType reqType, object reqObj)

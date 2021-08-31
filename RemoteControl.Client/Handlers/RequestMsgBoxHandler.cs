@@ -11,6 +11,7 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_MESSAGEBOX_REQUEST)]
     class RequestMsgBoxHandler : AbstractRequestHandler
     {
         private string lastMsgBoxExeFile = null;

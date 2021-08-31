@@ -13,6 +13,8 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PAKCET_BLACK_SCREEN_REQUEST)]
+    [PacketType(ePacketType.PAKCET_UN_BLACK_SCREEN_REQUEST)]
     class RequestBlackScreenHandler : AbstractRequestHandler
     {
         private bool _isRunning = false;

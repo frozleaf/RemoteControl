@@ -7,6 +7,7 @@ using Microsoft.Win32;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_VIEW_REGISTRY_KEY_REQUEST)]
     class RequestViewRegistryKeyHandler:IRequestHandler
     {
         public void Handle(SocketSession session, ePacketType reqType, object reqObj)

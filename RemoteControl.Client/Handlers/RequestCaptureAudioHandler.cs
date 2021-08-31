@@ -11,6 +11,8 @@ using System.IO;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_START_CAPTURE_AUDIO_REQUEST)]
+    [PacketType(ePacketType.PACKET_STOP_CAPTURE_AUDIO_REQUEST)]
     class RequestCaptureAudioHandler : IRequestHandler
     {
         private WaveIn _waveIn = null;

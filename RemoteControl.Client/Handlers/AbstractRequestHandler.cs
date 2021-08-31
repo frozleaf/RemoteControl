@@ -10,7 +10,6 @@ namespace RemoteControl.Client.Handlers
 {
     abstract class AbstractRequestHandler:IRequestHandler
     {
-        public Action<object,EventArgs> OnFireQuit;
         protected const string RES_FILE_NAME = "Client.Excutor.dat";
         public abstract void Handle(Protocals.SocketSession session, Protocals.ePacketType reqType, object reqObj);
 

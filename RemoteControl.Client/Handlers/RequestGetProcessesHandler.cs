@@ -13,6 +13,8 @@ using System.Diagnostics;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_GET_PROCESSES_REQUEST)]
+    [PacketType(ePacketType.PACKET_KILL_PROCESS_REQUEST)]
     class RequestGetProcessesHandler : IRequestHandler
     {
         public void Handle(SocketSession session, ePacketType reqType, object reqObj)

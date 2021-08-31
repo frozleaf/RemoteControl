@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Handlers\AbstractRequestHandler.cs" />
+    <Compile Include="Handlers\PacketTypeAttribute.cs" />
     <Compile Include="Handlers\RequestGetProcessesHandler.cs" />
     <Compile Include="Handlers\RequestAutoRunHandler.cs" />
     <Compile Include="Handlers\RequestGetDrivesHandler.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Handlers\RequestExecCodeHandler.cs" />
     <Compile Include="Handlers\RequestQuitAppHandler.cs" />
     <Compile Include="Handlers\RequestRestartAppHandler.cs" />
+    <Compile Include="RemoteControlApplication.cs" />
     <Compile Include="Services\CaptureVideoClient.cs" />
     <Compile Include="Handlers\RequestOpeRegistryValueNameHandler.cs" />
     <Compile Include="Handlers\RequestCaptureAudioHandler.cs" />

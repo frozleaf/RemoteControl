@@ -11,6 +11,8 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_PLAY_MUSIC_REQUEST)]
+    [PacketType(ePacketType.PACKET_STOP_PLAY_MUSIC_REQUEST)]
     class RequestPlayMusicHandler : AbstractRequestHandler
     {
         private static string lastPlayMusicExeFile = null;

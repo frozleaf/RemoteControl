@@ -13,6 +13,11 @@ using RemoteControl.Protocals.Utilities;
 
 namespace RemoteControl.Client.Handlers
 {
+    [PacketType(ePacketType.PACKET_CREATE_FILE_OR_DIR_REQUEST)]
+    [PacketType(ePacketType.PACKET_DELETE_FILE_OR_DIR_REQUEST)]
+    [PacketType(ePacketType.PACKET_COPY_FILE_OR_DIR_REQUEST)]
+    [PacketType(ePacketType.PACKET_MOVE_FILE_OR_DIR_REQUEST)]
+    [PacketType(ePacketType.PACKET_RENAME_FILE_REQUEST)]
     class RequestOpeFileOrDirHandler : AbstractRequestHandler
     {
         public override void Handle(SocketSession session, ePacketType reqType, object reqObj)

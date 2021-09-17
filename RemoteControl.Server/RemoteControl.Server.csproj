@@ -87,8 +87,8 @@
     <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IrisSkin2">
-      <HintPath>..\Libs\IrisSkin2.dll</HintPath>
+    <Reference Include="IrisSkin4">
+      <HintPath>..\Libs\IrisSkin4.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\Libs\log4net.dll</HintPath>

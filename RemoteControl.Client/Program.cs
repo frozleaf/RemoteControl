@@ -110,7 +110,7 @@ namespace RemoteControl.Client
         {
             if (isTestMode)
             {
-                clientParameters.SetServerIP("127.0.0.1");
+                clientParameters.SetHostNameOrAddress("127.0.0.1");
                 clientParameters.ServerPort = 10010;
                 clientParameters.OnlineAvatar = "";
                 clientParameters.ServiceName = "";
@@ -121,8 +121,9 @@ namespace RemoteControl.Client
                 clientParameters = ClientParametersManager.ReadParameters(filePath); 
             }
             Console.WriteLine("参数信息：");
-            Console.WriteLine("IP:" + clientParameters.GetServerIP());
-            Console.WriteLine("PORT：" + clientParameters.ServerPort);
+            string hostNameOrAddress = clientParameters.GetHostNameOrAddress();
+            Console.WriteLine("HostNameOrAddress:" + hostNameOrAddress);
+            Console.WriteLine("Port：" + clientParameters.ServerPort);
         }
 
         static void StartConnect()
@@ -131,9 +132,15 @@ namespace RemoteControl.Client
             {
                 try
                 {
-                    DoOutput("正在连接服务器...");
+                    string hostNameOrAddress = clientParameters.GetHostNameOrAddress();
+                    IPAddress[] ips = Dns.GetHostAddresses(hostNameOrAddress);
+                    if (ips.Length == 0)
+                        throw new Exception("未获取到ip");
+                    var ip = ips[0];
+                    var port = clientParameters.ServerPort;
+                    DoOutput($"正在连接服务器{ip}:{port}...");
                     oServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    oServer.Connect(clientParameters.GetIPEndPoint());
+                    oServer.Connect(new IPEndPoint(ip, port));
                     DoOutput("服务器连接成功！");
 
                     oServerSession = new SocketSession(oServer.RemoteEndPoint.ToString(), oServer);

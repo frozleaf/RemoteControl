@@ -99,7 +99,7 @@ namespace RemoteControl.Server
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 ClientParameters para = new ClientParameters();
-                para.SetServerIP(serverIP);
+                para.SetHostNameOrAddress(serverIP);
                 para.ServerPort = serverPortNum;
                 para.ServiceName = serviceName;
                 para.OnlineAvatar = avatar;

@@ -12,26 +12,22 @@ namespace RemoteControl.Protocals
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public byte[] Header; // 头部标示字节
-        public long ServerIP; // 服务器ip地址
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string ServerIP; // 服务器ip地址或域名
         public int ServerPort; // 服务器端口
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst=24)]
         public string OnlineAvatar; // 客户端上线图标名
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string ServiceName; // 客户端启动时的服务名
 
-        public void SetServerIP(string ip)
+        public void SetHostNameOrAddress(string ip)
         {
-            this.ServerIP = IPAddress.Parse(ip).Address;
+            this.ServerIP = ip;
         }
 
-        public string GetServerIP()
+        public string GetHostNameOrAddress()
         {
-            return new IPAddress(this.ServerIP).ToString();
-        }
-
-        public IPEndPoint GetIPEndPoint()
-        {
-            return new IPEndPoint(new IPAddress(this.ServerIP), this.ServerPort);
+            return this.ServerIP;
         }
 
         public void InitHeader()
